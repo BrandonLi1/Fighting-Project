@@ -11,6 +11,10 @@ import java.io.IOException;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton;
+    private JButton keybindsButton;
+    private JButton backButton;
+    private JTextArea p1Controls;
+    private JTextArea p2Controls;
     private BufferedImage background;
     private BufferedImage startBackground;
     private Timer timer;
@@ -19,19 +23,35 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Character p2;
     int countdown;
     boolean startWindow;
+    boolean keybindsWindow;
 
     public GraphicsPanel() {
+        startButton=new JButton("Start");
+        keybindsButton=new JButton("Keybinds");
+        backButton=new JButton("back");
+        startButton.setFocusPainted(false);
+        keybindsButton.setFocusPainted(false);
         timer = new Timer(1, this);
         roundTimer = new Timer(1000, this);
         startWindow=true;
         countdown=180;
+        p1Controls=new JTextArea();
+        p2Controls=new JTextArea();
         try {
             background = ImageIO.read(new File("src/background.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        p1 = new Character();
-        p2 = new Character();
+        backButton.setVisible(false);
+        add(startButton);
+        add(keybindsButton);
+        add(backButton);
+        add(p1Controls);
+        add(p2Controls);
+        startButton.addActionListener(this);
+        keybindsButton.addActionListener(this);
+        backButton.addActionListener(this);
+
         addKeyListener(this);
         setFocusable(true);
         requestFocusInWindow();
@@ -41,9 +61,30 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (startWindow) {
-            startButton=new JButton("Start");
             startButton.setBackground(Color.BLACK);
             startButton.setForeground(Color.WHITE);
+            keybindsButton.setBackground(Color.BLACK);
+            keybindsButton.setForeground(Color.WHITE);
+            startButton.setLocation(400, 300);
+            keybindsButton.setLocation(400, 400);
+            startButton.setVisible(true);
+            keybindsButton.setVisible(true);
+        } else if (keybindsWindow) {
+            System.out.println("called");
+            keybindsButton.setVisible(false);
+            startButton.setVisible(false);
+            backButton.setVisible(true);
+            backButton.setLocation(0, 0);
+            p1Controls.setLineWrap(true);
+            p2Controls.setLineWrap(true);
+            p1Controls.setVisible(true);
+            p2Controls.setVisible(true);
+            p1Controls.setText("p1 controls");
+            p2Controls.setText("p2 controls");
+            p1Controls.setBounds(0, 50, 100, 500);
+            p2Controls.setBounds(400, 50, 100, 500);
+        } else {
+            g.drawImage(background, 0, 0, null);
         }
     }
 
@@ -55,9 +96,27 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             countdown--;
         }
         if (source==startButton) {
+            startWindow=false;
             timer.start();
             roundTimer.start();
+            startButton.setVisible(false);
+            keybindsButton.setVisible(false);
+            keybindsWindow=false;
         }
+        if (source==keybindsButton) {
+            startWindow=false;
+            keybindsWindow=true;
+        }
+        if (source==backButton) {
+            startWindow=true;
+            keybindsWindow=false;
+            startButton.setVisible(true);
+            keybindsButton.setVisible(true);
+            backButton.setVisible(false);
+            p1Controls.setVisible(false);
+            p2Controls.setVisible(false);
+        }
+        repaint();
     }
 
     @Override
