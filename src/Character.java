@@ -9,7 +9,7 @@ public class Character {
     int speed;
     int jumpHeight;
     int comboCounter;
-    int meter;
+    double meter;
     int xCoord;
     int yCoord;
     boolean stunned;
@@ -18,7 +18,7 @@ public class Character {
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
-                      int comboCounter, int meter, int xCoord, int yCoord,
+                      int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames) {
         this.name=name;
         this.health=health;
@@ -39,5 +39,46 @@ public class Character {
         return rect;
     }
 
+    public void setIFrames(boolean IFrames) {
+        this.IFrames = IFrames;
+    }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setStunned(boolean stunned) {
+        this.stunned = stunned;
+    }
+
+    public void setComboCounter(int comboCounter) {
+        this.comboCounter = comboCounter;
+    }
+
+    public void setMeter(int meter) {
+        this.meter = meter;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    public void moveRight() {
+
+    }
+    public void moveLeft() {
+
+    }
+
+    public void jump() {
+
+    }
+
+    public void block() {
+
+    }
 }

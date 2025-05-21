@@ -24,6 +24,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     int countdown;
     boolean startWindow;
     boolean keybindsWindow;
+    boolean[] pressedKeys = new boolean[128];
 
     public GraphicsPanel() {
         startButton=new JButton("Start");
@@ -37,6 +38,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         countdown=180;
         p1Controls=new JTextArea();
         p2Controls=new JTextArea();
+        p1Controls.setEditable(false);
+        p2Controls.setEditable(false);
+        //this.setCursor(); - make a custom cursor(if time)
         try {
             background = ImageIO.read(new File("src/background.png"));
         } catch (IOException e) {
@@ -81,10 +85,13 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setVisible(true);
             p1Controls.setText("p1 controls");
             p2Controls.setText("p2 controls");
-            p1Controls.setBounds(0, 50, 100, 500);
-            p2Controls.setBounds(400, 50, 100, 500);
+            p1Controls.setBounds(0, 50, 300, 500);
+            p2Controls.setBounds(400, 50, 300, 500);
         } else {
             g.drawImage(background, 0, 0, null);
+            // W=87; A=65; S=83; D=68
+            // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
+
         }
     }
 
@@ -126,12 +133,19 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        if (!startWindow&&!keybindsWindow) {
+            int x = e.getKeyCode();
+            System.out.println(x);
+            pressedKeys[x] = true;
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if (!startWindow&&!keybindsWindow) {
+            int x = e.getKeyCode();
+            pressedKeys[x] = false;
+        }
     }
 
 }
