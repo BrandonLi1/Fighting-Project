@@ -89,7 +89,42 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setBounds(400, 50, 300, 500);
         } else {
             g.drawImage(background, 0, 0, null);
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            g.drawString(String.valueOf(countdown), 450, 40);
+
+            if (pressedKeys[87]) {
+                p1.jump();
+            }
+
+            if (pressedKeys[65]) {
+                p1.moveLeft();
+            }
+
+            if (pressedKeys[83]) {
+                p1.block();
+            }
+
+            if (pressedKeys[68]) {
+                p1.moveRight();
+            }
+
             // W=87; A=65; S=83; D=68
+
+            if (pressedKeys[38]) {
+                p2.jump();
+            }
+
+            if (pressedKeys[37]) {
+                p2.moveLeft();
+            }
+
+            if (pressedKeys[40]) {
+                p2.block();
+            }
+
+            if (pressedKeys[39]) {
+                p2.moveRight();
+            }
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
 
         }
@@ -106,8 +141,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             startWindow=false;
             timer.start();
             roundTimer.start();
-            startButton.setVisible(false);
-            keybindsButton.setVisible(false);
+            remove(startButton);
+            remove(keybindsButton);
+            remove(p1Controls);
+            remove(p2Controls);
             keybindsWindow=false;
         }
         if (source==keybindsButton) {

@@ -1,25 +1,19 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Character {
+    private final int MOVE_AMT = 3;
     String name;
-    int health;
-    int basicChain;
-    int height;
-    int width;
-    int speed;
-    int jumpHeight;
-    int comboCounter;
+    int health, basicChain, height, width, speed, jumpHeight, comboCounter, xCoord, yCoord;
     double meter;
-    int xCoord;
-    int yCoord;
-    boolean stunned;
-    boolean IFrames;
+    boolean stunned, IFrames, isGrounded;
+    private Animation animation;
 
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
-                     boolean stunned, boolean IFrames) {
+                     boolean stunned, boolean IFrames, boolean isGrounded) {
         this.name=name;
         this.health=health;
         this.basicChain=basicChain;
@@ -31,6 +25,9 @@ public class Character {
         this.meter=meter;
         this.stunned=stunned;
         this.IFrames=IFrames;
+        this.xCoord=xCoord;
+        this.yCoord=yCoord;
+        this.isGrounded=isGrounded;
     }
 
 
@@ -68,10 +65,23 @@ public class Character {
     }
 
     public void moveRight() {
-
+        if (xCoord + MOVE_AMT <= 920) {
+            xCoord += MOVE_AMT;
+        }
     }
-    public void moveLeft() {
 
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public BufferedImage getPlayerImage() {
+        return animation.getActiveFrame();  // updated
+    }
+
+    public void moveLeft() {
+        if (xCoord - MOVE_AMT >= 0) {
+            xCoord -= MOVE_AMT;
+        }
     }
 
     public void jump() {
