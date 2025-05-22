@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton;
@@ -24,6 +25,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     int countdown;
     boolean startWindow;
     boolean keybindsWindow;
+    int jumpcountdown;
     boolean[] pressedKeys = new boolean[128];
 
     public GraphicsPanel() {
@@ -36,14 +38,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         roundTimer = new Timer(1000, this);
         startWindow=true;
         countdown=180;
+        int jumpcountdown = 2;
         p1Controls=new JTextArea();
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
-        p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 300, false, false ,false);
+        p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
-            background = ImageIO.read(new File("src/background.png"));
+            background = ImageIO.read(new File("src/background2.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -119,6 +122,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             if (pressedKeys[38]) {
                 p2.jump();
+                System.out.println("w");
             }
 
             if (pressedKeys[37]) {
@@ -132,7 +136,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[39]) {
                 p2.moveRight();
             }
-            if (p1.yCoord<=900) {
+            if (p1.yCoord<=0) {
                 p1.setGrounded(true);
             }
            /* if (p2.yCoord<=900) {

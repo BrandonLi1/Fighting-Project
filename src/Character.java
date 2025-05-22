@@ -1,24 +1,33 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.*;
 
-public class Character {
+
+
+public class Character implements ActionListener {
     String name;
     int health, basicChain, height, width, speed, jumpHeight, comboCounter, xCoord, yCoord;
     double meter;
     boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
     private BufferedImage temp;
+    private Timer timer;
+    private int countdown;
+
 
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded) {
-
+        timer = new Timer(1,this);
+        countdown = 100;
         this.name=name;
         this.health=health;
         this.basicChain=basicChain;
@@ -106,7 +115,12 @@ public class Character {
     }
 
     public void jump() {
-
+        if(isGrounded){
+            timer.start();
+            if(countdown == 0){
+                timer.stop();
+            }
+        }
     }
 
     public void block() {
@@ -120,4 +134,17 @@ public class Character {
     }
 
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==timer) {
+            yCoord-=5;
+            countdown-=5;
+        }
+        if(countdown == 0){
+            timer.stop();
+        }
+        if (!timer.isRunning()) {
+            //fall
+        }
+    }
 }
