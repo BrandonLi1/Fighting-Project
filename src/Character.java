@@ -1,19 +1,24 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Character {
-    private final int MOVE_AMT = 3;
     String name;
     int health, basicChain, height, width, speed, jumpHeight, comboCounter, xCoord, yCoord;
     double meter;
-    boolean stunned, IFrames, isGrounded;
+    boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
+    private BufferedImage temp;
 
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded) {
+
         this.name=name;
         this.health=health;
         this.basicChain=basicChain;
@@ -28,6 +33,22 @@ public class Character {
         this.xCoord=xCoord;
         this.yCoord=yCoord;
         this.isGrounded=isGrounded;
+        try {
+            temp = ImageIO.read(new File("src\\marioright.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        /*ArrayList<BufferedImage> images = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            String filename = "src\\tile00" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        animation = new Animation(images,50);*/
     }
 
 
@@ -65,8 +86,8 @@ public class Character {
     }
 
     public void moveRight() {
-        if (xCoord + MOVE_AMT <= 920) {
-            xCoord += MOVE_AMT;
+        if (xCoord + speed <= 920) {
+            xCoord += speed;
         }
     }
 
@@ -75,12 +96,12 @@ public class Character {
     }
 
     public BufferedImage getPlayerImage() {
-        return animation.getActiveFrame();  // updated
+        return temp;  // updated
     }
 
     public void moveLeft() {
-        if (xCoord - MOVE_AMT >= 0) {
-            xCoord -= MOVE_AMT;
+        if (xCoord - speed >= 0) {
+            xCoord -= speed;
         }
     }
 
@@ -89,6 +110,14 @@ public class Character {
     }
 
     public void block() {
-
+        if (isGrounded) {
+            blocking=true;
+        }
     }
+
+    public void setGrounded(boolean grounded) {
+        isGrounded = grounded;
+    }
+
+
 }
