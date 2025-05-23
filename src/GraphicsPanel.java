@@ -11,21 +11,18 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton, keybindsButton, backButton, kaliButton, saberButton, gonButton, luffyButton, glorpButton, bingusButton;
+    private JButton startButton, keybindsButton, backButton, kaliButton, saberButton, gonButton, luffyButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background;
-    private BufferedImage startBackground;
-    private BufferedImage selectionBackground;
+    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
     private Character p2;
     int countdown;
-    boolean startWindow;
-    boolean keybindsWindow;
-    boolean selectionScreen=false;
+    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=true;
     boolean[] pressedKeys = new boolean[128];
+
 
     public GraphicsPanel() {
         startButton=new JButton("Start");
@@ -50,16 +47,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        selectionButtons();
 
-        kaliButton=new JButton();
-        try {
-            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
-            kaliButton.setIcon(new ImageIcon(img));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        add(kaliButton);
-        kaliButton.setVisible(false);
         backButton.setVisible(false);
         add(startButton);
         add(keybindsButton);
@@ -110,6 +99,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(selectionBackground, 0, 0, null);
             kaliButton.setVisible(true);
             kaliButton.setLocation(300, 100);
+            gonButton.setVisible(true);
+            gonButton.setLocation(600, 100);
         } else {
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), p1.xCoord, p1.yCoord, p1.width, p1.height, null);
@@ -211,6 +202,37 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p1Controls.setVisible(false);
             p2Controls.setVisible(false);
         }
+        if (source==kaliButton) {
+            if (!p1Picked) {
+                try {
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                try {
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            confirmButton.setVisible(true);
+        }
+        if (source==confirmButton) {
+            if (!p1Picked) {
+                p1Picked=true;
+                p2Picked=false;
+                confirmButton.setVisible(false);
+            } else {
+                p2Picked=true;
+            }
+            if (p2Picked) {
+                selectionScreen=false;
+                kaliButton.setVisible(false);
+                gonButton.setVisible(false);
+                confirmButton.setVisible(false);
+            }
+        }
         repaint();
     }
 
@@ -235,6 +257,37 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             int x = e.getKeyCode();
             pressedKeys[x] = false;
         }
+    }
+
+    private void selectionButtons() {
+        kaliButton=new JButton();
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+            kaliButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(kaliButton);
+        kaliButton.setVisible(false);
+
+        gonButton=new JButton();
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\gonSelection.jpg"));
+            gonButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(gonButton);
+        gonButton.setVisible(false);
+
+        confirmButton=new JButton("Confirm");
+        add(confirmButton);
+        confirmButton.setBounds(800, 800, 200, 100);
+        confirmButton.setVisible(false);
+
+        kaliButton.addActionListener(this);
+        gonButton.addActionListener(this);
+        confirmButton.addActionListener(this);
     }
 
 }
