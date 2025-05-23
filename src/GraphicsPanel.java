@@ -14,7 +14,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton startButton, keybindsButton, backButton, kaliButton, saberButton, gonButton, luffyButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage;
+    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -42,6 +42,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
+            healthBar = ImageIO.read(new File("src/Health_Bar000.jpg"));
             background = ImageIO.read(new File("src/Backgrounds/background2.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
@@ -104,7 +105,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         } else {
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), p1.xCoord, p1.yCoord, p1.width, p1.height, null);
-
+            g.drawImage(healthBar, 0, 0, null);
             //g.drawImage(p2.getPlayerImage(), p2.xCoord, p2.yCoord, p2.width, p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 450, 40);
