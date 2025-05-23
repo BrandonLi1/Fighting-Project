@@ -159,4 +159,8 @@ public class Character implements ActionListener {
 
 
     }
+
+    public void attackRect(int width, int height, int x, int y) {
+
+    }
 }

@@ -11,13 +11,12 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton;
-    private JButton keybindsButton;
-    private JButton backButton;
+    private JButton startButton, keybindsButton, backButton, kaliButton, saberButton, gonButton, luffyButton, glorpButton, bingusButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
     private BufferedImage background;
     private BufferedImage startBackground;
+    private BufferedImage selectionBackground;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -25,7 +24,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     int countdown;
     boolean startWindow;
     boolean keybindsWindow;
-    int jumpcountdown;
+    boolean selectionScreen=false;
     boolean[] pressedKeys = new boolean[128];
 
     public GraphicsPanel() {
@@ -46,11 +45,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
-            background = ImageIO.read(new File("src/background2.jpg"));
+            background = ImageIO.read(new File("src/Backgrounds/background2.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+
+        kaliButton=new JButton();
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+            kaliButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(kaliButton);
+        kaliButton.setVisible(false);
         backButton.setVisible(false);
         add(startButton);
         add(keybindsButton);
@@ -92,6 +101,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setText("p2 controls");
             p1Controls.setBounds(0, 50, 300, 500);
             p2Controls.setBounds(400, 50, 300, 500);
+        } else if (selectionScreen) {
+            try {
+                selectionBackground= ImageIO.read((new File("src\\Backgrounds\\selectionBackground.jpg")));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            g.drawImage(selectionBackground, 0, 0, null);
+            kaliButton.setVisible(true);
+            kaliButton.setLocation(300, 100);
         } else {
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), p1.xCoord, p1.yCoord, p1.width, p1.height, null);
@@ -99,6 +117,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //g.drawImage(p2.getPlayerImage(), p2.xCoord, p2.yCoord, p2.width, p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 450, 40);
+
+            //p1
 
             if (pressedKeys[87]) {
                 p1.jump();
@@ -118,7 +138,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 System.out.println("d");
             }
 
+            /*if (pressedKeys[81]) {//q
+                p1.//basic attack
+            }
+
+            if (pressedKeys[69]) {//e
+                p1.//heavy
+            }*/
+
+
+
             // W=87; A=65; S=83; D=68
+            //p2 q-light e- heavy zxc-flexq
 
             if (pressedKeys[38]) {
                 p2.jump();
@@ -164,8 +195,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             remove(keybindsButton);
             remove(p1Controls);
             remove(p2Controls);
+            selectionScreen=true;
             requestFocusInWindow();
-
         }
         if (source==keybindsButton) {
             startWindow=false;
@@ -190,10 +221,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(startWindow);
-        System.out.println(keybindsWindow);
+        int x = e.getKeyCode();
+        System.out.println(x);
         if (!startWindow&&!keybindsWindow) {
-            int x = e.getKeyCode();
             System.out.println(x);
             pressedKeys[x] = true;
         }
