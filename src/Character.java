@@ -147,4 +147,8 @@ public class Character implements ActionListener {
             //fall
         }
     }
+
+    public void attackRect(int width, int height, int x, int y) {
+
+    }
 }
