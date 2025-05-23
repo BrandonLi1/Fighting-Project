@@ -18,7 +18,9 @@ public class Character implements ActionListener {
     private Animation animation;
     private BufferedImage temp;
     private Timer timer;
+    private Timer timer2;
     private int countdown;
+    private int countdown2;
 
 
 
@@ -26,8 +28,10 @@ public class Character implements ActionListener {
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded) {
-        timer = new Timer(1,this);
+        timer = new Timer(5,this);
+        timer2 = new Timer(5,this);
         countdown = 100;
+        countdown2 = 100;
         this.name=name;
         this.health=health;
         this.basicChain=basicChain;
@@ -95,7 +99,7 @@ public class Character implements ActionListener {
     }
 
     public void moveRight() {
-        if (xCoord + speed <= 920) {
+        if (xCoord + speed <= 1860) {
             xCoord += speed;
         }
     }
@@ -117,10 +121,9 @@ public class Character implements ActionListener {
     public void jump() {
         if(isGrounded){
             timer.start();
-            if(countdown == 0){
-                timer.stop();
-            }
+            timer2.start();
         }
+
     }
 
     public void block() {
@@ -136,16 +139,25 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        double x=5;
         if (e.getSource()==timer) {
-            yCoord-=5;
-            countdown-=5;
+            yCoord-=x;
+            countdown-=2;
+            if(countdown <= 0){
+                timer.stop();
+            }
+            x-=.01;
+        } else if (e.getSource() == timer2 && !timer.isRunning()) {
+            yCoord += x;
+            countdown2 -= 2;
+            if(countdown2 <= 0){
+                timer2.stop();
+                countdown2=100;
+                countdown= 100;
+            }
         }
-        if(countdown == 0){
-            timer.stop();
-        }
-        if (!timer.isRunning()) {
-            //fall
-        }
+
+
     }
 
     public void attackRect(int width, int height, int x, int y) {
