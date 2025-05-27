@@ -313,6 +313,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         confirmButton.addActionListener(this);
     }
 
+    //merge force
 }
 
 /*3 -- Cancel

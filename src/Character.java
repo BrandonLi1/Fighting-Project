@@ -189,4 +189,6 @@ public class Character implements ActionListener {
     public int getAttackDamage() {
         return attackDamage;
     }
+
+    //merge force
 }
