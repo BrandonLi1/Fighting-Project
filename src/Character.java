@@ -21,13 +21,16 @@ public class Character implements ActionListener {
     private Timer timer2;
     private int countdown;
     private int countdown2;
+    private int aWidth;
+    private int aHeight;
+    private int attackDamage;
 
 
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
-                     boolean stunned, boolean IFrames, boolean isGrounded) {
+                     boolean stunned, boolean IFrames, boolean isGrounded, int attackDamage) {
         timer = new Timer(5,this);
         timer2 = new Timer(5,this);
         countdown = 100;
@@ -46,6 +49,7 @@ public class Character implements ActionListener {
         this.xCoord=xCoord;
         this.yCoord=yCoord;
         this.isGrounded=isGrounded;
+        this.attackDamage = attackDamage;
         try {
             temp = ImageIO.read(new File("src\\marioright.png"));
         } catch (IOException e) {
@@ -126,6 +130,18 @@ public class Character implements ActionListener {
 
     }
 
+    public void setAttack(int width, int height) {
+        aHeight = height;
+        aWidth = width;
+    }
+
+    public Rectangle attack (int locationX, int locationY, boolean direction) {
+        if (!direction) {
+            return new Rectangle(locationX, locationY, -aWidth, -aHeight);
+        }
+        return new Rectangle(locationX, locationY, aWidth, aHeight);
+    }
+
     public void block() {
         if (isGrounded) {
             blocking=true;
@@ -160,7 +176,7 @@ public class Character implements ActionListener {
 
     }
 
-    public void attackRect(int width, int height, int x, int y) {
-
+    public int getAttackDamage() {
+        return attackDamage;
     }
 }
