@@ -110,7 +110,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                g.drawImage(p1CharacterImage, 100, 650, null);
+                g.drawImage(p1CharacterImage, 100, 850, null);
             }
             if (p2CharacterImage!=null) {
 
@@ -126,7 +126,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p1
 
             if (pressedKeys[87]) {
-                if (p1.isGrounded)
                 p1.jump();
             }
 

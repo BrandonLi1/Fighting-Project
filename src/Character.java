@@ -165,7 +165,9 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        double x=5;
         if (e.getSource()==timer) {
+            yCoord-=x;
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;
@@ -173,8 +175,10 @@ public class Character implements ActionListener {
                 timer.stop();
                 //jumpHeight=temp2;
             }
+            x-=.01;
             jumpHeight-= 0.2;
         } else if (e.getSource() == timer2 && !timer.isRunning()) {
+            yCoord += x;
             yCoord += jumpHeight + 0.2;
             countdown2 -= 2;
             if(countdown2 <= 0){
@@ -186,7 +190,6 @@ public class Character implements ActionListener {
             }
             jumpHeight += 0.2;
         }
-
 
     }
 
