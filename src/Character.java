@@ -12,7 +12,8 @@ import javax.swing.*;
 
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, jumpHeight, comboCounter, xCoord, yCoord;
+    int health, basicChain, height, width, speed, comboCounter;
+    double jumpHeight, xCoord, yCoord;;
     double meter;
     boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
@@ -21,13 +22,20 @@ public class Character implements ActionListener {
     private Timer timer2;
     private int countdown;
     private int countdown2;
+    private int aWidth;
+    private int aHeight;
+    private int attackDamage;
+    double temp2 = jumpHeight;
 
 
 
     public Character(String name, int health, int basicChain,
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
-                     boolean stunned, boolean IFrames, boolean isGrounded) {
+                     boolean stunned, boolean IFrames, boolean isGrounded,
+                     int attackDamage) {
+            timer = new Timer(1,this);
+            timer2 = new Timer(1,this);
         timer = new Timer(5,this);
         timer2 = new Timer(5,this);
         countdown = 100;
@@ -46,6 +54,8 @@ public class Character implements ActionListener {
         this.xCoord=xCoord;
         this.yCoord=yCoord;
         this.isGrounded=isGrounded;
+        temp2=jumpHeight;
+        this.attackDamage = attackDamage;
         try {
             temp = ImageIO.read(new File("src\\marioright.png"));
         } catch (IOException e) {
@@ -66,7 +76,7 @@ public class Character implements ActionListener {
 
 
     public Rectangle hitBox() {
-        Rectangle rect = new Rectangle(xCoord, yCoord, width, height);
+        Rectangle rect = new Rectangle((int) xCoord, (int) yCoord, width, height);
         return rect;
     }
 
@@ -130,6 +140,18 @@ public class Character implements ActionListener {
 
     }
 
+    public void setAttack(int width, int height) {
+        aHeight = height;
+        aWidth = width;
+    }
+
+    public Rectangle attack (int locationX, int locationY, boolean direction) {
+        if (!direction) {
+            return new Rectangle(locationX, locationY, -aWidth, -aHeight);
+        }
+        return new Rectangle(locationX, locationY, aWidth, aHeight);
+    }
+
     public void block() {
         if (isGrounded) {
             blocking=true;
@@ -144,28 +166,34 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        double x=5;
         if (e.getSource()==timer) {
-            yCoord-=x;
+            isGrounded = false;
+            yCoord-=jumpHeight;
             countdown-=2;
             if(countdown <= 0){
                 timer.stop();
+                //jumpHeight=temp2;
             }
-            x-=.01;
+            jumpHeight-= 0.2;
         } else if (e.getSource() == timer2 && !timer.isRunning()) {
-            yCoord += x;
+            yCoord += jumpHeight + 0.2;
             countdown2 -= 2;
             if(countdown2 <= 0){
                 timer2.stop();
+                jumpHeight=temp2;
                 countdown2=100;
                 countdown= 100;
+                isGrounded = true;
             }
+            jumpHeight += 0.2;
         }
 
 
     }
 
-    public void attackRect(int width, int height, int x, int y) {
-
+    public int getAttackDamage() {
+        return attackDamage;
     }
+
+    //merge force
 }
