@@ -20,7 +20,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Character p1;
     private Character p2;
     int countdown;
-    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=true;
+    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
     boolean[] pressedKeys = new boolean[128];
 
 
@@ -39,7 +39,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
-        p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
             healthBar = ImageIO.read(new File("src/Health_Bar000.jpg"));
@@ -102,6 +101,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             kaliButton.setLocation(300, 100);
             gonButton.setVisible(true);
             gonButton.setLocation(600, 100);
+            if (p1!=null) {
+                try {
+                    g.drawImage(ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg")), 150, 500, null);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                g.drawImage(p1CharacterImage, 100, 650, null);
+            }
+            if (p2CharacterImage!=null) {
+
+            }
         } else {
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), p1.xCoord, p1.yCoord, p1.width, p1.height, null);
@@ -145,7 +155,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             if (pressedKeys[38]) {
                 p2.jump();
-                System.out.println("w");
             }
 
             if (pressedKeys[37]) {
@@ -159,12 +168,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[39]) {
                 p2.moveRight();
             }
-            if (p1.yCoord<=0) {
-                p1.setGrounded(true);
-            }
-           /* if (p2.yCoord<=900) {
-                p2.setGrounded(true);
-            }*/
+
+            p1.checkGrounded();
+            //p2.checkGrounded();
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
 
         }
@@ -206,7 +212,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         if (source==kaliButton) {
             if (!p1Picked) {
                 try {
-                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
+                    p1 = new Character("Kali", 500, 3, 50, 30, 2, 3, 3, 0, 300, 700, false, false, true);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -218,11 +225,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             }
             confirmButton.setVisible(true);
+            repaint();
         }
         if (source==confirmButton) {
             if (!p1Picked) {
                 p1Picked=true;
-                p2Picked=false;
                 confirmButton.setVisible(false);
             } else {
                 p2Picked=true;

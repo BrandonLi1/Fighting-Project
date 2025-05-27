@@ -98,6 +98,10 @@ public class Character implements ActionListener {
         this.yCoord = yCoord;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void moveRight() {
         if (xCoord + speed <= 1860) {
             xCoord += speed;
@@ -132,10 +136,11 @@ public class Character implements ActionListener {
         }
     }
 
-    public void setGrounded(boolean grounded) {
-        isGrounded = grounded;
+    public void checkGrounded() {
+        if (yCoord>=700) {
+            isGrounded=true;
+        }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
