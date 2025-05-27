@@ -39,7 +39,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
-        p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
+        p1 = new Character("joe", 1, 1, 100,100 , 10,10 ,1 ,1 ,300, 720, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
             healthBar = ImageIO.read(new File("src/Health_Bar000.jpg"));
@@ -104,7 +104,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             gonButton.setLocation(600, 100);
         } else {
             g.drawImage(background, 0, 0, null);
-            g.drawImage(p1.getPlayerImage(), p1.xCoord, p1.yCoord, p1.width, p1.height, null);
+            g.drawImage(p1.getPlayerImage(), (int) p1.xCoord, (int) p1.yCoord, p1.width, p1.height, null);
             g.drawImage(healthBar, 0, 0, null);
             //g.drawImage(p2.getPlayerImage(), p2.xCoord, p2.yCoord, p2.width, p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
@@ -113,6 +113,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p1
 
             if (pressedKeys[87]) {
+                if (p1.isGrounded)
                 p1.jump();
             }
 
@@ -144,6 +145,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p2 q-light e- heavy zxc-flexq
 
             if (pressedKeys[38]) {
+                if (p2.isGrounded)
                 p2.jump();
                 System.out.println("w");
             }

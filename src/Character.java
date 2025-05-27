@@ -12,7 +12,8 @@ import javax.swing.*;
 
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, jumpHeight, comboCounter, xCoord, yCoord;
+    int health, basicChain, height, width, speed, comboCounter;
+    double jumpHeight, xCoord, yCoord;;
     double meter;
     boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
@@ -21,6 +22,7 @@ public class Character implements ActionListener {
     private Timer timer2;
     private int countdown;
     private int countdown2;
+    double temp2 = jumpHeight;
 
 
 
@@ -28,8 +30,8 @@ public class Character implements ActionListener {
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded) {
-        timer = new Timer(5,this);
-        timer2 = new Timer(5,this);
+        timer = new Timer(1,this);
+        timer2 = new Timer(1,this);
         countdown = 100;
         countdown2 = 100;
         this.name=name;
@@ -46,6 +48,7 @@ public class Character implements ActionListener {
         this.xCoord=xCoord;
         this.yCoord=yCoord;
         this.isGrounded=isGrounded;
+        temp2=jumpHeight;
         try {
             temp = ImageIO.read(new File("src\\marioright.png"));
         } catch (IOException e) {
@@ -66,7 +69,7 @@ public class Character implements ActionListener {
 
 
     public Rectangle hitBox() {
-        Rectangle rect = new Rectangle(xCoord, yCoord, width, height);
+        Rectangle rect = new Rectangle((int) xCoord, (int) yCoord, width, height);
         return rect;
     }
 
@@ -139,22 +142,26 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        double x=5;
         if (e.getSource()==timer) {
-            yCoord-=x;
+            isGrounded = false;
+            yCoord-=jumpHeight;
             countdown-=2;
             if(countdown <= 0){
                 timer.stop();
+                //jumpHeight=temp2;
             }
-            x-=.01;
+            jumpHeight-= 0.2;
         } else if (e.getSource() == timer2 && !timer.isRunning()) {
-            yCoord += x;
+            yCoord += jumpHeight + 0.2;
             countdown2 -= 2;
             if(countdown2 <= 0){
                 timer2.stop();
+                jumpHeight=temp2;
                 countdown2=100;
                 countdown= 100;
+                isGrounded = true;
             }
+            jumpHeight += 0.2;
         }
 
 
