@@ -133,7 +133,6 @@ public class Character implements ActionListener {
             timer.start();
             timer2.start();
         }
-
     }
 
     public void setAttack(int width, int height) {
