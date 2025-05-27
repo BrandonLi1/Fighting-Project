@@ -42,7 +42,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
-        p1 = new Character("joe", 1, 1, 100,100 , 10,1 ,1 ,1 ,300, 700, false, false ,true);
         //this.setCursor(); - make a custom cursor(if time)
         try {
             healthBar = ImageIO.read(new File("src/Health_Bar000.jpg"));
@@ -237,7 +236,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Character("Kali", 500, 3, 50, 30, 2, 3, 3, 0, 300, 700, false, false, true);
+                    p1 = new Character("Kali", 500, 3, 50, 30, 2, 3, 3, 0, 300, 700, false, false, true, 300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
