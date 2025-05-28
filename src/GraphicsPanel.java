@@ -117,9 +117,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
         } else {
             g.drawImage(background, 0, 0, null);
-            g.drawImage(p1.getPlayerImage(), (int) p1.xCoord, (int) p1.yCoord, p1.width, p1.height, null);
+            g.drawImage(p1.getPlayerImage(), (int) p1.xCoord, (int) p1.yCoord, p1.getWidth(), p1.height, null);
             g.drawImage(healthBar, 0, 0, null);
-            //g.drawImage(p2.getPlayerImage(), p2.xCoord, p2.yCoord, p2.width, p2.height, null);
+            g.drawImage(p2.getPlayerImage(), (int) p2.xCoord,(int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 450, 40);
 
@@ -131,7 +131,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             if (pressedKeys[65]) {
                 p1.moveLeft();
-                System.out.println("a");
+                p1.faceLeft();
                 directionP1 = false;
             }
 
@@ -141,7 +141,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             if (pressedKeys[68]) {
                 p1.moveRight();
-                System.out.println("d");
+                p1.faceRight();
                 directionP1 = true;
             }
 
@@ -166,11 +166,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[38]) {
                 if (p2.isGrounded)
                 p2.jump();
-                System.out.println("w");
             }
 
             if (pressedKeys[37]) {
                 p2.moveLeft();
+                p2.faceLeft();
                 directionP2 = false;
             }
 
@@ -180,6 +180,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             if (pressedKeys[39]) {
                 p2.moveRight();
+                p2.faceRight();
                 directionP2 = true;
             }
 
@@ -235,13 +236,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Character("Kali", 500, 3, 50, 30, 2, 3, 3, 0, 300, 700, false, false, true, 300);
+                    p1 = new Character("Kali", 500, 3, 150, 150, 2, 10, 3, 0, 300, 675, false, false, true, 300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
+                    p2 = new Character("Gon", 500, 3, 150, 150, 2, 10, 3, 0, 1300, 675, false, false, true, 300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -274,9 +276,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     @Override
     public void keyPressed(KeyEvent e) {
         int x = e.getKeyCode();
-        System.out.println(x);
         if (!startWindow&&!keybindsWindow) {
-            System.out.println(x);
             pressedKeys[x] = true;
         }
     }

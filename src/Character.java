@@ -26,6 +26,7 @@ public class Character implements ActionListener {
     private int aHeight;
     private int attackDamage;
     double temp2 = jumpHeight;
+    private boolean facingRight;
 
 
 
@@ -36,10 +37,11 @@ public class Character implements ActionListener {
                      int attackDamage) {
             timer = new Timer(1,this);
             timer2 = new Timer(1,this);
-        timer = new Timer(5,this);
-        timer2 = new Timer(5,this);
+        timer = new Timer(1,this);
+        timer2 = new Timer(1,this);
         countdown = 100;
         countdown2 = 100;
+        facingRight = true;
         this.name=name;
         this.health=health;
         this.basicChain=basicChain;
@@ -61,9 +63,9 @@ public class Character implements ActionListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        /*ArrayList<BufferedImage> images = new ArrayList<>();
+        ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            String filename = "src\\tile00" + i + ".png";
+            String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -71,7 +73,7 @@ public class Character implements ActionListener {
                 System.out.println(e.getMessage());
             }
         }
-        animation = new Animation(images,50);*/
+        animation = new Animation(images,50);
     }
 
 
@@ -123,8 +125,9 @@ public class Character implements ActionListener {
     }
 
     public BufferedImage getPlayerImage() {
-        return temp;  // updated
+        return animation.getActiveFrame();  // updated
     }
+
 
     public void moveLeft() {
         if (xCoord - speed >= 0) {
@@ -163,11 +166,46 @@ public class Character implements ActionListener {
         }
     }
 
+
+    public void faceRight() {
+        facingRight = true;
+    }
+
+
+    public void faceLeft() {
+        facingRight = false;
+    }
+
+
+    // newly added, used for right-clicking to turn
+    public void turn() {
+        if (facingRight) {
+            faceLeft();
+        } else {
+            faceRight();
+        }
+    }
+    public double getxCoord() {
+        if (facingRight) {
+            return xCoord;
+        } else {
+            return (xCoord + 150);
+        }
+    } public int getWidth() {
+        if (facingRight) {
+            return 150;
+        } else {
+            return 150*-1;
+        }
+    }
+
+
+
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        double x=5;
         if (e.getSource()==timer) {
-            yCoord-=x;
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;
@@ -175,10 +213,8 @@ public class Character implements ActionListener {
                 timer.stop();
                 //jumpHeight=temp2;
             }
-            x-=.01;
             jumpHeight-= 0.2;
         } else if (e.getSource() == timer2 && !timer.isRunning()) {
-            yCoord += x;
             yCoord += jumpHeight + 0.2;
             countdown2 -= 2;
             if(countdown2 <= 0){
