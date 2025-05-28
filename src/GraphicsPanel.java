@@ -80,7 +80,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             startButton.setVisible(true);
             keybindsButton.setVisible(true);
         } else if (keybindsWindow) {
-            System.out.println("called");
             keybindsButton.setVisible(false);
             startButton.setVisible(false);
             backButton.setVisible(true);
@@ -89,10 +88,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setLineWrap(true);
             p1Controls.setVisible(true);
             p2Controls.setVisible(true);
-            p1Controls.setText("p1 controls");
-            p2Controls.setText("p2 controls");
-            p1Controls.setBounds(0, 50, 300, 500);
-            p2Controls.setBounds(400, 50, 300, 500);
+            p1Controls.setText("player 1 controls:\nW-jump\nA-left\nS-block\nD-right\nQ-light\nE-heavy\nZ-special 1\nX-special 2\nC-special 3(mode if applicable)");
+            p1Controls.setFont(new Font("Pacifico", Font.BOLD, 30));
+            p2Controls.setText("player 2 controls:\n↑-jump\n←-left\n↓-block\n→-right\nnumpad4-light\nnumpad5-heavy\nnumpad1-special 1\nnumpad2-special 2\nnumpad3-special 3(mode if applicable)");
+            p2Controls.setFont(new Font("Pacifico", Font.BOLD, 30));
+            p1Controls.setBounds(0, 50, 550, 450);
+            p2Controls.setBounds(1000, 50, 550, 450);
         } else if (selectionScreen) {
             try {
                 selectionBackground= ImageIO.read((new File("src\\Backgrounds\\selectionBackground.jpg")));
@@ -110,7 +111,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                g.drawImage(p1CharacterImage, 100, 850, null);
+                g.drawImage(p1CharacterImage, 100, 600, null);
             }
             if (p2CharacterImage!=null) {
 
