@@ -20,13 +20,8 @@ public class Character implements ActionListener {
     private BufferedImage temp;
     private Timer timer;
     private Timer timer2;
-    private int countdown;
-    private int countdown2;
-    private int aWidth;
-    private int aHeight;
-    private int attackDamage;
-    double temp2 = jumpHeight;
-    private boolean facingRight;
+    private int countdown, countdown2, aWidth, aHeight, attackDamage;
+    double temp2;
 
 
 
@@ -205,7 +200,9 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        double x=5;
         if (e.getSource()==timer) {
+            yCoord-=x;
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;
@@ -229,9 +226,11 @@ public class Character implements ActionListener {
 
     }
 
+
     public int getAttackDamage() {
         return attackDamage;
     }
 
     //merge force
+    //left right make player have to manually face enemy cus less code
 }
