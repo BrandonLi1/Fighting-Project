@@ -17,11 +17,14 @@ public class Character implements ActionListener {
     double meter;
     boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
+    private Animation animation2;
     private BufferedImage temp;
     private Timer timer;
     private Timer timer2;
     private int countdown, countdown2, aWidth, aHeight, attackDamage;
     double temp2;
+    boolean facingRight;
+    private int animationNum;
 
 
 
@@ -34,8 +37,8 @@ public class Character implements ActionListener {
             timer2 = new Timer(1,this);
         timer = new Timer(1,this);
         timer2 = new Timer(1,this);
-        countdown = 100;
-        countdown2 = 100;
+        countdown = 50;
+        countdown2 = 50;
         facingRight = true;
         this.name=name;
         this.health=health;
@@ -58,6 +61,7 @@ public class Character implements ActionListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        // walking animation
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
@@ -69,6 +73,18 @@ public class Character implements ActionListener {
             }
         }
         animation = new Animation(images,50);
+        //Luffy.Walk.idle animation
+        ArrayList<BufferedImage> images2 = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
+            try {
+                images2.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        animation2 = new Animation(images2,50);
     }
 
 
@@ -119,8 +135,13 @@ public class Character implements ActionListener {
         this.animation = animation;
     }
 
-    public BufferedImage getPlayerImage() {
-        return animation.getActiveFrame();  // updated
+    public BufferedImage getPlayerImage()
+    {
+        if(animationNum == 1){
+            return animation.getActiveFrame();  // updated
+        } else {
+            return animation2.getActiveFrame();
+        }
     }
 
 
@@ -159,6 +180,9 @@ public class Character implements ActionListener {
         if (yCoord>=700) {
             isGrounded=true;
         }
+    }
+    public void setAnimationNum(int num){
+        animationNum = num;
     }
 
 
@@ -200,9 +224,7 @@ public class Character implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        double x=5;
         if (e.getSource()==timer) {
-            yCoord-=x;
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;

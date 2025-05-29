@@ -33,7 +33,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         backButton=new JButton("back");
         startButton.setFocusPainted(false);
         keybindsButton.setFocusPainted(false);
-        timer = new Timer(1, this);
+        timer = new Timer(3, this);
         roundTimer = new Timer(1000, this);
         startWindow=true;
         countdown=180;
@@ -118,9 +118,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
         } else {
             g.drawImage(background, 0, 0, null);
-            g.drawImage(p1.getPlayerImage(), (int) p1.xCoord, (int) p1.yCoord, p1.getWidth(), p1.height, null);
+            g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             g.drawImage(healthBar, 0, 0, null);
-            g.drawImage(p2.getPlayerImage(), (int) p2.xCoord,(int) p2.yCoord, p2.getWidth(), p2.height, null);
+            g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(),(int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 450, 40);
 
@@ -134,6 +134,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 p1.moveLeft();
                 p1.faceLeft();
                 directionP1 = false;
+                p1.setAnimationNum(1);
             }
 
             if (pressedKeys[83]) {
@@ -143,6 +144,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[68]) {
                 p1.moveRight();
                 p1.faceRight();
+                p1.setAnimationNum(1);
                 directionP1 = true;
             }
 
@@ -172,6 +174,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[37]) {
                 p2.moveLeft();
                 p2.faceLeft();
+                p1.setAnimationNum(1);
                 directionP2 = false;
             }
 
@@ -182,6 +185,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[39]) {
                 p2.moveRight();
                 p2.faceRight();
+                p1.setAnimationNum(1);
                 directionP2 = true;
             }
 
@@ -237,14 +241,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Character("Kali", 500, 3, 150, 150, 2, 10, 3, 0, 300, 675, false, false, true, 300);
+                    p1 = new Character("Kali", 500, 3, 150, 150, 5, 10, 3, 0, 300, 675, false, false, true, 300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
-                    p2 = new Character("Gon", 500, 3, 150, 150, 2, 10, 3, 0, 1300, 675, false, false, true, 300);
+                    p2 = new Character("Gon", 500, 3, 150, 150, 5, 10, 3, 0, 1300, 675, false, false, true, 300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -282,11 +286,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         }
     }
 
+
+
     @Override
     public void keyReleased(KeyEvent e) {
         if (!startWindow&&!keybindsWindow) {
             int x = e.getKeyCode();
             pressedKeys[x] = false;
+            p1.setAnimationNum(2);
         }
     }
 
