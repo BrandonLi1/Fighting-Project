@@ -208,13 +208,13 @@ public class Character implements ActionListener {
         if (facingRight) {
             return xCoord;
         } else {
-            return (xCoord + 150);
+            return (xCoord + width);
         }
     } public int getWidth() {
         if (facingRight) {
-            return 150;
+            return width;
         } else {
-            return 150*-1;
+            return width*-1;
         }
     }
 

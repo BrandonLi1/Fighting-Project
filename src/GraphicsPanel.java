@@ -174,7 +174,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[37]) {
                 p2.moveLeft();
                 p2.faceLeft();
-                p1.setAnimationNum(1);
+                p2.setAnimationNum(1);
                 directionP2 = false;
             }
 
@@ -185,7 +185,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[39]) {
                 p2.moveRight();
                 p2.faceRight();
-                p1.setAnimationNum(1);
+                p2.setAnimationNum(1);
                 directionP2 = true;
             }
 
