@@ -105,7 +105,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             kaliButton.setLocation(300, 100);
             gonButton.setVisible(true);
             gonButton.setLocation(600, 100);
-            if (p1!=null) {
+            if (p1!=null && p1.getClass()==Kali.class) {
                 try {
                     g.drawImage(ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg")), 150, 500, null);
                 } catch (IOException e) {
@@ -113,8 +113,13 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
                 g.drawImage(p1CharacterImage, 100, 600, null);
             }
-            if (p2CharacterImage!=null) {
-
+            if (p2!= null && p2.getClass()==Kali.class) {
+                try {
+                    g.drawImage(ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg")), 1000, 500, null);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                g.drawImage(p2CharacterImage, 950, 600, null);
             }
         } else {
             if (!timer.isRunning()) {
@@ -250,8 +255,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             } else {
                 try {
-                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
-                    p2 = new Character("Gon", 500, 3, 150, 150, 5, 10, 3, 0, 1300, 675, false, false, true, 300);
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
+                    p2 = new Kali();
+                    p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
