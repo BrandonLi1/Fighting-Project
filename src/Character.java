@@ -12,19 +12,15 @@ import javax.swing.*;
 
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, comboCounter;
-    double jumpHeight, xCoord, yCoord;;
-    double meter;
-    boolean stunned, IFrames, isGrounded, blocking;
-    private Animation animation;
+    int health, basicChain, height, width, speed, comboCounter, currentBasic;
+    double jumpHeight, xCoord, yCoord, meter;
+    boolean stunned, IFrames, isGrounded, blocking, facingRight;
+    Animation animation;
     private Animation animation2;
-    private BufferedImage temp;
     private Timer timer;
     private Timer timer2;
-    private int countdown, countdown2, aWidth, aHeight, attackDamage;
-    double temp2;
-    boolean facingRight;
-    private int animationNum;
+    int countdown, countdown2, aWidth, aHeight, attackDamage, animationNum;
+    private double temp2;
 
 
 
@@ -56,11 +52,7 @@ public class Character implements ActionListener {
         this.isGrounded=isGrounded;
         temp2=jumpHeight;
         this.attackDamage = attackDamage;
-        try {
-            temp = ImageIO.read(new File("src\\marioright.png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
         // walking animation
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -72,7 +64,7 @@ public class Character implements ActionListener {
                 System.out.println(e.getMessage());
             }
         }
-        animation = new Animation(images,50);
+        animation = new Animation(images,50, true);
         //Luffy.Walk.idle animation
         ArrayList<BufferedImage> images2 = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
@@ -84,7 +76,7 @@ public class Character implements ActionListener {
                 System.out.println(e.getMessage());
             }
         }
-        animation2 = new Animation(images2,50);
+        animation2 = new Animation(images2,50, true);
     }
 
 
@@ -163,11 +155,11 @@ public class Character implements ActionListener {
         aWidth = width;
     }
 
-    public Rectangle attack (int locationX, int locationY, boolean direction) {
-        if (!direction) {
-            return new Rectangle(locationX, locationY, -aWidth, -aHeight);
+    public Rectangle attack () {
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, -aHeight);
         }
-        return new Rectangle(locationX, locationY, aWidth, aHeight);
+        return new Rectangle((int) (xCoord-width), (int) yCoord, aWidth, aHeight);
     }
 
     public void block() {
@@ -208,9 +200,10 @@ public class Character implements ActionListener {
         if (facingRight) {
             return xCoord;
         } else {
-            return (xCoord + 150);
+            return (xCoord + width);
         }
-    } public int getWidth() {
+    }
+    public int getWidth() {
         if (facingRight) {
             return 150;
         } else {
@@ -248,6 +241,12 @@ public class Character implements ActionListener {
 
     }
 
+    public Rectangle hitbox() {
+        if (facingRight) {
+            return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        }
+        return new Rectangle((int) xCoord, (int) yCoord, -width, height);
+    }
 
     public int getAttackDamage() {
         return attackDamage;

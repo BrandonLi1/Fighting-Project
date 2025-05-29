@@ -117,6 +117,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             }
         } else {
+            if (!timer.isRunning()) {
+                timer.start();
+            }
+            if (!roundTimer.isRunning()) {
+                roundTimer.start();
+            }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             g.drawImage(healthBar, 0, 0, null);
@@ -149,12 +155,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
 
             //basic attack
-            if (pressedKeys[81]) {
-                Rectangle damageBox = p1.attack((int)p1.xCoord, (int)p1.yCoord, directionP1);
-                if (damageBox.intersects(new Rectangle((int)p2.xCoord, (int)p2.yCoord, (int)p2.xCoord - (int)p2.width, (int)p2.yCoord - (int)p2.height))) {
-                    p2.health -= p1.getAttackDamage();
-                }
-            }
 
             /*
             if (pressedKeys[69]) {//e
@@ -195,9 +195,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             // basic attack
             if (pressedKeys[97]) {
-                Rectangle damageBox = p2.attack((int)p2.xCoord,(int) p2.yCoord, directionP2);
-                if (damageBox.intersects(new Rectangle((int)p2.xCoord, (int)p2.yCoord,(int) p2.xCoord - (int)p2.width,(int) p2.yCoord - (int) p2.height))) {
-                    p1.health -= p2.getAttackDamage();
+                Rectangle damageBox = p2.attack();
+                if (damageBox.intersects(p1.hitbox())) {
+                        p1.health -= p2.getAttackDamage();
                 }
             }
 
@@ -211,12 +211,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
         if (source==roundTimer) {
             countdown--;
+            if (countdown<=0) {
+                //placeholder for round end
+                System.exit(0);
+
+            }
         }
         if (source==startButton) {
             startWindow=false;
             keybindsWindow=false;
-            timer.start();
-            roundTimer.start();
             remove(startButton);
             remove(keybindsButton);
             remove(p1Controls);
@@ -241,7 +244,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Character("Kali", 500, 3, 150, 150, 5, 10, 3, 0, 300, 675, false, false, true, 300);
+                    p1 = new Kali();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -294,6 +297,13 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             int x = e.getKeyCode();
             pressedKeys[x] = false;
             p1.setAnimationNum(2);
+        }
+        if (e.getKeyCode()==81) {
+            Rectangle damageBox = p1.attack();
+            System.out.println("p1 attack");
+            if (damageBox.intersects(p2.hitbox())) {
+                p2.health -= p1.getAttackDamage();
+            }
         }
     }
 
