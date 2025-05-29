@@ -18,6 +18,7 @@ public class Character implements ActionListener {
     boolean stunned, IFrames, isGrounded, blocking;
     private Animation animation;
     private Animation animation2;
+    private Animation animation3;
     private BufferedImage temp;
     private Timer timer;
     private Timer timer2;
@@ -85,6 +86,18 @@ public class Character implements ActionListener {
             }
         }
         animation2 = new Animation(images2,50);
+        //luffy Luffy.Walk.jump animation
+        ArrayList<BufferedImage> images3 = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            String filename = "src\\Luffy\\Walk\\jump\\LuffyUp00" + i + ".png";
+            try {
+                images3.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        animation3 = new Animation(images2,50);
     }
 
 
@@ -135,10 +148,11 @@ public class Character implements ActionListener {
         this.animation = animation;
     }
 
-    public BufferedImage getPlayerImage()
-    {
-        if(animationNum == 1){
+    public BufferedImage getPlayerImage() {
+        if (animationNum == 1) {
             return animation.getActiveFrame();  // updated
+        } else if (animationNum == 3 ) {
+            return animation3.getActiveFrame();
         } else {
             return animation2.getActiveFrame();
         }
@@ -225,6 +239,7 @@ public class Character implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==timer) {
+            setAnimationNum(3);
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;
