@@ -17,6 +17,7 @@ public class Character implements ActionListener {
     boolean stunned, IFrames, isGrounded, blocking, facingRight;
     Animation animation;
     private Animation animation2;
+    private Animation animation3;
     private Timer timer;
     private Timer timer2;
     int countdown, countdown2, aWidth, aHeight, attackDamage, animationNum;

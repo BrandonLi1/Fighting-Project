@@ -10,6 +10,6 @@ public class Archer extends Character{
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Archer() {
-        super("Sagittarii", 350, 1, )
+        super("Sagittarii", 350, 1, 1,1,1,1,1,1,1,1,false,false,false, 1);
     }
 }
