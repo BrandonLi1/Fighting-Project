@@ -17,6 +17,7 @@ public class Character implements ActionListener {
     boolean stunned, IFrames, isGrounded, blocking, facingRight;
     Animation animation;
     private Animation animation2;
+    private Animation animation3;
     private Timer timer;
     private Timer timer2;
     int countdown, countdown2, aWidth, aHeight, attackDamage, animationNum;
@@ -29,8 +30,7 @@ public class Character implements ActionListener {
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded,
                      int attackDamage) {
-            timer = new Timer(1,this);
-            timer2 = new Timer(1,this);
+
         timer = new Timer(1,this);
         timer2 = new Timer(1,this);
         countdown = 50;
@@ -52,43 +52,43 @@ public class Character implements ActionListener {
         this.isGrounded=isGrounded;
         temp2=jumpHeight;
         this.attackDamage = attackDamage;
-
-        // walking animation
-        ArrayList<BufferedImage> images = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
-            try {
-                images.add(ImageIO.read(new File(filename)));
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        animation = new Animation(images,50, true);
-        //Luffy.Walk.idle animation
-        ArrayList<BufferedImage> images2 = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
-            try {
-                images2.add(ImageIO.read(new File(filename)));
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        animation2 = new Animation(images2,50, true);
-        //luffy Luffy.Walk.jump animation
-        ArrayList<BufferedImage> images3 = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            String filename = "src\\Luffy\\Walk\\jump\\LuffyUp00" + i + ".png";
-            try {
-                images3.add(ImageIO.read(new File(filename)));
-            }
-            catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        animation3 = new Animation(images2,50, false);
+//
+//        // walking animation
+//        ArrayList<BufferedImage> images = new ArrayList<>();
+//        for (int i = 0; i < 6; i++) {
+//            String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
+//            try {
+//                images.add(ImageIO.read(new File(filename)));
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        animation = new Animation(images,50, true);
+//        //Luffy.Walk.idle animation
+//        ArrayList<BufferedImage> images2 = new ArrayList<>();
+//        for (int i = 0; i < 7; i++) {
+//            String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
+//            try {
+//                images2.add(ImageIO.read(new File(filename)));
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        animation2 = new Animation(images2,50, true);
+//        //luffy Luffy.Walk.jump animation
+//        ArrayList<BufferedImage> images3 = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            String filename = "src\\Luffy\\Walk\\jump\\LuffyUp00" + i + ".png";
+//            try {
+//                images3.add(ImageIO.read(new File(filename)));
+//            }
+//            catch (IOException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        animation3 = new Animation(images2,50, false);
     }
 
 
@@ -140,13 +140,14 @@ public class Character implements ActionListener {
     }
 
     public BufferedImage getPlayerImage() {
-        if (animationNum == 1) {
-            return animation.getActiveFrame();  // updated
-        } else if (animationNum == 3 ) {
-            return animation3.getActiveFrame();
-        } else {
-            return animation2.getActiveFrame();
-        }
+//        if (animationNum == 1) {
+//            return animation.getActiveFrame();  // updated
+//        } else if (animationNum == 3 ) {
+//            return animation3.getActiveFrame();
+//        } else {
+//            return animation2.getActiveFrame();
+//        }
+        return animation.getActiveFrame();
     }
 
 
@@ -231,7 +232,6 @@ public class Character implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==timer) {
-            setAnimationNum(3);
             isGrounded = false;
             yCoord-=jumpHeight;
             countdown-=2;

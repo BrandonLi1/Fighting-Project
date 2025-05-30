@@ -39,9 +39,9 @@ public class Animation implements ActionListener {
             //In other words, this allows our animation to loop
             currentFrame = (currentFrame + 1) % frames.size();
         }
-        if (currentFrame==frames.size()-1 && !loop){
-            stop();
-            System.out.println("stop");
-        }
+//        if (currentFrame==frames.size()-1 && !loop){
+//            stop();
+//            System.out.println("stop");
+//        }
     }
 }

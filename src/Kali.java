@@ -21,7 +21,7 @@ public class Kali extends Character {
                 System.out.println(e.getMessage());
             }
         }
-        animation.stop();
+       //animation.stop();
         attackAnimation = new Animation(images,50, false);
         attackAnimation.stop();
     }

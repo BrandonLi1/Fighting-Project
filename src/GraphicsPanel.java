@@ -138,14 +138,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p1
 
             if (pressedKeys[87]) {
+                p1.setAnimationNum(3);
                 p1.jump();
             }
 
             if (pressedKeys[65]) {
                 p1.moveLeft();
                 p1.faceLeft();
-                directionP1 = false;
                 p1.setAnimationNum(1);
+                directionP1 = false;
+
             }
 
             if (pressedKeys[83]) {
@@ -249,14 +251,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Kali();
+                    p1 = new Luffy();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p2 = new Kali();
+                    p2 = new Luffy();
                     p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
