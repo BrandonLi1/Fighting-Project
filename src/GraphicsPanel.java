@@ -44,7 +44,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls.setEditable(false);
         //this.setCursor(); - make a custom cursor(if time)
         try {
-            healthBar = ImageIO.read(new File("src/Health_Bar000.jpg"));
+            healthBar = ImageIO.read(new File("src\\healthBar\\HUD_Sharp_backplate.png"));
             background = ImageIO.read(new File("src/Backgrounds/background2.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
