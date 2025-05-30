@@ -129,7 +129,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
-            g.drawImage(healthBar, 0, 0, null);
+            g.drawImage(healthBar, 450, 0, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(),(int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 450, 40);
