@@ -283,12 +283,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
                     p1Temp="Luffy";
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\luffyName.png"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\luffyName.png"));
                     p2Temp="Luffy";
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
