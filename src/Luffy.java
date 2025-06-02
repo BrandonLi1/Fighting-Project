@@ -11,6 +11,7 @@ public class Luffy extends Character {
     Animation animation;
     private Animation animation2;
     private Animation animation3;
+    private Animation animation4;
     private Animation attackAnimation;
     private int animationNum;
     ArrayList<BufferedImage> images = new ArrayList<>();
@@ -52,6 +53,17 @@ public class Luffy extends Character {
             }
         }
         animation3 = new Animation(images3,50, true);
+        ArrayList<BufferedImage> images4 = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
+            try {
+                images4.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation4 = new Animation(images4,50, true);
     }
 
     public Animation getAnimation3() {
@@ -66,13 +78,31 @@ public class Luffy extends Character {
     public BufferedImage getPlayerImage() {
         if (animationNum == 1) {
             return animation.getActiveFrame();  // updated
-       } else if (animationNum == 3 ) {
+        } else if (animationNum == 3) {
             return animation3.getActiveFrame();
+        } else if (animationNum == 4){
+            return animation4.getActiveFrame();
         } else {
             return animation2.getActiveFrame();
         }
     }
     public Rectangle attack() {
+        animationNum = 4;
+        setAttack(30, height);
+        animation4.resume();
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), -aWidth, -aHeight);
+        }
+        return new Rectangle((int) (xCoord-width), (int) (yCoord), aWidth, aHeight);
+    }
+    public Rectangle hitbox() { //change cus character is small
+        if (facingRight) {
+            return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        }
+        return new Rectangle((int) xCoord, (int) yCoord, -width, height);
+    }
+
+    /*  public Rectaqngle attack() {
         setAnimation(attackAnimation);
         setAttack(30, height);
         attackAnimation.resume();
@@ -81,5 +111,12 @@ public class Luffy extends Character {
         }
         return new Rectangle((int) (xCoord-width), (int) (yCoord), aWidth, aHeight);
     }
+
+    public Rectangle hitbox() { //change cus character is small
+        if (facingRight) {
+            return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        }
+        return new Rectangle((int) xCoord, (int) yCoord, -width, height);
+    }*/
 }
 
