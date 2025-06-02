@@ -128,13 +128,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(healthBar, 450, 0, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(),(int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
-            g.drawString(String.valueOf(countdown), 450, 40);
+            g.drawString(String.valueOf(countdown), 904, 100);
 
             //p1
 
             if (pressedKeys[87]) {
-                p1.setAnimationNum(3);
-                p1.jump();
+                if(p1.isGrounded){
+                    p1.setAnimationNum(3);
+                    p1.jump();
+
+                }
             }
 
             if (pressedKeys[65]) {
@@ -173,8 +176,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p2 q-light e- heavy zxc-flexq
 
             if (pressedKeys[38]) {
-                if (p2.isGrounded)
-                p2.jump();
+                if (p2.isGrounded){
+                    p2.setAnimationNum(3);
+                    p2.jump();
+                }
             }
 
             if (pressedKeys[37]) {
