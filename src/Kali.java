@@ -8,30 +8,35 @@ import java.util.ArrayList;
 
 public class Kali extends Character {
     private Animation attackAnimation;
-    private Animation idle;
+    private Animation idleAnimation;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Kali() {
         super("Kali", 500, 3, 500, 500, 2, 10, 3, 0, 300, 675, false, false, true, 10);
 
         for (int i = 1; i < 6; i++) {
-            String filename = "src\\Kali\\Attack" + i + ".png";
-                try {
+            String filename = "src/Kali/Attack/Attack" + i + ".png"; //why this null
+            try {
                 images.add(ImageIO.read(new File(filename)));
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
-        //get actual idle animatio wtf man
-        try {
-            idle = new Animation(ImageIO.read(new File("src\\Kali\\Idle\\kaliIdle.png")), 100, false);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        attackAnimation = new Animation(images,50, false);
+        attackAnimation = new Animation(images, 50, false);
         attackAnimation.stop();
-        setAnimation(idle);
+        images=new ArrayList<>();
+
+        for (int i = 1; i < 3; i++) {
+            String filename = "src\\Kali\\Idle\\kaliIdle.png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        idleAnimation = new Animation(images, 100, true);
+        attackAnimation.stop();
+        setAnimation(idleAnimation);
     }
 
     public Rectangle attack() {

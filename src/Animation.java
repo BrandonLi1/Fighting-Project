@@ -18,14 +18,6 @@ public class Animation implements ActionListener {
         this.loop=loop;
     }
 
-    public Animation(BufferedImage frames, int delay, boolean loop) { //for one frame idle
-        this.frames.add(frames);
-        currentFrame = 0;
-        timer = new Timer(delay, this);
-        timer.start();
-        this.loop=loop;
-    }
-
     public BufferedImage getActiveFrame() {
         return frames.get(currentFrame);
     }
@@ -47,9 +39,9 @@ public class Animation implements ActionListener {
             //In other words, this allows our animation to loop
             currentFrame = (currentFrame + 1) % frames.size();
         }
-//        if (currentFrame==frames.size()-1 && !loop){
-//            stop();
-//            System.out.println("stop");
-//        }
+        if (currentFrame==frames.size()-1 && !loop){
+            stop();
+            System.out.println("stop");
+        }
     }
 }

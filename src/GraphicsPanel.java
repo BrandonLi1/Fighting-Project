@@ -14,7 +14,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton startButton, keybindsButton, backButton, kaliButton, saberButton, luffyButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar;
+    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar, p1NameImage, p2NameImage;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -104,20 +104,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             kaliButton.setLocation(300, 100);
             luffyButton.setVisible(true);
             luffyButton.setLocation(600, 100);
-            if (p1!=null && p1.getClass()==Kali.class) {
-                try {
-                    g.drawImage(ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg")), 150, 500, null);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            if (p1!=null) {
+                g.drawImage(p1NameImage, 100, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
             }
-            if (p2!= null && p2.getClass()==Kali.class) {
-                try {
-                    g.drawImage(ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg")), 1000, 500, null);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            if (p2!= null) {
+                g.drawImage(p2NameImage, 1000, 500, null);
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
         } else {
@@ -251,14 +243,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Luffy();
+                    p1 = new Kali();
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p2 = new Luffy();
+                    p2 = new Kali();
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
                     p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -269,19 +263,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             repaint();
         }
         if (source==luffyButton) {
-            System.out.println("luffy clicked");
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
-                    p1 = new Kali();
+                    p1 = new Luffy();
+                    System.out.println("new luffy");
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
-                    System.out.println("luffy image");
-                    p2 = new Kali();
+                    p2 = new Luffy();
                     p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
