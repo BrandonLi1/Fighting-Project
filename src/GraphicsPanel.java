@@ -17,9 +17,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar, p1NameImage, p2NameImage;
     private Timer timer;
     private Timer roundTimer;
+    private Timer holdTimer;
     private Character p1;
     private Character p2;
-    int countdown;
+    int countdown, holdCount=0;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
     boolean[] pressedKeys = new boolean[128];
     private boolean directionP1 = true;
@@ -35,6 +36,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         keybindsButton.setFocusPainted(false);
         timer = new Timer(3, this);
         roundTimer = new Timer(1000, this);
+        holdTimer = new Timer(500, this);
         startWindow=true;
         countdown=180;
         p1Controls=new JTextArea();
@@ -152,6 +154,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP1 = true;
             }
 
+            if (pressedKeys[67]) { //check for mode(transform) holding
+                holdTimer.start();
+            }
+
             //basic attack
 
             /*
@@ -207,6 +213,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         requestFocusInWindow();
         Object source =  e.getSource();
+
+        if (source == holdTimer) {
+            holdCount+=1;
+        }
 
         if (source==roundTimer) {
             countdown--;
@@ -329,6 +339,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (damageBox.intersects(p2.hitbox())) {
                 p2.health -= p1.getAttackDamage();
             }
+        }
+        if (e.getKeyCode()==67) {
+            System.out.println(holdCount);
+            if (holdCount>=3) {
+                //p1.transform();
+            }
+            holdCount=0;
+            holdTimer.restart();
+            holdTimer.stop();
         }
     }
 
