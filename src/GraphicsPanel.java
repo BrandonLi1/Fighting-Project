@@ -131,8 +131,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p1
 
             if (pressedKeys[87]) {
-                p1.setAnimationNum(3);
-                p1.jump();
+                if(p1.isGrounded){
+                    p1.setAnimationNum(3);
+                    p1.jump();
+
+                }
             }
 
             if (pressedKeys[65]) {
@@ -171,8 +174,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p2 q-light e- heavy zxc-flexq
 
             if (pressedKeys[38]) {
-                if (p2.isGrounded)
-                p2.jump();
+                if (p2.isGrounded){
+                    p2.setAnimationNum(3);
+                    p2.jump();
+                }
             }
 
             if (pressedKeys[37]) {
@@ -277,7 +282,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
                     p1 = new Luffy();
-                    System.out.println("new luffy");
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\luffyName.png"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -285,6 +290,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
                     p2 = new Luffy();
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\luffyName.png"));
                     p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
