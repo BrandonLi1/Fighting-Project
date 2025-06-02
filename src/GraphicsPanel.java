@@ -257,7 +257,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setVisible(false);
         }
         if (source==saberButton) {
-           /* if (!p1Picked) {
+           if (!p1Picked) {
                 try {
                     //p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
                     p1Temp="Saber";
@@ -273,7 +273,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-            }*/
+            }
 
             confirmButton.setVisible(true);
             repaint();
@@ -374,8 +374,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         saberButton=new JButton();
         saberButton.setSize(101, 85);
         try {
-            //Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\kaliSelection.jpg"));
-            //saberButton.setIcon(new ImageIcon(img));
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\saberSelection.jpg"));
+            saberButton.setIcon(new ImageIcon(img));
         } catch (Exception e) {
             System.out.println(e);
         }
