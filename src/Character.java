@@ -1,11 +1,7 @@
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.*;
 
 
@@ -169,12 +165,32 @@ public class Character implements ActionListener {
         aWidth = width;
     }
 
-    public Rectangle attack () {
+    public Rectangle attack() {
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, -aHeight);
         }
         return new Rectangle((int) (xCoord-width), (int) yCoord, aWidth, aHeight);
     }
+
+  /*  public Rectangle heavyAttack() {
+
+    }
+
+    public Rectangle special1() {
+
+    }
+
+    public Rectangle special2() {
+
+    }
+
+    public Rectangle special3() {
+
+    }
+
+    public void transform() {
+
+    }*/
 
     public void block() {
         if (isGrounded) {
@@ -261,6 +277,7 @@ public class Character implements ActionListener {
         }
         return new Rectangle((int) xCoord, (int) yCoord, -width, height);
     }
+
 
     public int getAttackDamage() {
         return attackDamage;

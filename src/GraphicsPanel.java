@@ -21,6 +21,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Character p1;
     private Character p2;
     int countdown, holdCount=0;
+    String p1Temp;
+    String p2Temp;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
     boolean[] pressedKeys = new boolean[128];
     private boolean directionP1 = true;
@@ -106,11 +108,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             kaliButton.setLocation(300, 100);
             luffyButton.setVisible(true);
             luffyButton.setLocation(600, 100);
-            if (p1!=null) {
+            if (p1CharacterImage!=null) {
                 g.drawImage(p1NameImage, 100, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
             }
-            if (p2!= null) {
+            if (p2CharacterImage!= null) {
                 g.drawImage(p2NameImage, 1000, 500, null);
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
@@ -253,7 +255,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p1 = new Kali();
+                    p1Temp="Kali";
                     p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -261,9 +263,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
-                    p2 = new Kali();
+                    p2Temp="Kali";
                     p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
-                    p2.setxCoord(1300);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -276,16 +277,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 try {
                     p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
-                    p1 = new Luffy();
-                    System.out.println("new luffy");
+                    p1Temp="Luffy";
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\luffySelectionPlayer.jpg"));
-                    p2 = new Luffy();
-                    p2.setxCoord(1300);
+                    p2Temp="Luffy";
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -297,8 +296,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 p1Picked=true;
                 confirmButton.setVisible(false);
+                if (p1Temp.equals("Kali")) {
+                    p1=new Kali();
+                }
+                if (p1Temp.equals("Luffy")) {
+                    p1=new Luffy();
+                }
             } else {
                 p2Picked=true;
+                if (p2Temp.equals("Kali")) {
+                    p2=new Kali();
+                }
+                if (p2Temp.equals("Luffy")) {
+                    p2=new Luffy();
+                }
+                p2.setxCoord(1300);
             }
             if (p2Picked) {
                 selectionScreen=false;
