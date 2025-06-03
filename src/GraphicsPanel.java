@@ -14,7 +14,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar, p1NameImage, p2NameImage;
+    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
     private Timer timer;
     private Timer roundTimer;
     private Timer holdTimer;
@@ -47,7 +47,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls.setEditable(false);
         //this.setCursor(); - make a custom cursor(if time)
         try {
-            healthBar = ImageIO.read(new File("src\\healthBar\\HUD_Sharp_backplate.png"));
+            healthBar1 = ImageIO.read(new File("src\\healthBar\\health bar 1.png"));
+            healthBar2 = ImageIO.read(new File("src\\healthBar\\health bar 2.png"));
             background = ImageIO.read(new File("src/Backgrounds/background2.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
@@ -125,7 +126,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
-            g.drawImage(healthBar, 450, 0, null);
+            g.setColor(Color.RED);
+            g.fillRect(327,74,480*(p1.getHealth()/p1.getMaxHealth()),52);
+            g.fillRect(577+(480*(p2.getHealth()/p2.getMaxHealth())),74,480*(p2.getHealth()/p2.getMaxHealth()),52);
+            g.setColor(Color.BLUE);
+            g.fillRect(327,124,480,26);
+            g.fillRect(1057,126,480,26);
+            g.setColor(Color.BLACK);
+            g.drawImage(healthBar1, 200, 50, null);
+            g.drawImage(healthBar2, 1050, 50, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(),(int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 904, 100);
