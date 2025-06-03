@@ -1,3 +1,5 @@
+import org.w3c.dom.css.Rect;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, glorpButton, bingusButton, confirmButton;
+    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
     private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
@@ -109,6 +111,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             saberButton.setLocation(300, 100);
             luffyButton.setVisible(true);
             luffyButton.setLocation(600, 100);
+            archerButton.setVisible(true);
+            archerButton.setLocation(900, 100);
             if (p1CharacterImage!=null) {
                 g.drawImage(p1NameImage, 100, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
@@ -141,6 +145,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             //p1
 
+            //W
             if (pressedKeys[87]) {
                 if(p1.isGrounded){
                     p1.setAnimationNum(3);
@@ -149,6 +154,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             }
 
+            //A
             if (pressedKeys[65]) {
                 p1.moveLeft();
                 p1.faceLeft();
@@ -157,10 +163,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             }
 
+            //S
             if (pressedKeys[83]) {
                 p1.block();
             }
 
+            //D
             if (pressedKeys[68]) {
                 p1.moveRight();
                 p1.faceRight();
@@ -168,6 +176,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP1 = true;
             }
 
+            //C
             if (pressedKeys[67]) { //check for mode(transform) holding
                 holdTimer.start();
             }
@@ -184,6 +193,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             // W=87; A=65; S=83; D=68
             //p2 q-light e- heavy zxc-flexq
 
+            //Up Key
             if (pressedKeys[38]) {
                 if (p2.isGrounded){
                     p2.setAnimationNum(3);
@@ -191,6 +201,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             }
 
+            //Left Key
             if (pressedKeys[37]) {
                 p2.moveLeft();
                 p2.faceLeft();
@@ -198,10 +209,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP2 = false;
             }
 
+            //Down Key
             if (pressedKeys[40]) {
                 p2.block();
             }
 
+            //Right Key
             if (pressedKeys[39]) {
                 p2.moveRight();
                 p2.faceRight();
@@ -214,10 +227,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
 
             // basic attack
-            if (pressedKeys[97]) {
-                Rectangle damageBox = p2.attack();
-                if (damageBox.intersects(p1.hitbox())) {
-                        p1.health -= p2.getAttackDamage();
+            if (pressedKeys[81]) {
+                Rectangle damageBox = p1.attack();
+                Rectangle hitbox = p2.hitbox();
+                if (damageBox.intersects(hitbox)) {
+                    System.out.println("hit");
                 }
             }
 
@@ -308,6 +322,27 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             confirmButton.setVisible(true);
             repaint();
         }
+        if (source == archerButton) {
+            if (!p1Picked) {
+                try {
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\archerSelectionPlayer_p1.jpg"));
+                    p1Temp="Archer";
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\archerName.png"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                try {
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\archerSelectionPlayer_p2.jpg"));
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\archerName.png"));
+                    p2Temp="Archer";
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            confirmButton.setVisible(true);
+            repaint();
+        }
         if (source==confirmButton) {
             if (!p1Picked) {
                 p1Picked=true;
@@ -318,6 +353,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p1Temp.equals("Luffy")) {
                     p1=new Luffy();
                 }
+                if (p1Temp.equals("Archer")) {
+                    p1 = new Archer();
+                }
             } else {
                 p2Picked=true;
                 if (p2Temp.equals("Saber")) {
@@ -326,12 +364,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p2Temp.equals("Luffy")) {
                     p2=new Luffy();
                 }
+                if (p2Temp.equals("Archer")) {
+                    p2 = new Archer();
+                }
                 p2.setxCoord(1300);
             }
             if (p2Picked) {
                 selectionScreen=false;
                 saberButton.setVisible(false);
                 luffyButton.setVisible(false);
+                archerButton.setVisible(false);
                 confirmButton.setVisible(false);
             }
         }
@@ -362,11 +404,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2.setAnimationNum(2);
         }
         if (e.getKeyCode()==81) {
-            Rectangle damageBox = p1.attack();
             System.out.println("p1 attack");
-            if (damageBox.intersects(p2.hitbox())) {
-                p2.health -= p1.getAttackDamage();
-            }
+
         }
         if (e.getKeyCode()==67) {
             System.out.println(holdCount);
@@ -402,6 +441,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         add(luffyButton);
         luffyButton.setVisible(false);
 
+        archerButton=new JButton();
+        archerButton.setSize(92, 85);
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\archerSelection.png"));
+            archerButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(archerButton);
+        archerButton.setVisible(false);
+
         confirmButton=new JButton("Confirm");
         add(confirmButton);
         confirmButton.setBounds(800, 800, 200, 100);
@@ -409,6 +459,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
         saberButton.addActionListener(this);
         luffyButton.addActionListener(this);
+        archerButton.addActionListener(this);
         System.out.println("action listener added");
         confirmButton.addActionListener(this);
     }
