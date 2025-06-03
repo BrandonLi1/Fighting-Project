@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-
 public class Luffy extends Character {
     Animation animation;
     private Animation animation2;

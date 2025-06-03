@@ -134,6 +134,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             //p1
 
+            //W
             if (pressedKeys[87]) {
                 if(p1.isGrounded){
                     p1.setAnimationNum(3);
@@ -142,6 +143,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             }
 
+            //A
             if (pressedKeys[65]) {
                 p1.moveLeft();
                 p1.faceLeft();
@@ -150,10 +152,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             }
 
+            //S
             if (pressedKeys[83]) {
                 p1.block();
             }
 
+            //D
             if (pressedKeys[68]) {
                 p1.moveRight();
                 p1.faceRight();
@@ -161,6 +165,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP1 = true;
             }
 
+            //C
             if (pressedKeys[67]) { //check for mode(transform) holding
                 holdTimer.start();
             }
@@ -177,6 +182,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             // W=87; A=65; S=83; D=68
             //p2 q-light e- heavy zxc-flexq
 
+            //Up Key
             if (pressedKeys[38]) {
                 if (p2.isGrounded){
                     p2.setAnimationNum(3);
@@ -184,6 +190,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
             }
 
+            //Left Key
             if (pressedKeys[37]) {
                 p2.moveLeft();
                 p2.faceLeft();
@@ -191,10 +198,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP2 = false;
             }
 
+            //Down Key
             if (pressedKeys[40]) {
                 p2.block();
             }
 
+            //Right Key
             if (pressedKeys[39]) {
                 p2.moveRight();
                 p2.faceRight();
@@ -207,6 +216,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
 
             // basic attack
+            //NumPad 1
             if (pressedKeys[97]) {
                 Rectangle damageBox = p2.attack();
                 if (damageBox.intersects(p1.hitbox())) {
