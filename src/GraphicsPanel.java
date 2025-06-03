@@ -1,3 +1,5 @@
+import org.w3c.dom.css.Rect;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -216,11 +218,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
 
             // basic attack
-            //NumPad 1
-            if (pressedKeys[97]) {
-                Rectangle damageBox = p2.attack();
-                if (damageBox.intersects(p1.hitbox())) {
-                        p1.health -= p2.getAttackDamage();
+            if (pressedKeys[81]) {
+                Rectangle damageBox = p1.attack();
+                Rectangle hitbox = p2.hitbox();
+                if (damageBox.intersects(hitbox)) {
+                    System.out.println("hit");
                 }
             }
 
@@ -393,11 +395,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2.setAnimationNum(2);
         }
         if (e.getKeyCode()==81) {
-            Rectangle damageBox = p1.attack();
             System.out.println("p1 attack");
-            if (damageBox.intersects(p2.hitbox())) {
-                p2.health -= p1.getAttackDamage();
-            }
+
         }
         if (e.getKeyCode()==67) {
             System.out.println(holdCount);
