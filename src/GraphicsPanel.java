@@ -36,7 +36,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         backButton=new JButton("back");
         startButton.setFocusPainted(false);
         keybindsButton.setFocusPainted(false);
-        timer = new Timer(3, this);
+        timer = new Timer(10, this);
         roundTimer = new Timer(1000, this);
         holdTimer = new Timer(500, this);
         startWindow=true;
@@ -259,17 +259,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         if (source==saberButton) {
            if (!p1Picked) {
                 try {
-                    //p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
                     p1Temp="Saber";
-                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
-                try {
-                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\kaliSelectionPlayer.jpg"));
+               try {
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
                     p2Temp="Saber";
-                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\kaliName.jpg"));
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -303,16 +303,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (!p1Picked) {
                 p1Picked=true;
                 confirmButton.setVisible(false);
-                if (p1Temp.equals("Kali")) {
-                   // p1=new Kali();
+                if (p1Temp.equals("Saber")) {
+                   p1 = new Saber();
                 }
                 if (p1Temp.equals("Luffy")) {
                     p1=new Luffy();
                 }
             } else {
                 p2Picked=true;
-                if (p2Temp.equals("Kali")) {
-                  //  p2=new Kali();
+                if (p2Temp.equals("Saber")) {
+                  p2=new Saber();
                 }
                 if (p2Temp.equals("Luffy")) {
                     p2=new Luffy();
@@ -372,7 +372,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
     private void selectionButtons() {
         saberButton=new JButton();
-        saberButton.setSize(101, 85);
+        saberButton.setSize(101, 101);
         try {
             Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\saberSelection.jpg"));
             saberButton.setIcon(new ImageIcon(img));

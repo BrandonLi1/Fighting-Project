@@ -53,6 +53,7 @@ public class Luffy extends Character {
             }
         }
         animation3 = new Animation(images3,50, true);
+        //jump
         ArrayList<BufferedImage> images4 = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
             String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
@@ -64,6 +65,7 @@ public class Luffy extends Character {
             }
         }
         animation4 = new Animation(images4,50, true);
+        //attack
     }
 
     public Animation getAnimation3() {
