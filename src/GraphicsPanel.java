@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, glorpButton, bingusButton, confirmButton;
+    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
     private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar, p1NameImage, p2NameImage;
@@ -108,6 +108,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             saberButton.setLocation(300, 100);
             luffyButton.setVisible(true);
             luffyButton.setLocation(600, 100);
+            archerButton.setVisible(true);
+            archerButton.setLocation(900, 100);
             if (p1CharacterImage!=null) {
                 g.drawImage(p1NameImage, 100, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
@@ -299,6 +301,27 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             confirmButton.setVisible(true);
             repaint();
         }
+        if (source == archerButton) {
+            if (!p1Picked) {
+                try {
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\archerSelectionPlayer_p1.jpg"));
+                    p1Temp="Archer";
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\archerName.png"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                try {
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\archerSelectionPlayer_p2.jpg"));
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\archerName.png"));
+                    p2Temp="Archer";
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            confirmButton.setVisible(true);
+            repaint();
+        }
         if (source==confirmButton) {
             if (!p1Picked) {
                 p1Picked=true;
@@ -309,6 +332,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p1Temp.equals("Luffy")) {
                     p1=new Luffy();
                 }
+                if (p1Temp.equals("Archer")) {
+                    p1 = new Archer();
+                }
             } else {
                 p2Picked=true;
                 if (p2Temp.equals("Saber")) {
@@ -317,12 +343,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p2Temp.equals("Luffy")) {
                     p2=new Luffy();
                 }
+                if (p2Temp.equals("Archer")) {
+                    p2 = new Archer();
+                }
                 p2.setxCoord(1300);
             }
             if (p2Picked) {
                 selectionScreen=false;
                 saberButton.setVisible(false);
                 luffyButton.setVisible(false);
+                archerButton.setVisible(false);
                 confirmButton.setVisible(false);
             }
         }
@@ -393,6 +423,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         add(luffyButton);
         luffyButton.setVisible(false);
 
+        archerButton=new JButton();
+        archerButton.setSize(92, 85);
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\archerSelection.png"));
+            archerButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(archerButton);
+        archerButton.setVisible(false);
+
         confirmButton=new JButton("Confirm");
         add(confirmButton);
         confirmButton.setBounds(800, 800, 200, 100);
@@ -400,6 +441,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
         saberButton.addActionListener(this);
         luffyButton.addActionListener(this);
+        archerButton.addActionListener(this);
         System.out.println("action listener added");
         confirmButton.addActionListener(this);
     }

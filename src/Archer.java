@@ -15,7 +15,7 @@ public class Archer extends Character{
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Archer() {
-        super("Sagittarii", 350, 1, 130, 150, 4, 13, 1, 0, 300, 675, false, false, true, 6);
+        super("Archer", 350, 1, 130, 150, 4, 13, 1, 0, 300, 675, false, false, true, 6);
 
         //Archer attack
         for (int i = 11; i < 22; i++) {
