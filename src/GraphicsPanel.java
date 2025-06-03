@@ -109,7 +109,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             luffyButton.setVisible(true);
             luffyButton.setLocation(600, 100);
             if (p1CharacterImage!=null) {
-                g.drawImage(p1NameImage, 100, 500, null);
+                g.drawImage(p1NameImage, 150, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
             }
             if (p2CharacterImage!= null) {
@@ -229,8 +229,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             countdown--;
             if (countdown<=0) {
                 //placeholder for round end
-                System.exit(0);
 
+
+                System.exit(0);
             }
         }
         if (source==startButton) {

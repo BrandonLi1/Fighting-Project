@@ -12,7 +12,7 @@ public class Saber extends Character{
         super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
-            String filename = "src\\Saber\\Idle\\idle" + i + ".png";
+            String filename = "src\\Saber\\Idle\\idle" + i + ".jpg";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -20,9 +20,10 @@ public class Saber extends Character{
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation2 = new Animation(images,50, true);
+        animation2 = new Animation(images,100, true);
+        images = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            String filename = "src\\Saber\\Jump\\jump" + i + ".png";
+            String filename = "src\\Saber\\Jump\\jump" + i + ".jpg";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }

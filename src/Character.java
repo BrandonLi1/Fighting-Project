@@ -26,7 +26,7 @@ public class Character implements ActionListener {
                      boolean stunned, boolean IFrames, boolean isGrounded,
                      int attackDamage) {
 
-        timer = new Timer(1,this);
+        timer = new Timer(5,this);
         countdown = 50;
         countdown2 = 50;
         facingRight = true;
@@ -211,12 +211,12 @@ public class Character implements ActionListener {
         if (e.getSource()==timer && countdown>0) {
             isGrounded = false;
             yCoord-=jumpHeight;
-            countdown-=2;
+            countdown-=5;
             jumpHeight-= 0.2;
         }
         if (countdown<=0) {
             yCoord += jumpHeight + 0.2;
-            countdown2 -= 2;
+            countdown2 -= 5;
             if(countdown2 <= 0){
                 jumpHeight=temp2;
                 countdown2=100;
