@@ -12,10 +12,11 @@ public class Archer extends Character{
     private Animation deathAnimation;
     private Animation hurtAnimation;
     private Animation idleAnimation;
+    private int animationNum;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Archer() {
-        super("Sagittarii", 350, 1, 130, 150, 4, 13, 1, 0, 300, 675, false, false, true, 6);
+        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6);
 
         //Archer attack
         for (int i = 11; i < 22; i++) {
@@ -76,7 +77,7 @@ public class Archer extends Character{
         }
         hurtAnimation = new Animation(images, 50, false);
 
-        animation.stop();
+        //animation.stop();
         attackAnimation.stop();
     }
 
@@ -88,5 +89,27 @@ public class Archer extends Character{
             return new Rectangle((int) (xCoord + width), (int) (yCoord), -aWidth, -aHeight);
         }
         return new Rectangle((int) (xCoord + width), (int) (yCoord), aWidth, aHeight);
+    }
+
+    @Override
+    public void setAnimationNum(int num){
+        animationNum = num;
+    }
+
+    @Override
+    public BufferedImage getPlayerImage() {
+        if (animationNum == 1) {
+            return runAnimation.getActiveFrame();
+        } else if (animationNum == 3) {
+            return idleAnimation.getActiveFrame();
+        } else if (animationNum == 4) {
+            return attackAnimation.getActiveFrame();
+        } else {
+            return idleAnimation.getActiveFrame();
+        }
+    }
+
+    public BufferedImage deathAnimation() {
+        return deathAnimation.getActiveFrame();
     }
 }

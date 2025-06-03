@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, comboCounter, currentBasic;
+    int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth;
     double jumpHeight, xCoord, yCoord, meter;
     boolean stunned, IFrames, isGrounded, blocking, facingRight;
     Animation animation;
@@ -28,7 +28,8 @@ public class Character implements ActionListener {
 
         timer = new Timer(5,this);
         countdown = 50;
-        countdown2 = 50;
+        countdown2 = 50;;
+        maxHealth = health;
         facingRight = true;
         this.name=name;
         this.health=health;
@@ -53,6 +54,13 @@ public class Character implements ActionListener {
     public Rectangle hitBox() {
         Rectangle rect = new Rectangle((int) xCoord, (int) yCoord, width, height);
         return rect;
+    }
+    public int getHealth(){
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public void setIFrames(boolean IFrames) {
