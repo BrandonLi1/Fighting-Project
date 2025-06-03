@@ -90,18 +90,15 @@ public class Luffy extends Character {
     }
     public Rectangle attack() {
         animationNum = 4;
-        setAttack(30, height);
+        setAttack(100, height);
         animation4.resume();
         if (facingRight) {
-            return new Rectangle((int) (xCoord+width), (int) (yCoord), -aWidth, -aHeight);
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord-width), (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
     }
     public Rectangle hitbox() { //change cus character is small
-        if (facingRight) {
-            return new Rectangle((int) xCoord, (int) yCoord, width, height);
-        }
-        return new Rectangle((int) xCoord, (int) yCoord, -width, height);
+        return new Rectangle((int) xCoord, (int) yCoord, width, height);
     }
 
     /*  public Rectaqngle attack() {
