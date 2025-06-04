@@ -96,6 +96,10 @@ public class Saber extends Character{
        return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
    }
 
+   public Rectangle hitbox() { //change cus character is small
+        return new Rectangle((int) xCoord, (int) yCoord, width, height);
+   }
+
    /* public Rectangle hitbox() {
 
     }*/

@@ -10,7 +10,6 @@ public class Luffy extends Character {
     private Animation animation2;
     private Animation animation3;
     private Animation animation4;
-    private Animation attackAnimation;
     private int animationNum;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
