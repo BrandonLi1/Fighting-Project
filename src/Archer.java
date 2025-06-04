@@ -13,10 +13,12 @@ public class Archer extends Character{
     private Animation hurtAnimation;
     private Animation idleAnimation;
     private int animationNum;
+    private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Archer() {
         super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6);
+        isAttacking = false;
 
         //Archer attack
         for (int i = 11; i < 22; i++) {
@@ -81,16 +83,6 @@ public class Archer extends Character{
         //attackAnimation.stop();
     }
 
-    public Rectangle attack() {
-        setAnimation(attackAnimation);
-        setAttack(30, height);
-        attackAnimation.resume();
-        if (facingRight) {
-            return new Rectangle((int) (xCoord + width), (int) (yCoord), -aWidth, -aHeight);
-        }
-        return new Rectangle((int) (xCoord + width), (int) (yCoord), aWidth, aHeight);
-    }
-
     @Override
     public void setAnimationNum(int num){
         animationNum = num;
@@ -98,6 +90,15 @@ public class Archer extends Character{
 
     @Override
     public BufferedImage getPlayerImage() {
+        if (isAttacking) {
+            if (!attackAnimation.isRunning()) {
+                isAttacking = false;
+                animationNum = 2;
+            } else {
+                return attackAnimation.getActiveFrame();
+            }
+        }
+
         if (animationNum == 1) {
             return runAnimation.getActiveFrame();
         } else if (animationNum == 3) {
@@ -113,5 +114,24 @@ public class Archer extends Character{
 
     public BufferedImage deathAnimation() {
         return deathAnimation.getActiveFrame();
+    }
+
+    public Rectangle attack() {
+        if (!isAttacking) {
+            isAttacking = true;
+            animationNum = 4;
+            attackAnimation.reset();
+            attackAnimation.resume();
+        }
+
+        setAttack(100, height);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+        }
+        return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+    }
+
+    public Rectangle hitbox() { //change cus character is small
+        return new Rectangle((int) xCoord, (int) yCoord, width, height);
     }
 }
