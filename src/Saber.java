@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Saber extends Character{
-    private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7;
-    private boolean isAttacking;
+public class Saber extends Character implements switchAttack {
+    private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
+    private int restart=0;
 
     public Saber() {
         super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 2, 10);
@@ -56,7 +56,7 @@ public class Saber extends Character{
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images,50, false);
+        animation4 = new Animation(images,50, true);
         images = new ArrayList<>();
         for (int i=0; i<2; i++) {
             String filename = "src\\Saber\\Block\\block1.png";
@@ -108,6 +108,21 @@ public class Saber extends Character{
        }
 
        setAttack(100, height);
+       setAnimationNum(4);
+       if (restart==0) {
+           animation4.resume();
+           restart++;
+       }
+       setAttack(100, height);
+       if (animation.getCurrentFrame()==animation4.getFrames().size()-1) {
+           restart=0;
+//           if (animation4!=attack2) {
+//               animation4 = attack2;
+//           } else {
+//               animation4 = attack1;
+//           }
+           animation4.setCurrentFrame(0);
+       }
        if (facingRight) {
            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
        }
@@ -117,6 +132,16 @@ public class Saber extends Character{
    public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
    }
+
+    @Override
+    public void switchAttack() {
+        if (animation4 != attack2) {
+            animation4 = attack2;
+        } else {
+            animation4 = attack1;
+        }
+        animation4.setCurrentFrame(0);
+    }
 
    /* public Rectangle hitbox() {
 
