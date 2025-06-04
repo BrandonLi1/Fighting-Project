@@ -39,7 +39,7 @@ public class Archer extends Character{
                 System.out.println(e.getMessage());
             }
         }
-        runAnimation = new Animation(images, 50, false);
+        runAnimation = new Animation(images, 50, true);
         images = new ArrayList<>();
 
         //Archer idle
@@ -78,7 +78,7 @@ public class Archer extends Character{
         hurtAnimation = new Animation(images, 50, false);
 
         //animation.stop();
-        attackAnimation.stop();
+        //attackAnimation.stop();
     }
 
     public Rectangle attack() {
@@ -101,6 +101,8 @@ public class Archer extends Character{
         if (animationNum == 1) {
             return runAnimation.getActiveFrame();
         } else if (animationNum == 3) {
+            //needs a jump animation
+            //using idle animation for now
             return idleAnimation.getActiveFrame();
         } else if (animationNum == 4) {
             return attackAnimation.getActiveFrame();
