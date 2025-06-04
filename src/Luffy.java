@@ -11,12 +11,14 @@ public class Luffy extends Character {
     private Animation animation3;
     private Animation animation4;
     private int animationNum;
+    private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 300, 1200);
+        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10,2, 10);
+        isAttacking = false;
+
         ArrayList<BufferedImage> images = new ArrayList<>();
-        setAttack(100, height);
         for (int i = 0; i < 5; i++) {
             String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
             try {
@@ -62,7 +64,7 @@ public class Luffy extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images4,50, true);
+        animation4 = new Animation(images4,50, false);
         //attack
     }
 
@@ -74,8 +76,18 @@ public class Luffy extends Character {
     public void setAnimationNum(int num){
         animationNum = num;
     }
+
     @Override
     public BufferedImage getPlayerImage() {
+        if (isAttacking) {
+            if (!animation4.isRunning()) {
+                isAttacking = false;
+                animationNum = 2;
+            } else {
+                return animation4.getActiveFrame();
+            }
+        }
+
         if (animationNum == 1) {
             return animation.getActiveFrame();  // updated
         } else if (animationNum == 3) {
@@ -86,11 +98,17 @@ public class Luffy extends Character {
             return animation2.getActiveFrame();
         }
     }
+
     @Override
     public Rectangle attack() {
-        animationNum = 4;
+        if (!isAttacking) {
+            isAttacking = true;
+            animationNum = 4;
+            animation4.reset();
+            animation4.resume();
+        }
 
-        animation4.resume();
+        setAttack(100, height);
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
