@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Saber extends Character{
-    private Animation animation, animation1, animation2, animation3, animation4;
+    private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7;
 
     public Saber() {
         super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
         ArrayList<BufferedImage> images = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 9; i++) {
             String filename = "src\\Saber\\Walk\\walk" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
@@ -43,6 +43,28 @@ public class Saber extends Character{
             }
         }
         animation3 = new Animation(images,200, false);
+        images = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            String filename = "src\\Saber\\Attack\\attack" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation4 = new Animation(images,50, true);
+        images = new ArrayList<>();
+        for (int i=0; i<2; i++) {
+            String filename = "src\\Saber\\Block\\block1.png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation5 = new Animation(images, 50, true);
     }
 
     @Override
@@ -57,16 +79,24 @@ public class Saber extends Character{
             return animation3.getActiveFrame();
         } else if (animationNum == 4){
             return animation4.getActiveFrame();
-        } else {
+        } else if (animationNum==5) {
+            return animation5.getActiveFrame();
+        }else {
             return animation2.getActiveFrame();
         }
     }
 
-   /* public Rectangle attack() {
+   public Rectangle attack() {
+       animationNum = 4;
+       setAttack(100, height);
+       animation4.resume();
+       if (facingRight) {
+           return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+       }
+       return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+   }
 
-    }
-
-    public Rectangle hitbox() {
+   /* public Rectangle hitbox() {
 
     }*/
 }

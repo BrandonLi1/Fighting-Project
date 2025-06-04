@@ -454,6 +454,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         archerButton.setVisible(false);
 
         confirmButton=new JButton("Confirm");
+        confirmButton.setFocusPainted(false);
         add(confirmButton);
         confirmButton.setBounds(800, 800, 200, 100);
         confirmButton.setVisible(false);
