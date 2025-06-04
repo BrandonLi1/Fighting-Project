@@ -7,9 +7,12 @@ import java.util.ArrayList;
 
 public class Saber extends Character{
     private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7;
+    private boolean isAttacking;
 
     public Saber() {
-        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
+        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 2, 10);
+        isAttacking = false;
+
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             String filename = "src\\Saber\\Walk\\walk" + i + ".png";
@@ -53,7 +56,7 @@ public class Saber extends Character{
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images,50, true);
+        animation4 = new Animation(images,50, false);
         images = new ArrayList<>();
         for (int i=0; i<2; i++) {
             String filename = "src\\Saber\\Block\\block1.png";
@@ -71,8 +74,18 @@ public class Saber extends Character{
     public void setAnimationNum(int num){
         animationNum = num;
     }
+
     @Override
     public BufferedImage getPlayerImage() {
+        if (isAttacking) {
+            if (!animation4.isRunning()) {
+                isAttacking = false;
+                animationNum = 2;
+            } else {
+                return animation4.getActiveFrame();
+            }
+        }
+
         if (animationNum == 1) {
             return animation.getActiveFrame();  // updated
         } else if (animationNum == 3) {
@@ -85,19 +98,24 @@ public class Saber extends Character{
             return animation2.getActiveFrame();
         }
     }
-
+    @Override
    public Rectangle attack() {
-       animationNum = 4;
+       if (!isAttacking) {
+           isAttacking = true;
+           animationNum = 4;
+           animation4.reset();
+           animation4.resume();
+       }
+
        setAttack(100, height);
-       animation4.resume();
        if (facingRight) {
            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
        }
-       return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+       return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
    }
 
    public Rectangle hitbox() { //change cus character is small
-        return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
    }
 
    /* public Rectangle hitbox() {

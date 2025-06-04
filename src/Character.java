@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth;
+    int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth, normalD, heavyD;
     double jumpHeight, xCoord, yCoord, meter;
     boolean stunned, IFrames, isGrounded, blocking, facingRight;
     Animation animation;
@@ -24,7 +24,7 @@ public class Character implements ActionListener {
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded,
-                     int attackDamage) {
+                     int attackDamage, int normalD, int heavyD) {
 
         timer = new Timer(5,this);
         countdown = 50;
@@ -47,6 +47,8 @@ public class Character implements ActionListener {
         this.isGrounded=isGrounded;
         temp2=jumpHeight;
         this.attackDamage = attackDamage;
+        this.normalD = normalD;
+        this.heavyD = heavyD;
 
     }
 
@@ -139,8 +141,11 @@ public class Character implements ActionListener {
     }
 
     public Rectangle attack() {
+        setAnimationNum(4);
+        setAttack(100, height);
+        animation.resume();
         if (facingRight) {
-            return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, -aHeight);
+            return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, aHeight);
         }
         return new Rectangle((int) (xCoord-width), (int) yCoord, aWidth, aHeight);
     }
