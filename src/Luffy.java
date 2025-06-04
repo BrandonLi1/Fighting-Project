@@ -88,7 +88,6 @@ public class Luffy extends Character {
     public Rectangle attack() {
         animationNum = 4;
         setAttack(100, height);
-        animation4.resume();
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
