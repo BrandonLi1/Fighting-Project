@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Archer extends Character{
@@ -17,7 +16,7 @@ public class Archer extends Character{
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Archer() {
-        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6);
+        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6, 2, 10);
         isAttacking = false;
 
         //Archer attack
