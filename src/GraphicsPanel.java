@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
@@ -178,15 +181,29 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             // basic attack
             if (pressedKeys[81]) {
-                Rectangle damageBox = p1.attack();
-                Rectangle hitbox = p2.hitbox();
-                if (damageBox.intersects(hitbox) && p1AttackCount==0) {
-                    System.out.println("hit");
-                    p2.setHealth(p2.getHealth()-p1.attackDamage);
-                    System.out.println(p2.getHealth());
-                    System.out.println(p1.attackDamage);
-                    p1AttackCount++;
-                }
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                executor.schedule(() -> {
+                    Rectangle damageBox = p1.attack();
+                    Rectangle hitbox = p2.hitbox();
+                    if (damageBox.intersects(hitbox)) {
+
+                        System.out.println("hit");
+                    }
+                    executor.shutdown();
+                }, p1.normalD, TimeUnit.MILLISECONDS);
+            }
+
+            if(pressedKeys[120]) {
+                System.out.println("Before delay");
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                executor.schedule(() -> {
+                    Rectangle damageBox = p1.attack();
+                    Rectangle hitbox = p2.hitbox();
+                    if (damageBox.intersects(hitbox)) {
+                        System.out.println("hit");
+                    }
+                    executor.shutdown();
+                }, p1.heavyD, TimeUnit.MILLISECONDS);
             }
 
             //C
@@ -428,7 +445,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         }
         if (e.getKeyCode()==100) {
             System.out.println("p2 attack");
-            p2AttackCount=0;
         }
         if (e.getKeyCode()==67) {
             System.out.println(holdCount);
