@@ -22,7 +22,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Timer holdTimer;
     private Character p1;
     private Character p2;
-    int countdown, holdCount=0, p1AttackCount, p2AttackCount;
+    int countdown, holdCount=0, p1AttackCount;
     String p1Temp;
     String p2Temp;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
@@ -236,18 +236,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 directionP2 = true;
             }
 
-            if (pressedKeys[100]) {
-                Rectangle damageBox = p2.attack();
-                Rectangle hitbox = p1.hitbox();
-                if (damageBox.intersects(hitbox) && p2AttackCount==0) {
-                    System.out.println("hit");
-                    p1.setHealth(p1.getHealth()-p2.attackDamage);
-                    System.out.println(p1.getHealth());
-                    System.out.println(p2.attackDamage);
-                    p2AttackCount++;
-                }
-            }
-
             p1.checkGrounded();
             p2.checkGrounded();
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
@@ -425,10 +413,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         if (e.getKeyCode()==81) {
             System.out.println("p1 attack");
             p1AttackCount=0;
-        }
-        if (e.getKeyCode()==100) {
-            System.out.println("p2 attack");
-            p2AttackCount=0;
+            p1.attack();
         }
         if (e.getKeyCode()==67) {
             System.out.println(holdCount);

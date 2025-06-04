@@ -92,10 +92,10 @@ public class Luffy extends Character {
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+        return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
     }
     public Rectangle hitbox() { //change cus character is small
-        return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
     }
 
     /*  public Rectaqngle attack() {

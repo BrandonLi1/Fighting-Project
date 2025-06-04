@@ -139,8 +139,11 @@ public class Character implements ActionListener {
     }
 
     public Rectangle attack() {
+        setAnimationNum(4);
+        setAttack(100, height);
+        animation.resume();
         if (facingRight) {
-            return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, -aHeight);
+            return new Rectangle((int) (xCoord+width), (int) yCoord, -aWidth, aHeight);
         }
         return new Rectangle((int) (xCoord-width), (int) yCoord, aWidth, aHeight);
     }

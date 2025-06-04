@@ -85,7 +85,7 @@ public class Saber extends Character{
             return animation2.getActiveFrame();
         }
     }
-
+    @Override
    public Rectangle attack() {
        animationNum = 4;
        setAttack(100, height);
@@ -93,11 +93,11 @@ public class Saber extends Character{
        if (facingRight) {
            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
        }
-       return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+       return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
    }
 
    public Rectangle hitbox() { //change cus character is small
-        return new Rectangle((int) xCoord, (int) yCoord, width, height);
+        return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
    }
 
    /* public Rectangle hitbox() {
