@@ -9,7 +9,7 @@ public class Saber extends Character{
     private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7;
 
     public Saber() {
-        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
+        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 300, 1200);
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             String filename = "src\\Saber\\Walk\\walk" + i + ".png";

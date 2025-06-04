@@ -14,8 +14,9 @@ public class Luffy extends Character {
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
+        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 300, 1200);
         ArrayList<BufferedImage> images = new ArrayList<>();
+        setAttack(100, height);
         for (int i = 0; i < 5; i++) {
             String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
             try {
@@ -85,9 +86,10 @@ public class Luffy extends Character {
             return animation2.getActiveFrame();
         }
     }
+    @Override
     public Rectangle attack() {
         animationNum = 4;
-        setAttack(100, height);
+
         animation4.resume();
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
