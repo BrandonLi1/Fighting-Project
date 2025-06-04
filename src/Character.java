@@ -91,6 +91,10 @@ public class Character implements ActionListener {
         this.yCoord = yCoord;
     }
 
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
