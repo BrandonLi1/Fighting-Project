@@ -219,12 +219,12 @@ public class Character implements ActionListener {
         if (e.getSource()==timer && countdown>0) {
             isGrounded = false;
             yCoord-=jumpHeight;
-            countdown-=5;
+            countdown-=3;
             jumpHeight-= 0.2;
         }
         if (countdown<=0) {
             yCoord += jumpHeight + 0.2;
-            countdown2 -= 5;
+            countdown2 -= 3;
             if(countdown2 <= 0){
                 jumpHeight=temp2;
                 countdown2=100;

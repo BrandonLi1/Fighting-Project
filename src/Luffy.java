@@ -27,7 +27,7 @@ public class Luffy extends Character {
             }
         }
         animation = new Animation(images,50, true);
-        //Luffy.Walk.idle animation
+        //Luffy.Saber.Walk.idle animation
         ArrayList<BufferedImage> images2 = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
@@ -39,7 +39,7 @@ public class Luffy extends Character {
             }
         }
         animation2 = new Animation(images2,50, true);
-        //luffy Luffy.Walk.jump animation
+        //luffy Luffy.Saber.Walk.jump animation
         ArrayList<BufferedImage> images3 = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             String filename = "src\\Luffy\\Walk\\jump\\LuffyUp00" + i + ".png";

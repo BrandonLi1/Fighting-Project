@@ -132,7 +132,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             g.setColor(Color.RED);
             g.fillRect(327,74,480*(p1.getHealth()/p1.getMaxHealth()),52);
-            g.fillRect(577+(480*(p2.getHealth()/p2.getMaxHealth())),74,480*(p2.getHealth()/p2.getMaxHealth()),52);
+            g.fillRect(1057+(480*(1-p2.getHealth()/p2.getMaxHealth())),74,480*(p2.getHealth()/p2.getMaxHealth()),52);
             g.setColor(Color.BLUE);
             g.fillRect(327,124,480,26);
             g.fillRect(1057,126,480,26);

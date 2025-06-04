@@ -9,10 +9,21 @@ public class Saber extends Character{
     private Animation animation, animation1, animation2, animation3, animation4;
 
     public Saber() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
+        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10);
         ArrayList<BufferedImage> images = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            String filename = "src\\Saber\\Walk\\walk" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation = new Animation(images,50, true);
+        images = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
-            String filename = "src\\Saber\\Idle\\idle" + i + ".jpg";
+            String filename = "src\\Saber\\Idle\\idle" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -23,7 +34,7 @@ public class Saber extends Character{
         animation2 = new Animation(images,100, true);
         images = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
-            String filename = "src\\Saber\\Jump\\jump" + i + ".jpg";
+            String filename = "src\\Saber\\Jump\\jump" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -31,7 +42,7 @@ public class Saber extends Character{
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation3 = new Animation(images,50, true);
+        animation3 = new Animation(images,200, false);
     }
 
     @Override
