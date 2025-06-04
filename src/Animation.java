@@ -32,6 +32,14 @@ public class Animation implements ActionListener {
         timer.start();
     }
 
+    public void reset() {
+        currentFrame = 0;
+    }
+
+    public boolean isRunning() {
+        return timer.isRunning();
+    }
+
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof Timer) {
             //This advances the animation to the next frame
