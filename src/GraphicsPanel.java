@@ -427,6 +427,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         if (e.getKeyCode()==83) {
             p1.setBlocking(false);
         }
+        if (e.getKeyCode()==40) {
+            p2.setBlocking(false);
+        }
     }
 
     private void selectionButtons() {
