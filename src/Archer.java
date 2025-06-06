@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Archer extends Character{
@@ -133,7 +132,7 @@ public class Archer extends Character{
         return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
     }
 
-    public Rectangle hitbox() { //change cus character is small
+    public Rectangle hitbox() {
         return new Rectangle((int) xCoord, (int) yCoord, width, height);
     }
 }
