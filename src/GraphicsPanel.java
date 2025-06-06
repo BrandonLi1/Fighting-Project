@@ -187,18 +187,19 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 if (!p1Attcking) {
                     p1Attcking = true;
-                    executorService.schedule(() -> {
-                        Rectangle damageBox = p1.attack();
-                        Rectangle hitbox = p2.hitbox();
-                        if (damageBox.intersects(hitbox)) {
-                            System.out.println("hit");
-                            p2.setHealth(p2.getHealth() - p1.attackDamage);
-                            System.out.println(p2.getHealth());
-                            System.out.println(p1.attackDamage);
+                    Rectangle damageBox = p1.attack();
+                    Rectangle hitbox = p2.hitbox();
+                    if (damageBox.intersects(hitbox)) {
+                        System.out.println("hit");
+                        p2.setHealth(p2.getHealth() - p1.attackDamage);
+                        System.out.println(p2.getHealth());
+                        System.out.println(p1.attackDamage);
 
-                        }
+                    }
+                    executorService.schedule(() -> {
+
                         p1Attcking = false;
-                    }, 1, TimeUnit.SECONDS);
+                    }, p1.normalD, TimeUnit.MILLISECONDS);
 
                 executorService.shutdown();
                 }
@@ -256,18 +257,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 if (!p2Attacking) {
                     p2Attacking = true;
+                    Rectangle damageBox = p2.attack();
+                    Rectangle hitbox = p1.hitbox();
+                    if (damageBox.intersects(hitbox)) {
+                        System.out.println("hit");
+                        p1.setHealth(p1.getHealth() - p2.attackDamage);
+                        System.out.println(p1.getHealth());
+                        System.out.println(p2.attackDamage);
+                    }
                     executorService.schedule(() -> {
 
-                        Rectangle damageBox = p2.attack();
-                        Rectangle hitbox = p1.hitbox();
-                        if (damageBox.intersects(hitbox)) {
-                            System.out.println("hit");
-                            p1.setHealth(p1.getHealth() - p2.attackDamage);
-                            System.out.println(p1.getHealth());
-                            System.out.println(p2.attackDamage);
-                        }
                         p2Attacking = false;
-                    }, 1, TimeUnit.SECONDS);
+                    }, p2.normalD, TimeUnit.MILLISECONDS);
 
 
                     executorService.shutdown();
