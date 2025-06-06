@@ -182,6 +182,11 @@ public class Character implements ActionListener {
             isGrounded=true;
         }
     }
+
+    public void setNormalD(int normalD) {
+        this.normalD = normalD;
+    }
+
     public void setAnimationNum(int num){
         animationNum = num;
     }
