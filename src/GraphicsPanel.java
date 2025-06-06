@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
@@ -30,7 +33,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private boolean directionP1 = true;
     private boolean directionP2 = false;
     //false is left, true is right -what is this bruh
-
+    private boolean p1Attcking = false;
+    private boolean p2Attacking = false;
 
     public GraphicsPanel() {
         startButton=new JButton("Start");
@@ -72,6 +76,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         setFocusable(true);
         requestFocusInWindow();
     }
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -177,15 +182,25 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
 
             // basic attack
-            if (pressedKeys[81] && p1AttackCount==0) {
-                Rectangle damageBox = p1.attack();
-                Rectangle hitbox = p2.hitbox();
-                if (damageBox.intersects(hitbox) && p1AttackCount==0) {
-                    System.out.println("hit");
-                    p2.setHealth(p2.getHealth()-p1.attackDamage);
-                    System.out.println(p2.getHealth());
-                    System.out.println(p1.attackDamage);
-                    p1AttackCount++;
+            if (pressedKeys[81]) {
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+                if (!p1Attcking) {
+                    p1Attcking = true;
+                    executorService.schedule(() -> {
+                        Rectangle damageBox = p1.attack();
+                        Rectangle hitbox = p2.hitbox();
+                        if (damageBox.intersects(hitbox)) {
+                            System.out.println("hit");
+                            p2.setHealth(p2.getHealth() - p1.attackDamage);
+                            System.out.println(p2.getHealth());
+                            System.out.println(p1.attackDamage);
+
+                        }
+                        p1Attcking = false;
+                    }, 1, TimeUnit.SECONDS);
+
+                executorService.shutdown();
                 }
             }
 
@@ -237,21 +252,31 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
 
             if (pressedKeys[100]) {
-                Rectangle damageBox = p2.attack();
-                Rectangle hitbox = p1.hitbox();
-                if (damageBox.intersects(hitbox) && p2AttackCount==0) {
-                    System.out.println("hit");
-                    p1.setHealth(p1.getHealth()-p2.attackDamage);
-                    System.out.println(p1.getHealth());
-                    System.out.println(p2.attackDamage);
-                    p2AttackCount++;
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+                if (!p2Attacking) {
+                    p2Attacking = true;
+                    executorService.schedule(() -> {
+
+                        Rectangle damageBox = p2.attack();
+                        Rectangle hitbox = p1.hitbox();
+                        if (damageBox.intersects(hitbox)) {
+                            System.out.println("hit");
+                            p1.setHealth(p1.getHealth() - p2.attackDamage);
+                            System.out.println(p1.getHealth());
+                            System.out.println(p2.attackDamage);
+                        }
+                        p2Attacking = false;
+                    }, 1, TimeUnit.SECONDS);
+
+
+                    executorService.shutdown();
                 }
             }
 
             p1.checkGrounded();
             p2.checkGrounded();
             // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
-
 
         }
     }
