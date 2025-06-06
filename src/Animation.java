@@ -9,21 +9,10 @@ public class Animation implements ActionListener {
     private Timer timer;
     private int currentFrame;
     private boolean loop;
-    private switchAttack handler;
     private String name;
 
     public Animation(ArrayList<BufferedImage> frames, int delay, boolean loop) {
         this.frames = frames;
-        currentFrame = 0;
-        timer = new Timer(delay, this);
-        timer.start();
-        this.loop=loop;
-    }
-
-    public Animation(ArrayList<BufferedImage> frames, int delay, boolean loop, switchAttack handler, String name) {
-        this.frames = frames;
-        this.handler = handler;
-        this.name = name;
         currentFrame = 0;
         timer = new Timer(delay, this);
         timer.start();
@@ -70,14 +59,7 @@ public class Animation implements ActionListener {
             //This advances the animation to the next frame
             //It also uses modulus to reset the frame to the beginning after the last frame
             //In other words, this allows our animation to loop
-            if (name != null) {
-                currentFrame = (currentFrame + 1) % frames.size();
-            } else {
-                currentFrame = (currentFrame + 1);
-                if (currentFrame==frames.size()-1) {
-                    handler.switchAttack();
-                }
-            }
+            currentFrame = (currentFrame + 1) % frames.size();
         }
 
         if (currentFrame==frames.size()-1 && !loop){

@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Saber extends Character implements switchAttack {
-    private Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
+public class Saber extends Character {
+     Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
     private int restart=0;
 
     public Saber() {
-        super("Saber", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10, 2, 10);
+        super("Saber", 500, 3, 150, 150, 10, 10, 4, 0, 300, 675, false, false, true, 10, 2, 10);
         isAttacking = false;
 
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -56,7 +56,19 @@ public class Saber extends Character implements switchAttack {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images,50, true);
+        attack1 = new Animation(images,175, false);
+        animation4=attack1;
+        images=new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            String filename = "src\\Saber\\Attack\\attack2-" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        attack2=new Animation(images, 75, false);
         images = new ArrayList<>();
         for (int i=0; i<2; i++) {
             String filename = "src\\Saber\\Block\\block1.png";
@@ -85,7 +97,6 @@ public class Saber extends Character implements switchAttack {
                 return animation4.getActiveFrame();
             }
         }
-
         if (animationNum == 1) {
             return animation.getActiveFrame();  // updated
         } else if (animationNum == 3) {
@@ -99,49 +110,29 @@ public class Saber extends Character implements switchAttack {
         }
     }
     @Override
-   public Rectangle attack() {
-       if (!isAttacking) {
-           isAttacking = true;
-           animationNum = 4;
-           animation4.reset();
-           animation4.resume();
-       }
+    public Rectangle attack() {
+        setAttack(100, height);
+        if (Math.random()<=.5) {
+            animation4=attack1;
+        } else {
+            animation4=attack2;
+        }
+        if (!isAttacking) {
+            isAttacking = true;
+            animation4.reset();
+            animation4.resume();
+        }
 
-       setAttack(100, height);
-       setAnimationNum(4);
-       if (restart==0) {
-           animation4.resume();
-           restart++;
-       }
-       setAttack(100, height);
-       if (animation.getCurrentFrame()==animation4.getFrames().size()-1) {
-           restart=0;
-//           if (animation4!=attack2) {
-//               animation4 = attack2;
-//           } else {
-//               animation4 = attack1;
-//           }
-           animation4.setCurrentFrame(0);
-       }
-       if (facingRight) {
-           return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
-       }
-       return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
-   }
+        setAnimationNum(4);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+        }
+        return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
+    }
 
    public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
    }
-
-    @Override
-    public void switchAttack() {
-        if (animation4 != attack2) {
-            animation4 = attack2;
-        } else {
-            animation4 = attack1;
-        }
-        animation4.setCurrentFrame(0);
-    }
 
    /* public Rectangle hitbox() {
 

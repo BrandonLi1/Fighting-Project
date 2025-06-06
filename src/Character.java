@@ -10,7 +10,7 @@ public class Character implements ActionListener {
     String name;
     int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth, normalD, heavyD;
     double jumpHeight, xCoord, yCoord, meter;
-    boolean stunned, IFrames, isGrounded, blocking, facingRight;
+    boolean stunned, IFrames, isGrounded, blocking, facingRight, isAttacking;
     Animation animation;
     private Animation animation2;
     private Animation animation3;
@@ -102,7 +102,7 @@ public class Character implements ActionListener {
     }
 
     public void moveRight() {
-        if (xCoord + speed <= 1750 && !blocking) {
+        if (xCoord + speed <= 1750 && !blocking && !isAttacking) {
             xCoord += speed;
         }
     }
@@ -124,7 +124,7 @@ public class Character implements ActionListener {
 
 
     public void moveLeft() {
-        if (xCoord - speed >= 0 && !blocking) {
+        if (xCoord - speed >= 0 && !blocking && !isAttacking) {
             xCoord -= speed;
         }
     }

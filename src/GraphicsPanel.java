@@ -177,7 +177,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
 
             // basic attack
-            if (pressedKeys[81]) {
+            if (pressedKeys[81] && p1AttackCount==0) {
                 Rectangle damageBox = p1.attack();
                 Rectangle hitbox = p2.hitbox();
                 if (damageBox.intersects(hitbox) && p1AttackCount==0) {
