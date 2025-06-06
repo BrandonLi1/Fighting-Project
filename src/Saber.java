@@ -111,7 +111,6 @@ public class Saber extends Character {
     @Override
     public Rectangle attack() {
         setAttack(100, height);
-        basicCount++;
         if (Math.random()<=.5) {
             animation4=attack1;
         } else {
