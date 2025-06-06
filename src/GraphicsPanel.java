@@ -153,14 +153,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //W
             if (!p1.stunned) {
                 if (pressedKeys[87]) {
-                    if (p1.isGrounded) {
+                    if (p1.isGrounded && !p1.blocking) {
                         p1.setAnimationNum(3);
                         p1.jump();
                     }
                 }
 
                 //A
-                if (pressedKeys[65]) {
+                if (pressedKeys[65] && !p1.blocking) {
                     p1.moveLeft();
                     p1.faceLeft();
                     p1.setAnimationNum(1);
@@ -174,7 +174,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //D
-                if (pressedKeys[68]) {
+                if (pressedKeys[68] && !p1.blocking) {
                     p1.moveRight();
                     p1.faceRight();
                     p1.setAnimationNum(1);
@@ -182,7 +182,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 // basic attack
-                if (pressedKeys[81]) {
+                if (pressedKeys[81] && !p1.blocking) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                 if (!p1Attcking) {
@@ -194,6 +194,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p2.setHealth(p2.getHealth() - p1.attackDamage);
                         System.out.println(p2.getHealth());
                         System.out.println(p1.attackDamage);
+                        p2StunTimer=0;
+                        p2.setStunned(true);
 
                     }else if (damageBox.intersects(hitbox) && p2.blocking) {
                         p2.setHealth(p2.getHealth() - 1);
@@ -201,7 +203,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p2.setStunned(false);
                     }
                     executorService.schedule(() -> {
-
                         p1Attcking = false;
                     }, p1.normalD, TimeUnit.MILLISECONDS);
 
@@ -230,7 +231,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             //Up Key
             if (!p2.stunned) {
-                if (pressedKeys[38]) {
+                if (pressedKeys[38] && !p2.blocking) {
                     if (p2.isGrounded) {
                         p2.setAnimationNum(3);
                         p2.jump();
@@ -238,7 +239,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //Left Key
-                if (pressedKeys[37]) {
+                if (pressedKeys[37] && !p2.blocking) {
                     p2.moveLeft();
                     p2.faceLeft();
                     p2.setAnimationNum(1);
@@ -251,14 +252,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //Right Key
-                if (pressedKeys[39]) {
+                if (pressedKeys[39] && !p2.blocking) {
                     p2.moveRight();
                     p2.faceRight();
                     p2.setAnimationNum(1);
                     directionP2 = true;
                 }
 
-                if (pressedKeys[100]) {
+                if (pressedKeys[100] && !p2.blocking) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                 if (!p2Attacking) {
@@ -270,6 +271,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p1.setHealth(p1.getHealth() - p2.attackDamage);
                         System.out.println(p1.getHealth());
                         System.out.println(p2.attackDamage);
+                        p1StunTimer=0;
+                        p1.setStunned(true);
                     }else if (damageBox.intersects(hitbox) && p1.blocking) {
                         p1.setHealth(p1.getHealth() - 1);
                         p2AttackCount++;

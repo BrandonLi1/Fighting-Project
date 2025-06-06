@@ -6,11 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Saber extends Character {
-     Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
-    private int restart=0;
-
+    Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
+    private int basicCount;
     public Saber() {
-        super("Saber", 500, 3, 150, 150, 10, 10, 4, 0, 300, 675, false, false, true, 10, 2, 10);
+        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 600, 10);
         isAttacking = false;
 
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -56,7 +55,7 @@ public class Saber extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        attack1 = new Animation(images,175, false);
+        attack1 = new Animation(images,81, false);
         animation4=attack1;
         images=new ArrayList<>();
         for (int i = 0; i < 9; i++) {
@@ -68,7 +67,7 @@ public class Saber extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        attack2=new Animation(images, 75, false);
+        attack2=new Animation(images, 36, false);
         images = new ArrayList<>();
         for (int i=0; i<2; i++) {
             String filename = "src\\Saber\\Block\\block1.png";
@@ -112,6 +111,7 @@ public class Saber extends Character {
     @Override
     public Rectangle attack() {
         setAttack(100, height);
+        basicCount++;
         if (Math.random()<=.5) {
             animation4=attack1;
         } else {
@@ -124,6 +124,11 @@ public class Saber extends Character {
         }
 
         setAnimationNum(4);
+        if (basicCount%basicChain==0) {
+            setNormalD(1000);
+        } else {
+            setNormalD(600);
+        }
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
