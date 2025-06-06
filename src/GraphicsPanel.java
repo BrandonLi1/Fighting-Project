@@ -15,6 +15,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+//https://craftpix.net/freebies/free-animated-explosion-sprite-pack/
+
+//https://craftpix.net/freebies/11-free-pixel-art-explosion-sprites/
+
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
@@ -189,13 +193,15 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     p1Attcking = true;
                     Rectangle damageBox = p1.attack();
                     Rectangle hitbox = p2.hitbox();
+                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
                     if (damageBox.intersects(hitbox) && !p2.blocking) {
                         System.out.println("hit");
                         p2.setHealth(p2.getHealth() - p1.attackDamage);
                         System.out.println(p2.getHealth());
                         System.out.println(p1.attackDamage);
 
-                    }else if (damageBox.intersects(hitbox) && p2.blocking) {
+                    }
+                    else if (damageBox.intersects(hitbox) && p2.blocking) {
                         p2.setHealth(p2.getHealth() - 1);
                         p1AttackCount++;
                         p2.setStunned(false);

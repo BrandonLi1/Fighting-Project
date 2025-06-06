@@ -16,6 +16,8 @@ public class Archer extends Character{
     private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
+    //https://craftpix.net/freebies/free-underwater-enemies-pixel-art-character-pack/
+
     public Archer() {
         super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6, 2, 10);
         isAttacking = false;

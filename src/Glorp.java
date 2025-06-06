@@ -5,6 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//https://free-game-assets.itch.io/free-2d-robot-sprite/download/eyJleHBpcmVzIjoxNzQ5MjIwNDM2LCJpZCI6MjgxMjA2fQ%3d%3d.CcGd7nY0X9LHD%2fCnuVouVKzmy98%3d
+
+//https://craftpix.net/freebies/free-sci-fi-antagonists-pixel-character-pack/
+
+//https://craftpix.net/freebies/free-robot-pixel-art-sprite-sheets/
+
 public class Glorp extends Character {
     Animation animation;
     private Animation animation2;
