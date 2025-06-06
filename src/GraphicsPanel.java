@@ -22,7 +22,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Timer holdTimer;
     private Character p1;
     private Character p2;
-    int countdown, holdCount=0, p1AttackCount, p2AttackCount;
+    int countdown, holdCount=0, p1AttackCount, p2AttackCount, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
@@ -146,52 +146,61 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p1
 
             //W
-            if (pressedKeys[87]) {
-                if(p1.isGrounded){
-                    p1.setAnimationNum(3);
-                    p1.jump();
+            if (!p1.stunned) {
+                if (pressedKeys[87]) {
+                    if (p1.isGrounded) {
+                        p1.setAnimationNum(3);
+                        p1.jump();
+                    }
+                }
+
+                //A
+                if (pressedKeys[65]) {
+                    p1.moveLeft();
+                    p1.faceLeft();
+                    p1.setAnimationNum(1);
+                    directionP1 = false;
 
                 }
-            }
 
-            //A
-            if (pressedKeys[65]) {
-                p1.moveLeft();
-                p1.faceLeft();
-                p1.setAnimationNum(1);
-                directionP1 = false;
-
-            }
-
-            //S
-            if (pressedKeys[83]) {
-                p1.block();
-            }
-
-            //D
-            if (pressedKeys[68]) {
-                p1.moveRight();
-                p1.faceRight();
-                p1.setAnimationNum(1);
-                directionP1 = true;
-            }
-
-            // basic attack
-            if (pressedKeys[81] && p1AttackCount==0) {
-                Rectangle damageBox = p1.attack();
-                Rectangle hitbox = p2.hitbox();
-                if (damageBox.intersects(hitbox) && p1AttackCount==0) {
-                    System.out.println("hit");
-                    p2.setHealth(p2.getHealth()-p1.attackDamage);
-                    System.out.println(p2.getHealth());
-                    System.out.println(p1.attackDamage);
-                    p1AttackCount++;
+                //S
+                if (pressedKeys[83]) {
+                    p1.block();
                 }
-            }
 
-            //C
-            if (pressedKeys[67]) { //check for mode(transform) holding
-                holdTimer.start();
+                //D
+                if (pressedKeys[68]) {
+                    p1.moveRight();
+                    p1.faceRight();
+                    p1.setAnimationNum(1);
+                    directionP1 = true;
+                }
+
+                // basic attack
+                if (pressedKeys[81] && p1AttackCount == 0) {
+                    Rectangle damageBox = p1.attack();
+                    Rectangle hitbox = p2.hitbox();
+                    if (damageBox.intersects(hitbox) && p1AttackCount == 0 && !p2.blocking) {
+                        System.out.println("hit");
+                        p2.setHealth(p2.getHealth() - p1.attackDamage);
+                        System.out.println(p2.getHealth());
+                        System.out.println(p1.attackDamage);
+                        p1AttackCount++;
+                        p2StunTimer=0;
+                        p2.setStunned(true);
+                    } else if (damageBox.intersects(hitbox) && p1AttackCount == 0 && p2.blocking) {
+                        p2.setHealth(p2.getHealth()-1);
+                        p1AttackCount++;
+                        p2.setStunned(false);
+                    }
+                    System.out.println(p2.blocking);
+                    System.out.println(p2.stunned);
+                }
+
+                //C
+                if (pressedKeys[67]) { //check for mode(transform) holding
+                    holdTimer.start();
+                }
             }
 
 
@@ -208,45 +217,56 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p2 q-light e- heavy zxc-flexq
 
             //Up Key
-            if (pressedKeys[38]) {
-                if (p2.isGrounded){
-                    p2.setAnimationNum(3);
-                    p2.jump();
+            if (!p2.stunned) {
+                if (pressedKeys[38]) {
+                    if (p2.isGrounded) {
+                        p2.setAnimationNum(3);
+                        p2.jump();
+                    }
+                }
+
+                //Left Key
+                if (pressedKeys[37]) {
+                    p2.moveLeft();
+                    p2.faceLeft();
+                    p2.setAnimationNum(1);
+                    directionP2 = false;
+                }
+
+                //Down Key
+                if (pressedKeys[40]) {
+                    p2.block();
+                }
+
+                //Right Key
+                if (pressedKeys[39]) {
+                    p2.moveRight();
+                    p2.faceRight();
+                    p2.setAnimationNum(1);
+                    directionP2 = true;
+                }
+
+                if (pressedKeys[100] && p2AttackCount==0) {
+
+                    Rectangle damageBox = p2.attack();
+                    Rectangle hitbox = p1.hitbox();
+                    if (damageBox.intersects(hitbox) && p2AttackCount == 0 && !p1.blocking) {
+                        System.out.println("hit");
+                        p1.setHealth(p1.getHealth() - p2.attackDamage);
+                        System.out.println(p1.getHealth());
+                        System.out.println(p2.attackDamage);
+                        p2AttackCount++;
+                        p1StunTimer=0;
+                        p1.setStunned(true);
+                    } else if(damageBox.intersects(hitbox) && p2AttackCount == 0 && p1.blocking) {
+                        p1.setHealth(p1.getHealth()-1);
+                        p2AttackCount++;
+                    }
+                    System.out.println(p1.blocking);
+                    System.out.println(p1.stunned);
                 }
             }
 
-            //Left Key
-            if (pressedKeys[37]) {
-                p2.moveLeft();
-                p2.faceLeft();
-                p2.setAnimationNum(1);
-                directionP2 = false;
-            }
-
-            //Down Key
-            if (pressedKeys[40]) {
-                p2.block();
-            }
-
-            //Right Key
-            if (pressedKeys[39]) {
-                p2.moveRight();
-                p2.faceRight();
-                p2.setAnimationNum(1);
-                directionP2 = true;
-            }
-
-            if (pressedKeys[100]) {
-                Rectangle damageBox = p2.attack();
-                Rectangle hitbox = p1.hitbox();
-                if (damageBox.intersects(hitbox) && p2AttackCount==0) {
-                    System.out.println("hit");
-                    p1.setHealth(p1.getHealth()-p2.attackDamage);
-                    System.out.println(p1.getHealth());
-                    System.out.println(p2.attackDamage);
-                    p2AttackCount++;
-                }
-            }
 
             p1.checkGrounded();
             p2.checkGrounded();
@@ -261,6 +281,20 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         requestFocusInWindow();
         Object source =  e.getSource();
+        if (p1 != null && p2 != null){
+            if (p2.stunned) {
+                p2StunTimer++;
+            }
+            if (p2StunTimer >= 33) {
+                p2.setStunned(false);
+            }
+            if (p1.stunned) {
+                p1StunTimer++;
+            }
+            if (p1StunTimer >= 33) {
+                p1.setStunned(false);
+            }
+        }
 
         if (source == holdTimer) {
             holdCount+=1;
