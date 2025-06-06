@@ -25,7 +25,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Timer holdTimer;
     private Character p1;
     private Character p2;
-    int countdown, holdCount=0, p1AttackCount, p2AttackCount;
+    int countdown, holdCount=0, p1AttackCount, p2AttackCount, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
@@ -107,7 +107,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setBounds(1000, 50, 550, 450);
         } else if (selectionScreen) {
             try {
-                selectionBackground= ImageIO.read((new File("src\\Backgrounds\\selectionBackground.jpg")));
+                selectionBackground = ImageIO.read((new File("src\\Backgrounds\\selectionBackground.jpg")));
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -118,11 +118,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             luffyButton.setLocation(600, 100);
             archerButton.setVisible(true);
             archerButton.setLocation(900, 100);
-            if (p1CharacterImage!=null) {
+            if (p1CharacterImage != null) {
                 g.drawImage(p1NameImage, 150, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
             }
-            if (p2CharacterImage!= null) {
+            if (p2CharacterImage != null) {
                 g.drawImage(p2NameImage, 1000, 500, null);
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
@@ -136,78 +136,83 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             g.setColor(Color.RED);
-            g.fillRect(327,74,(int)(480*((double)p1.getHealth()/p1.getMaxHealth())),52);
-            g.fillRect(1057+(int)(480*(1.0-(double)p2.getHealth()/p2.getMaxHealth())),74,(int)(480*((double)p2.getHealth()/p2.getMaxHealth())),52);
+            g.fillRect(327, 74, (int) (480 * ((double) p1.getHealth() / p1.getMaxHealth())), 52);
+            g.fillRect(1057 + (int) (480 * (1.0 - (double) p2.getHealth() / p2.getMaxHealth())), 74, (int) (480 * ((double) p2.getHealth() / p2.getMaxHealth())), 52);
             g.setColor(Color.BLUE);
-            g.fillRect(327,124,480,26);
-            g.fillRect(1057,126,480,26);
+            g.fillRect(327, 124, 480, 26);
+            g.fillRect(1057, 126, 480, 26);
             g.setColor(Color.BLACK);
             g.drawImage(healthBar1, 200, 50, null);
             g.drawImage(healthBar2, 1050, 50, null);
-            g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(),(int) p2.yCoord, p2.getWidth(), p2.height, null);
+            g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 904, 100);
 
             //p1
 
             //W
-            if (pressedKeys[87]) {
-                if(p1.isGrounded){
-                    p1.setAnimationNum(3);
-                    p1.jump();
+            if (!p1.stunned) {
+                if (pressedKeys[87]) {
+                    if (p1.isGrounded) {
+                        p1.setAnimationNum(3);
+                        p1.jump();
+                    }
+                }
+
+                //A
+                if (pressedKeys[65]) {
+                    p1.moveLeft();
+                    p1.faceLeft();
+                    p1.setAnimationNum(1);
+                    directionP1 = false;
 
                 }
-            }
 
-            //A
-            if (pressedKeys[65]) {
-                p1.moveLeft();
-                p1.faceLeft();
-                p1.setAnimationNum(1);
-                directionP1 = false;
+                //S
+                if (pressedKeys[83]) {
+                    p1.block();
+                }
 
-            }
+                //D
+                if (pressedKeys[68]) {
+                    p1.moveRight();
+                    p1.faceRight();
+                    p1.setAnimationNum(1);
+                    directionP1 = true;
+                }
 
-            //S
-            if (pressedKeys[83]) {
-                p1.block();
-            }
-
-            //D
-            if (pressedKeys[68]) {
-                p1.moveRight();
-                p1.faceRight();
-                p1.setAnimationNum(1);
-                directionP1 = true;
-            }
-
-            // basic attack
-            if (pressedKeys[81]) {
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                // basic attack
+                if (pressedKeys[81]) {
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                 if (!p1Attcking) {
                     p1Attcking = true;
                     Rectangle damageBox = p1.attack();
                     Rectangle hitbox = p2.hitbox();
-                    if (damageBox.intersects(hitbox)) {
+                    if (damageBox.intersects(hitbox) && !p2.blocking) {
                         System.out.println("hit");
                         p2.setHealth(p2.getHealth() - p1.attackDamage);
                         System.out.println(p2.getHealth());
                         System.out.println(p1.attackDamage);
 
+                    }else if (damageBox.intersects(hitbox) && p2.blocking) {
+                        p2.setHealth(p2.getHealth() - 1);
+                        p1AttackCount++;
+                        p2.setStunned(false);
                     }
                     executorService.schedule(() -> {
 
                         p1Attcking = false;
                     }, p1.normalD, TimeUnit.MILLISECONDS);
 
-                executorService.shutdown();
+                        executorService.shutdown();
+                    }
                 }
-            }
 
-            //C
-            if (pressedKeys[67]) { //check for mode(transform) holding
-                holdTimer.start();
+                //C
+                if (pressedKeys[67]) { //check for mode(transform) holding
+                    holdTimer.start();
+                }
             }
 
 
@@ -224,46 +229,50 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             //p2 q-light e- heavy zxc-flexq
 
             //Up Key
-            if (pressedKeys[38]) {
-                if (p2.isGrounded){
-                    p2.setAnimationNum(3);
-                    p2.jump();
+            if (!p2.stunned) {
+                if (pressedKeys[38]) {
+                    if (p2.isGrounded) {
+                        p2.setAnimationNum(3);
+                        p2.jump();
+                    }
                 }
-            }
 
-            //Left Key
-            if (pressedKeys[37]) {
-                p2.moveLeft();
-                p2.faceLeft();
-                p2.setAnimationNum(1);
-                directionP2 = false;
-            }
+                //Left Key
+                if (pressedKeys[37]) {
+                    p2.moveLeft();
+                    p2.faceLeft();
+                    p2.setAnimationNum(1);
+                    directionP2 = false;
+                }
 
-            //Down Key
-            if (pressedKeys[40]) {
-                p2.block();
-            }
+                //Down Key
+                if (pressedKeys[40]) {
+                    p2.block();
+                }
 
-            //Right Key
-            if (pressedKeys[39]) {
-                p2.moveRight();
-                p2.faceRight();
-                p2.setAnimationNum(1);
-                directionP2 = true;
-            }
+                //Right Key
+                if (pressedKeys[39]) {
+                    p2.moveRight();
+                    p2.faceRight();
+                    p2.setAnimationNum(1);
+                    directionP2 = true;
+                }
 
-            if (pressedKeys[100]) {
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                if (pressedKeys[100]) {
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                 if (!p2Attacking) {
                     p2Attacking = true;
                     Rectangle damageBox = p2.attack();
                     Rectangle hitbox = p1.hitbox();
-                    if (damageBox.intersects(hitbox)) {
+                    if (damageBox.intersects(hitbox) && !p1.blocking) {
                         System.out.println("hit");
                         p1.setHealth(p1.getHealth() - p2.attackDamage);
                         System.out.println(p1.getHealth());
                         System.out.println(p2.attackDamage);
+                    }else if (damageBox.intersects(hitbox) && p1.blocking) {
+                        p1.setHealth(p1.getHealth() - 1);
+                        p2AttackCount++;
                     }
                     executorService.schedule(() -> {
 
@@ -271,14 +280,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     }, p2.normalD, TimeUnit.MILLISECONDS);
 
 
-                    executorService.shutdown();
+                        executorService.shutdown();
+                    }
                 }
+
+
+                p1.checkGrounded();
+                p2.checkGrounded();
+                // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
+
+
             }
-
-            p1.checkGrounded();
-            p2.checkGrounded();
-            // up arrow=38; left arrow=37; down arrow=40; right arrow=39;
-
         }
     }
 
@@ -287,6 +299,20 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         requestFocusInWindow();
         Object source =  e.getSource();
+        if (p1 != null && p2 != null){
+            if (p2.stunned) {
+                p2StunTimer++;
+            }
+            if (p2StunTimer >= 33) {
+                p2.setStunned(false);
+            }
+            if (p1.stunned) {
+                p1StunTimer++;
+            }
+            if (p1StunTimer >= 33) {
+                p1.setStunned(false);
+            }
+        }
 
         if (source == holdTimer) {
             holdCount+=1;
