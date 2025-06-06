@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
@@ -30,7 +33,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private boolean directionP1 = true;
     private boolean directionP2 = false;
     //false is left, true is right -what is this bruh
-
+    private boolean p1Attcking = false;
+    private boolean p2Attacking = false;
 
     public GraphicsPanel() {
         startButton=new JButton("Start");
@@ -72,6 +76,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         setFocusable(true);
         requestFocusInWindow();
     }
+
 
     @Override
     public void paintComponent(Graphics g) {
@@ -176,26 +181,32 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     directionP1 = true;
                 }
 
-                // basic attack
-                if (pressedKeys[81] && p1AttackCount == 0) {
-                    Rectangle damageBox = p1.attack();
-                    Rectangle hitbox = p2.hitbox();
-                    if (damageBox.intersects(hitbox) && p1AttackCount == 0 && !p2.blocking) {
-                        System.out.println("hit");
-                        p2.setHealth(p2.getHealth() - p1.attackDamage);
-                        System.out.println(p2.getHealth());
-                        System.out.println(p1.attackDamage);
-                        p1AttackCount++;
-                        p2StunTimer=0;
-                        p2.setStunned(true);
-                    } else if (damageBox.intersects(hitbox) && p1AttackCount == 0 && p2.blocking) {
-                        p2.setHealth(p2.getHealth()-1);
-                        p1AttackCount++;
-                        p2.setStunned(false);
-                    }
-                    System.out.println(p2.blocking);
-                    System.out.println(p2.stunned);
+            // basic attack
+            if (pressedKeys[81]) {
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+                if (!p1Attcking) {
+                    p1Attcking = true;
+                    executorService.schedule(() -> {
+                        Rectangle damageBox = p1.attack();
+                        Rectangle hitbox = p2.hitbox();
+                        if (damageBox.intersects(hitbox) && !p2.blocking) {
+                            System.out.println("hit");
+                            p2.setHealth(p2.getHealth() - p1.attackDamage);
+                            System.out.println(p2.getHealth());
+                            System.out.println(p1.attackDamage);
+
+                        }else if (damageBox.intersects(hitbox) && p2.blocking) {
+                            p2.setHealth(p2.getHealth()-1);
+                            p1AttackCount++;
+                            p2.setStunned(false);
+                        }
+                        p1Attcking = false;
+                    }, 1, TimeUnit.SECONDS);
+
+                executorService.shutdown();
                 }
+            }
 
                 //C
                 if (pressedKeys[67]) { //check for mode(transform) holding
@@ -246,24 +257,29 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     directionP2 = true;
                 }
 
-                if (pressedKeys[100] && p2AttackCount==0) {
+            if (pressedKeys[100]) {
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                    Rectangle damageBox = p2.attack();
-                    Rectangle hitbox = p1.hitbox();
-                    if (damageBox.intersects(hitbox) && p2AttackCount == 0 && !p1.blocking) {
-                        System.out.println("hit");
-                        p1.setHealth(p1.getHealth() - p2.attackDamage);
-                        System.out.println(p1.getHealth());
-                        System.out.println(p2.attackDamage);
-                        p2AttackCount++;
-                        p1StunTimer=0;
-                        p1.setStunned(true);
-                    } else if(damageBox.intersects(hitbox) && p2AttackCount == 0 && p1.blocking) {
-                        p1.setHealth(p1.getHealth()-1);
-                        p2AttackCount++;
-                    }
-                    System.out.println(p1.blocking);
-                    System.out.println(p1.stunned);
+                if (!p2Attacking) {
+                    p2Attacking = true;
+                    executorService.schedule(() -> {
+
+                        Rectangle damageBox = p2.attack();
+                        Rectangle hitbox = p1.hitbox();
+                        if (damageBox.intersects(hitbox) && !p1.blocking) {
+                            System.out.println("hit");
+                            p1.setHealth(p1.getHealth() - p2.attackDamage);
+                            System.out.println(p1.getHealth());
+                            System.out.println(p2.attackDamage);
+                        }else if(damageBox.intersects(hitbox) && p1.blocking) {
+                            p1.setHealth(p1.getHealth()-1);
+                            p2AttackCount++;
+                        }
+                        p2Attacking = false;
+                    }, 1, TimeUnit.SECONDS);
+
+
+                    executorService.shutdown();
                 }
             }
 
