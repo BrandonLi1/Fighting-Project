@@ -102,7 +102,7 @@ public class Character implements ActionListener {
     }
 
     public void moveRight() {
-        if (xCoord + speed <= 1750 && !blocking && !isAttacking && !stunned) {
+        if (xCoord + speed <= 1750 && !blocking && !stunned) {
             xCoord += speed;
         }
     }
@@ -124,7 +124,7 @@ public class Character implements ActionListener {
 
 
     public void moveLeft() {
-        if (xCoord - speed >= 0 && !blocking && !isAttacking && !stunned) {
+        if (xCoord - speed >= 0 && !blocking && !stunned) {
             xCoord -= speed;
         }
     }

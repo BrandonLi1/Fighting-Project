@@ -10,7 +10,7 @@ public class Saber extends Character {
     private int restart=0;
 
     public Saber() {
-        super("Saber", 500, 3, 150, 150, 10, 10, 4, 0, 300, 675, false, false, true, 10, 2, 10);
+        super("Saber", 500, 3, 150, 150, 10, 10, 4, 0, 300, 675, false, false, true, 10, 500, 10);
         isAttacking = false;
 
         ArrayList<BufferedImage> images = new ArrayList<>();
