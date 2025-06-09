@@ -14,7 +14,7 @@ public class Arrow extends Character{
     public Arrow(double x, double y, boolean facingRight) {
         super("Arrow", 1, 0, 12, 50, 0, 0, 0, 0, (int) x, (int) y, false, false, true, 0, 0, 0);
         distanceTraveled = 0;
-        maxDistance = 200;
+        maxDistance = 350;
         arrowSpeed = 15;
         expired = false;
         this.facingRight = facingRight;

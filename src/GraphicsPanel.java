@@ -14,6 +14,8 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 //https://craftpix.net/freebies/free-animated-explosion-sprite-pack/
 
@@ -38,6 +40,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     //false is left, true is right -what is this bruh
     private boolean p1Attcking = false;
     private boolean p2Attacking = false;
+    private List<Arrow> arrows = new ArrayList<>();
 
     public GraphicsPanel() {
         startButton=new JButton("Start");
@@ -137,6 +140,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
+            if (p1 instanceof Archer) {
+                Archer archer = (Archer)p1;
+                if (archer.attackAnimationEnded()) {
+                    int arrowY = (int) (archer.yCoord + archer.height / 2);
+                    int arrowX;
+                    if (archer.facingRight) {
+                        arrowX = (int) (archer.xCoord + archer.width);
+                    } else {
+                        arrowX = (int) (archer.xCoord - 50); //remember to adjust this
+                    }
+                    arrows.add(new Arrow(arrowX, arrowY, archer.facingRight));
+                    archer.setIsAttacking(false);
+                }
+            }
+
             g.setColor(Color.RED);
             g.fillRect(327, 74, (int) (480 * ((double) p1.getHealth() / p1.getMaxHealth())), 52);
             g.fillRect(1057 + (int) (480 * (1.0 - (double) p2.getHealth() / p2.getMaxHealth())), 74, (int) (480 * ((double) p2.getHealth() / p2.getMaxHealth())), 52);
@@ -147,6 +165,31 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(healthBar1, 200, 50, null);
             g.drawImage(healthBar2, 1050, 50, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
+            if (p2 instanceof Archer) {
+                Archer archer = (Archer)p2;
+                if (archer.attackAnimationEnded()) {
+                    int arrowY = (int) (archer.yCoord + archer.height / 2);
+                    int arrowX;
+                    if (archer.facingRight) {
+                        arrowX = (int) (archer.xCoord + archer.width);
+                    } else {
+                        arrowX = (int) (archer.xCoord - 50); //remember to adjust this
+                    }
+                    arrows.add(new Arrow(arrowX, arrowY, archer.facingRight));
+                    archer.setIsAttacking(false);
+                }
+            }
+            for (int i = 0; i < arrows.size(); i++) {
+                Arrow arrow = arrows.get(i);
+                arrow.update();
+                if (arrow.isExpired()) {
+                    arrows.remove(i);
+                    i--;
+                }
+            }
+            for (Arrow arrow : arrows) {
+                arrow.draw(g);
+            }
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 904, 100);
             g.drawRect((int)p1.xCoord, (int) p1.yCoord, p1.width, p1.height);
