@@ -101,6 +101,13 @@ public class Character implements ActionListener {
         this.name = name;
     }
 
+    public void addMeter(double meter) {
+        this.meter+=meter;
+        if (this.meter>=7) {
+            this.meter=7;
+        }
+    }
+
     public void moveRight() {
         if (xCoord + speed <= 1750 && !blocking && !stunned) {
             xCoord += speed;
@@ -150,25 +157,17 @@ public class Character implements ActionListener {
         return new Rectangle((int) (xCoord-width), (int) yCoord, aWidth, aHeight);
     }
 
-  /*  public Rectangle heavyAttack() {
-
+    public Rectangle heavyAttack() {
+        return new Rectangle();
     }
 
     public Rectangle special1() {
-
+        return new Rectangle();
     }
 
     public Rectangle special2() {
-
+        return new Rectangle();
     }
-
-    public Rectangle special3() {
-
-    }
-
-    public void transform() {
-
-    }*/
 
     public void block() {
         if (isGrounded && !stunned) {
