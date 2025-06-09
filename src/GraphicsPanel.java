@@ -1,6 +1,7 @@
 import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
+import javax.print.DocFlavor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,10 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +30,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
+    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -33,10 +38,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     int countdown, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
-    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
+    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false, EndWindow = false, directionP1 = true, directionP2 = false, p1Win, p2Win;
     boolean[] pressedKeys = new boolean[128];
-    private boolean directionP1 = true;
-    private boolean directionP2 = false;
     //false is left, true is right -what is this bruh
     private boolean p1Attcking = false;
     private boolean p2Attacking = false;
@@ -131,7 +134,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 g.drawImage(p2NameImage, 1000, 500, null);
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
-        } else {
+        } else if (EndWindow) {
+
+        }else {
             if (!timer.isRunning()) {
                 timer.start();
             }
@@ -244,6 +249,13 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         System.out.println(p1.attackDamage);
                         p2StunTimer=0;
                         p2.setStunned(true);
+                        try {
+                            Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
+                            g.drawImage(Hitimage,damageBox.x+ damageBox.width/2,damageBox.y+ damageBox.height/2,100,100,null);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
                         p1.addMeter(.2);
                     }
                     else if (damageBox.intersects(hitbox) && p2.blocking) {
@@ -352,6 +364,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p1StunTimer=0;
                         p1.setStunned(true);
                         p2.addMeter(.2);
+                        try {
+                            Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
+                            g.drawImage(Hitimage,damageBox.x+ damageBox.width/2,damageBox.y+ damageBox.height/2,100,100,null);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }else if (damageBox.intersects(hitbox) && p1.blocking) {
                         p1.setHealth(p1.getHealth() - 1);
                         p2.addMeter(.05);
@@ -364,6 +382,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                         executorService.shutdown();
                     }
+                }
+                if (p1.getHealth()<=0) {
+                    p2Win=true;
+                    EndWindow = true;
+                }
+                if(p2.getHealth()<=0){
+                    p1Win = true;
+                    EndWindow = true;
                 }
 
 
