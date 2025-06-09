@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Saber extends Character {
-    Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, attack1, attack2;
+    Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, animation8, attack1, attack2;
     private int basicCount;
     public Saber() {
-        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 600, 10);
+        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 600, 2000);
         isAttacking = false;
 
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -111,6 +111,7 @@ public class Saber extends Character {
     @Override
     public Rectangle attack() {
         setAttack(100, height);
+        basicCount++;
         if (Math.random()<=.5) {
             animation4=attack1;
         } else {
@@ -131,10 +132,32 @@ public class Saber extends Character {
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
     }
 
-   public Rectangle hitbox() { //change cus character is small
+    public Rectangle heavyAttack() { //ani 6
+        setAttack(100, height);
+        if (!isAttacking) {
+            isAttacking = true;
+            animation4.reset(); //change to 6
+            animation4.resume();
+        }
+        setAnimationNum(4);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+        }
+        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
+    }
+
+    /*public Rectangle special1() { //ani 7
+
+    }
+
+    public Rectangle special2() {//ani 8
+
+    }*/
+
+    public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
    }
 

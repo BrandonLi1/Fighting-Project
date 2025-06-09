@@ -20,16 +20,15 @@ import java.util.concurrent.TimeUnit;
 //https://craftpix.net/freebies/11-free-pixel-art-explosion-sprites/
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
+    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
     private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
     private Timer timer;
     private Timer roundTimer;
-    private Timer holdTimer;
     private Character p1;
     private Character p2;
-    int countdown, holdCount=0, p1AttackCount, p2AttackCount, p1StunTimer, p2StunTimer;
+    int countdown, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
     boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false;
@@ -48,7 +47,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         keybindsButton.setFocusPainted(false);
         timer = new Timer(10, this);
         roundTimer = new Timer(1000, this);
-        holdTimer = new Timer(500, this);
         startWindow=true;
         countdown=180;
         p1Controls=new JTextArea();
@@ -103,9 +101,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p2Controls.setLineWrap(true);
             p1Controls.setVisible(true);
             p2Controls.setVisible(true);
-            p1Controls.setText("player 1 controls:\nW-jump\nA-left\nS-block\nD-right\nQ-light\nE-heavy\nZ-special 1\nX-special 2\nC-special 3(mode if applicable)");
+            p1Controls.setText("player 1 controls:\nW-jump\nA-left\nS-block\nD-right\nQ-light\nE-heavy\nZ-special 1\nX-special 2");
             p1Controls.setFont(new Font("Pacifico", Font.BOLD, 30));
-            p2Controls.setText("player 2 controls:\n↑-jump\n←-left\n↓-block\n→-right\nnumpad4-light\nnumpad5-heavy\nnumpad1-special 1\nnumpad2-special 2\nnumpad3-special 3(mode if applicable)");
+            p2Controls.setText("player 2 controls:\n↑-jump\n←-left\n↓-block\n→-right\nnumpad4-light\nnumpad5-heavy\nnumpad1-special 1\nnumpad2-special 2");
             p2Controls.setFont(new Font("Pacifico", Font.BOLD, 30));
             p1Controls.setBounds(0, 50, 550, 450);
             p2Controls.setBounds(1000, 50, 550, 450);
@@ -143,14 +141,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.fillRect(327, 74, (int) (480 * ((double) p1.getHealth() / p1.getMaxHealth())), 52);
             g.fillRect(1057 + (int) (480 * (1.0 - (double) p2.getHealth() / p2.getMaxHealth())), 74, (int) (480 * ((double) p2.getHealth() / p2.getMaxHealth())), 52);
             g.setColor(Color.BLUE);
-            g.fillRect(327, 124, 480, 26);
-            g.fillRect(1057, 126, 480, 26);
+            g.fillRect(327, 124, (int) (480 * (p1.meter/7)), 26);
+            g.fillRect(1057 + (int) (480 * (1.0 - p2.meter/7)), 126, (int) (480 * (p2.meter/7)), 26);
             g.setColor(Color.BLACK);
             g.drawImage(healthBar1, 200, 50, null);
             g.drawImage(healthBar2, 1050, 50, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 904, 100);
+            g.drawRect((int)p1.xCoord, (int) p1.yCoord, p1.width, p1.height);
+            g.drawRect((int)p2.xCoord, (int) p2.yCoord, p2.width, p2.height);
 
             //p1
 
@@ -201,12 +201,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         System.out.println(p1.attackDamage);
                         p2StunTimer=0;
                         p2.setStunned(true);
-
+                        p1.addMeter(.2);
                     }
                     else if (damageBox.intersects(hitbox) && p2.blocking) {
                         p2.setHealth(p2.getHealth() - 1);
-                        p1AttackCount++;
                         p2.setStunned(false);
+                        p1.addMeter(.05);
                     }
                     executorService.schedule(() -> {
                         p1Attcking = false;
@@ -215,10 +215,39 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         executorService.shutdown();
                     }
                 }
+                if (pressedKeys[69]) { //DONT CLICK E
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                //C
-                if (pressedKeys[67]) { //check for mode(transform) holding
-                    holdTimer.start();
+                    if (!p1Attcking) {
+                        p1Attcking = true;
+                        Rectangle damageBox = p1.attack();
+                        Rectangle hitbox = p2.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                        if (damageBox.intersects(hitbox)) {
+                            System.out.println("hit");
+                            p2.setHealth(p2.getHealth() - p1.attackDamage*3);
+                            System.out.println(p2.getHealth());
+                            System.out.println(p1.attackDamage);
+                            p2StunTimer=0;
+                            p2.setStunned(true);
+                            p1.addMeter(.5);
+                        }
+
+                        executorService.schedule(() -> {
+                            p1Attcking = false;
+                        }, p1.heavyD, TimeUnit.MILLISECONDS);
+
+                        executorService.shutdown();
+                    }
+                }
+
+                //Z
+                if (p1.meter>=1&&pressedKeys[90]) { //check for mode(transform) holding
+                    //do spec 1
+                }
+                //X
+                if (p1.meter>=3&&pressedKeys[88]) { //check for mode(transform) holding
+                    //do spec 2
                 }
             }
 
@@ -279,9 +308,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         System.out.println(p2.attackDamage);
                         p1StunTimer=0;
                         p1.setStunned(true);
+                        p2.addMeter(.2);
                     }else if (damageBox.intersects(hitbox) && p1.blocking) {
                         p1.setHealth(p1.getHealth() - 1);
-                        p2AttackCount++;
+                        p2.addMeter(.05);
                     }
                     executorService.schedule(() -> {
 
@@ -323,9 +353,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
         }
 
-        if (source == holdTimer) {
-            holdCount+=1;
-        }
 
         if (source==roundTimer) {
             countdown--;
@@ -485,20 +512,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         }
         if (e.getKeyCode()==81) {
             System.out.println("p1 attack");
-            p1AttackCount=0;
         }
         if (e.getKeyCode()==100) {
             System.out.println("p2 attack");
-            p2AttackCount=0;
-        }
-        if (e.getKeyCode()==67) {
-            System.out.println(holdCount);
-            if (holdCount>=3) {
-                //p1.transform();
-            }
-            holdCount=0;
-            holdTimer.restart();
-            holdTimer.stop();
         }
         if (e.getKeyCode()==83) {
             p1.setBlocking(false);
