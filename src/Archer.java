@@ -93,7 +93,6 @@ public class Archer extends Character{
     public BufferedImage getPlayerImage() {
         if (isAttacking) {
             if (!attackAnimation.isRunning()) {
-                isAttacking = false;
                 animationNum = 2;
             } else {
                 return attackAnimation.getActiveFrame();
@@ -134,5 +133,13 @@ public class Archer extends Character{
 
     public Rectangle hitbox() {
         return new Rectangle((int) xCoord, (int) yCoord, width, height);
+    }
+
+    public boolean attackAnimationEnded() {
+        return isAttacking && !attackAnimation.isRunning();
+    }
+
+    public void setIsAttacking(boolean attacking) {
+        isAttacking = attacking;
     }
 }
