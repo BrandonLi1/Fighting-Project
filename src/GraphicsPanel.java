@@ -25,7 +25,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, bingusButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
+    private BufferedImage origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage;
     private Timer timer;
     private Timer roundTimer;
     private Timer holdTimer;
@@ -70,6 +70,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         selectionButtons();
 
         backButton.setVisible(false);
+        startButton.setSize(300, 300);
         add(startButton);
         add(keybindsButton);
         add(backButton);
@@ -89,12 +90,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (startWindow) {
+            try {
+                origin = ImageIO.read((new File("src\\Backgrounds\\origin.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            g.drawImage(origin, 0, 0, null);
+
             startButton.setBackground(Color.BLACK);
             startButton.setForeground(Color.WHITE);
             keybindsButton.setBackground(Color.BLACK);
             keybindsButton.setForeground(Color.WHITE);
-            startButton.setLocation(400, 300);
-            keybindsButton.setLocation(400, 400);
+            startButton.setLocation(870, 275);
+            startButton.setSize(90, 60);
+            keybindsButton.setLocation(680, 640);
+            keybindsButton.setSize(95, 50);
             startButton.setVisible(true);
             keybindsButton.setVisible(true);
         } else if (keybindsWindow) {
