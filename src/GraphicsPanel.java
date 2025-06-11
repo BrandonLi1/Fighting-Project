@@ -27,7 +27,7 @@ import java.util.List;
 //https://craftpix.net/freebies/11-free-pixel-art-explosion-sprites/
 
 public class GraphicsPanel extends JPanel implements ActionListener, KeyListener {
-    private JButton startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
+    private JButton playAgain, startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
     private BufferedImage origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
@@ -38,7 +38,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     int countdown, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
-    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false, EndWindow = false, directionP1 = true, directionP2 = false, p1Win, p2Win;
+    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false, endWindow = false, directionP1 = true, directionP2 = false, p1Win, p2Win;
     boolean[] pressedKeys = new boolean[128];
     //false is left, true is right -what is this bruh
     private boolean p1Attcking = false;
@@ -49,6 +49,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         startButton=new JButton("Start");
         keybindsButton=new JButton("Keybinds");
         backButton=new JButton("back");
+        playAgain = new JButton("Play Again");
         startButton.setFocusPainted(false);
         keybindsButton.setFocusPainted(false);
         timer = new Timer(10, this);
@@ -71,15 +72,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         selectionButtons();
 
         backButton.setVisible(false);
+        playAgain.setVisible(false);
         startButton.setSize(300, 300);
         add(startButton);
         add(keybindsButton);
         add(backButton);
         add(p1Controls);
         add(p2Controls);
+        add(playAgain);
         startButton.addActionListener(this);
         keybindsButton.addActionListener(this);
         backButton.addActionListener(this);
+        playAgain.addActionListener(this);
 
         addKeyListener(this);
         setFocusable(true);
@@ -124,6 +128,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p1Controls.setBounds(0, 50, 550, 450);
             p2Controls.setBounds(1000, 50, 550, 450);
         } else if (selectionScreen) {
+            playAgain.setVisible(false);
             try {
                 selectionBackground = ImageIO.read((new File("src\\Backgrounds\\selectionBackground.jpg")));
             } catch (Exception e) {
@@ -144,7 +149,42 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 g.drawImage(p2NameImage, 1000, 500, null);
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
-        } else if (EndWindow) {
+        } else if (endWindow) {
+            /*if (p2Win) {
+                if (p2 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p2 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p2 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p2 instanceof Glorp) {
+                    g.drawImage()
+                }
+            }
+            else {
+                if (p1 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p1 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p1 instanceof Glorp) {
+                    g.drawImage()
+                }
+                else if (p1 instanceof Glorp) {
+                    g.drawImage()
+                }
+            }*/
+
+            playAgain.setVisible(true);
+            playAgain.grabFocus();
+            playAgain.setBackground(Color.BLACK);
+            playAgain.setForeground(Color.WHITE);
+            playAgain.setLocation(150, 150);
+            playAgain.setSize(90, 60);
 
         }else {
             if (!timer.isRunning()) {
@@ -395,11 +435,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
                 if (p1.getHealth()<=0) {
                     p2Win=true;
-                    EndWindow = true;
+                    endWindow = true;
                 }
                 if(p2.getHealth()<=0){
                     p1Win = true;
-                    EndWindow = true;
+                    endWindow = true;
                 }
 
 
@@ -562,6 +602,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 archerButton.setVisible(false);
                 confirmButton.setVisible(false);
             }
+        }
+        if (source == playAgain) {
+            selectionScreen = true;
+            endWindow = false;
         }
         repaint();
     }
