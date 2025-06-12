@@ -353,8 +353,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p2.setHealth(p2.getHealth() - p1.attackDamage * 3);
                             System.out.println(p2.getHealth());
                             System.out.println(p1.attackDamage);
-                            p2StunTimer = 0;
-                            p2.setStunned(true);
+                            stunP2(500);
                             p1.addMeter(.5);
                             if (p1.getClass()==Saber.class) {
                                 ((Saber) p1).energy++;
@@ -371,17 +370,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 //X
                 if (p1.meter >= 3 && pressedKeys[88]) {
+                    int x=0;
                     p1Attcking = true;
                     Rectangle damageBox = p1.special1();
                     Rectangle hitbox = p2.hitbox();
                     g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                    if (p1.getClass() == Saber.class) {
+                        x = ((Saber) p1).energy + (int)p1.meter;
+                        p1.meter-=(int) p1.meter;
+                        System.out.println(x);
+                        x*=30;
+                    }
+                    System.out.println(x);
                     if (damageBox.intersects(hitbox)) {
-                        if (p1.getClass() == Saber.class) {
-                            int x =((Saber) p1).energy + (int)p1.meter;
-                            p1.meter-=(int) p1.meter;
-                            x*=30;
-                            p2.setHealth(p2.getHealth()-x);
-                        }
+                        System.out.println("?dakshgdsbja");
+                        p2.setHealth(p2.getHealth()-x);
                     }
                     //add executor service for this pls
                     p1Attcking=false;
@@ -495,8 +498,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p1.setHealth(p1.getHealth() - p2.attackDamage * 3);
                             System.out.println(p1.getHealth());
                             System.out.println(p2.attackDamage);
-                            p1StunTimer=0;
-                            p1.setStunned(true);
+                            stunP1(500);
                             p1.addMeter(.5);
                             if (p1.getClass()==Saber.class) {
                                 ((Saber) p1).energy++;

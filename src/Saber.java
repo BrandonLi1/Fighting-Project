@@ -9,6 +9,7 @@ public class Saber extends Character {
     Animation animation, animation2, animation3, animation4, animation5, animation6, heavyAttack, attack1, attack2;
     private int basicCount;
     int energy;
+    private int failCheck=0;
     public int comboNum;
     private boolean ult;
     public Saber() {
@@ -130,6 +131,7 @@ public class Saber extends Character {
                 isAttacking = false;
                 if (ult==true) {
                     setyCoord((int) (yCoord + 300));
+                    failCheck=0;
                 }
                 ult=false;
                 animationNum = 2;
@@ -199,15 +201,18 @@ public class Saber extends Character {
             animation6.resume();
         }
         setAnimationNum(6);
-        setyCoord((int) (yCoord-300));
+        if (failCheck==0) {
+            setyCoord((int) (yCoord - 300));
+            failCheck++;
+        }
+        System.out.println("fly");
         setWidth(1000);
         setHeight(400);
         if (facingRight) {
-            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+            return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
         }
-        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
     }
-
 
     public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
