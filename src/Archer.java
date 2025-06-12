@@ -13,6 +13,7 @@ public class Archer extends Character{
     private Animation idleAnimation;
     private int animationNum;
     private boolean isAttacking;
+    public int comboNum;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     //https://craftpix.net/freebies/free-underwater-enemies-pixel-art-character-pack/
@@ -21,6 +22,7 @@ public class Archer extends Character{
         super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6, 2, 10);
         isAttacking = false;
 
+        comboNum = 9;
         //Archer attack
         for (int i = 11; i < 22; i++) {
             String filename = "src\\Archer\\Attack\\Archer0" + i + ".png";

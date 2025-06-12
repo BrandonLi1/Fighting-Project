@@ -141,6 +141,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             luffyButton.setLocation(600, 100);
             archerButton.setVisible(true);
             archerButton.setLocation(900, 100);
+            glorpButton.setVisible(true);
+            glorpButton.setLocation(1200, 100);
             if (p1CharacterImage != null) {
                 g.drawImage(p1NameImage, 150, 500, null);
                 g.drawImage(p1CharacterImage, 100, 600, null);
@@ -183,8 +185,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             playAgain.grabFocus();
             playAgain.setBackground(Color.BLACK);
             playAgain.setForeground(Color.WHITE);
-            playAgain.setLocation(150, 150);
-            playAgain.setSize(90, 60);
+            playAgain.setLocation(400, 260);
+            playAgain.setSize(180, 60);
 
         }else {
             if (!timer.isRunning()) {
@@ -297,8 +299,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p2.setHealth(p2.getHealth() - p1.attackDamage);
                         System.out.println(p2.getHealth());
                         System.out.println(p1.attackDamage);
-                        p2StunTimer=0;
-                        p2.setStunned(true);
                         try {
                             Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
                             g.drawImage(Hitimage,damageBox.x+ damageBox.width/2,damageBox.y+ damageBox.height/2,100,100,null);
@@ -310,7 +310,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     }
                     else if (damageBox.intersects(hitbox) && p2.blocking) {
                         p2.setHealth(p2.getHealth() - 1);
-                        p2.setStunned(false);
                         p1.addMeter(.05);
                     }
                     executorService.schedule(() -> {
@@ -333,8 +332,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p2.setHealth(p2.getHealth() - p1.attackDamage*3);
                             System.out.println(p2.getHealth());
                             System.out.println(p1.attackDamage);
-                            p2StunTimer=0;
-                            p2.setStunned(true);
                             p1.addMeter(.5);
                         }
 
@@ -354,6 +351,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p1.meter>=3&&pressedKeys[88]) { //check for mode(transform) holding
                     //do spec 2
                 }
+            }
+            else {
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                executorService.schedule(() -> {
+                    p1Attcking = false;
+                }, 2000, TimeUnit.MILLISECONDS);
             }
 
 
@@ -411,8 +414,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         p1.setHealth(p1.getHealth() - p2.attackDamage);
                         System.out.println(p1.getHealth());
                         System.out.println(p2.attackDamage);
-                        p1StunTimer=0;
-                        p1.setStunned(true);
                         p2.addMeter(.2);
                         try {
                             Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
@@ -449,6 +450,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
 
             }
+            else {
+
+            }
         }
     }
 
@@ -457,29 +461,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         requestFocusInWindow();
         Object source =  e.getSource();
-        if (p1 != null && p2 != null){
-            if (p2.stunned) {
-                p2StunTimer++;
-            }
-            if (p2StunTimer >= 33) {
-                p2.setStunned(false);
-            }
-            if (p1.stunned) {
-                p1StunTimer++;
-            }
-            if (p1StunTimer >= 33) {
-                p1.setStunned(false);
-            }
-        }
+
 
 
         if (source==roundTimer) {
             countdown--;
             if (countdown<=0) {
-                //placeholder for round end
-
-
-                System.exit(0);
+                if (p1.health > p2.health) {
+                    endWindow = true;
+                }
+                else {
+                    endWindow = true;
+                }
             }
         }
         if (source==startButton) {
@@ -518,6 +511,28 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
                     p2Temp="Saber";
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            confirmButton.setVisible(true);
+            repaint();
+        }
+        if (source==glorpButton) {
+            if (!p1Picked) {
+                try {
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
+                    p1Temp="Luffy";
+                    p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else {
+                try {
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
+                    p2Temp="Luffy";
                     p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -599,6 +614,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 selectionScreen=false;
                 saberButton.setVisible(false);
                 luffyButton.setVisible(false);
+                glorpButton.setVisible(false);
                 archerButton.setVisible(false);
                 confirmButton.setVisible(false);
             }
@@ -648,6 +664,17 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     }
 
     private void selectionButtons() {
+        glorpButton=new JButton();
+        glorpButton.setSize(92, 85);
+        try {
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\luffySelection.jpg"));
+            glorpButton.setIcon(new ImageIcon(img));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        add(glorpButton);
+        glorpButton.setVisible(false);
+
         saberButton=new JButton();
         saberButton.setSize(101, 101);
         try {
@@ -690,6 +717,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         saberButton.addActionListener(this);
         luffyButton.addActionListener(this);
         archerButton.addActionListener(this);
+        glorpButton.addActionListener(this);
         System.out.println("action listener added");
         confirmButton.addActionListener(this);
     }

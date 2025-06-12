@@ -18,11 +18,13 @@ public class Glorp extends Character {
     private Animation animation4;
     private int animationNum;
     private boolean isAttacking;
+    public int comboNum;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Glorp() {
         super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10,2, 10);
         isAttacking = false;
+        comboNum = 5;
 
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

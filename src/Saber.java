@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class Saber extends Character {
     Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, animation8, attack1, attack2;
     private int basicCount;
+    public int comboNum;
     public Saber() {
         super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 600, 2000);
         isAttacking = false;
 
+        comboNum = 5;
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             String filename = "src\\Saber\\Walk\\walk" + i + ".png";

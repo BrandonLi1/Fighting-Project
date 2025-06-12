@@ -11,13 +11,14 @@ public class Luffy extends Character {
     private Animation animation3;
     private Animation animation4;
     private int animationNum;
+    public int comboNum;
     private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10,2, 10);
+        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 60,600, 10);
         isAttacking = false;
-
+        comboNum = 3;
         ArrayList<BufferedImage> images = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
