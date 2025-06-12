@@ -16,7 +16,7 @@ public class Luffy extends Character {
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 60,600, 10);
+        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0, 300, 675, false, false, true, 60,600, 1000);
         isAttacking = false;
         comboNum = 3;
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -109,7 +109,7 @@ public class Luffy extends Character {
             animation4.resume();
         }
 
-        setAttack(100, height);
+        setAttack(280, height);
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }

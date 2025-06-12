@@ -21,6 +21,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+
 
 //https://craftpix.net/freebies/free-animated-explosion-sprite-pack/
 
@@ -35,6 +37,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Timer roundTimer;
     private Character p1;
     private Character p2;
+    private boolean p1InEndLag = false;
+    private boolean p2InEndLag = false;
+    private LinkedList<Long> pressTimestamps = new LinkedList<>();
+    private LinkedList<Long> pressTimestampsP2 = new LinkedList<>();
+    private boolean hasPressedThreeTimes = false;
     int countdown, p1StunTimer, p2StunTimer;
     String p1Temp;
     String p2Temp;
@@ -60,6 +67,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
+
         //this.setCursor(); - make a custom cursor(if time)
         try {
             healthBar1 = ImageIO.read(new File("src\\healthBar\\health bar 1.png"));
@@ -188,7 +196,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             playAgain.setLocation(400, 260);
             playAgain.setSize(180, 60);
 
-        }else {
+        } else {
             if (!timer.isRunning()) {
                 timer.start();
             }
@@ -289,36 +297,50 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (pressedKeys[81] && !p1.blocking) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                if (!p1Attcking) {
-                    p1Attcking = true;
-                    Rectangle damageBox = p1.attack();
-                    Rectangle hitbox = p2.hitbox();
-                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                    if (damageBox.intersects(hitbox) && !p2.blocking) {
-                        System.out.println("hit");
-                        p2.setHealth(p2.getHealth() - p1.attackDamage);
-                        System.out.println(p2.getHealth());
-                        System.out.println(p1.attackDamage);
-                        try {
-                            Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
-                            g.drawImage(Hitimage,damageBox.x+ damageBox.width/2,damageBox.y+ damageBox.height/2,100,100,null);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                    if (!p1Attcking && !p1InEndLag) {
+                        p1Attcking = true;
+                        Rectangle damageBox = p1.attack();
+                        Rectangle hitbox = p2.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+
+                        if (damageBox.intersects(hitbox) && !p2.blocking) {
+                            System.out.println("hit");
+                            p2.setHealth(p2.getHealth() - p1.attackDamage);
+                            stunP2(p1.normalD - 50);
+                            p1.addMeter(.2);
+                        } else if (damageBox.intersects(hitbox) && p2.blocking) {
+                            p2.setHealth(p2.getHealth() - 1);
+                            p1.addMeter(.05);
                         }
 
-                        p1.addMeter(.2);
-                    }
-                    else if (damageBox.intersects(hitbox) && p2.blocking) {
-                        p2.setHealth(p2.getHealth() - 1);
-                        p1.addMeter(.05);
-                    }
-                    executorService.schedule(() -> {
-                        p1Attcking = false;
-                    }, p1.normalD, TimeUnit.MILLISECONDS);
+                        // **Track attack timestamps**
+                        long now = System.currentTimeMillis();
+                        pressTimestamps.add(now);
+
+                        // **Remove old timestamps beyond 3 seconds**
+                        while (!pressTimestamps.isEmpty() && now - pressTimestamps.peek() > p1.normalD * p1.comboCounter + 600) {
+                            pressTimestamps.poll();
+                        }
+
+                        // **Check if 3 attacks happened within 3 seconds**
+                        if (pressTimestamps.size() >= 3) {
+                            System.out.println("Endlag triggered!"); // Debugging message
+                            p1InEndLag = true; // **Start endlag period**
+
+                            executorService.schedule(() -> {
+                                p1InEndLag = false; // **Endlag finished, attacks are allowed again**
+                            }, p1.normalD + 1500, TimeUnit.MILLISECONDS); // Adjust this duration for endlag
+                        }
+
+                        // **Standard attack cooldown**
+                        executorService.schedule(() -> {
+                            p1Attcking = false;
+                        }, p1.normalD, TimeUnit.MILLISECONDS);
 
                         executorService.shutdown();
                     }
                 }
+
                 if (pressedKeys[69]) { //DONT CLICK E
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -395,45 +417,53 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //Right Key
-                if (pressedKeys[39] && !p2.blocking) {
-                    p2.moveRight();
-                    p2.faceRight();
-                    p2.setAnimationNum(1);
-                    directionP2 = true;
-                }
-
-                if (pressedKeys[100] && !p2.blocking) {
+                if (pressedKeys[80] && !p2.blocking) { // Assuming P2 attacks with 'P' key (key code 80)
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                if (!p2Attacking) {
-                    p2Attacking = true;
-                    Rectangle damageBox = p2.attack();
-                    Rectangle hitbox = p1.hitbox();
-                    if (damageBox.intersects(hitbox) && !p1.blocking) {
-                        System.out.println("hit");
-                        p1.setHealth(p1.getHealth() - p2.attackDamage);
-                        System.out.println(p1.getHealth());
-                        System.out.println(p2.attackDamage);
-                        p2.addMeter(.2);
-                        try {
-                            Hitimage = ImageIO.read(new File("src\\Winanimations\\hit.png"));
-                            g.drawImage(Hitimage,damageBox.x+ damageBox.width/2,damageBox.y+ damageBox.height/2,100,100,null);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                    if (!p2Attacking && !p2InEndLag) {
+                        p2Attacking = true;
+                        Rectangle damageBox = p2.attack();
+                        Rectangle hitbox = p1.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+
+                        if (damageBox.intersects(hitbox) && !p1.blocking) {
+                            System.out.println("hit");
+                            p1.setHealth(p1.getHealth() - p2.attackDamage);
+                            p2.addMeter(.2);
+                            stunP1(p2.normalD - 5);
+                        } else if (damageBox.intersects(hitbox) && p1.blocking) {
+                            p1.setHealth(p1.getHealth() - 1);
+                            p2.addMeter(.05);
                         }
-                    }else if (damageBox.intersects(hitbox) && p1.blocking) {
-                        p1.setHealth(p1.getHealth() - 1);
-                        p2.addMeter(.05);
-                    }
-                    executorService.schedule(() -> {
 
-                        p2Attacking = false;
-                    }, p2.normalD, TimeUnit.MILLISECONDS);
+                        // **Track attack timestamps**
+                        long now = System.currentTimeMillis();
+                        pressTimestampsP2.add(now);
 
+                        // **Remove old timestamps beyond 3 seconds**
+                        while (!pressTimestampsP2.isEmpty() && now - pressTimestampsP2.peek() > p2.normalD * p2.comboCounter + 600) {
+                            pressTimestampsP2.poll();
+                        }
+
+                        // **Check if P2 attacked 3 times within 3 seconds**
+                        if (pressTimestampsP2.size() >= 3) {
+                            System.out.println("Endlag triggered for P2!"); // Debugging message
+                            p2InEndLag = true; // **Start endlag period**
+
+                            executorService.schedule(() -> {
+                                p2InEndLag = false; // **Endlag finished, P2 can attack again**
+                            }, p2.normalD + 1500, TimeUnit.MILLISECONDS); // Adjust this duration for endlag
+                        }
+
+                        // **Standard attack cooldown**
+                        executorService.schedule(() -> {
+                            p2Attacking = false;
+                        }, p2.normalD, TimeUnit.MILLISECONDS);
 
                         executorService.shutdown();
                     }
                 }
+
                 if (p1.getHealth()<=0) {
                     p2Win=true;
                     endWindow = true;
@@ -454,6 +484,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
             }
         }
+        checkAttacksP1();
+        checkAttacksP2();
     }
 
 
@@ -723,6 +755,69 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     }
 
     //merge force
+    public void stunP1 (int duration) {
+        p1.stunned = true;
+
+        ScheduledExecutorService stun = Executors.newSingleThreadScheduledExecutor();
+        stun.schedule(() -> {
+            p1.stunned = false;
+        }, duration, TimeUnit.MILLISECONDS);
+    }
+
+    public void stunP2 (int duration) {
+        p2.stunned = true;
+
+        ScheduledExecutorService stun = Executors.newSingleThreadScheduledExecutor();
+        stun.schedule(() -> {
+            p2.stunned = false;
+        }, duration, TimeUnit.MILLISECONDS);
+    }
+
+
+    private void checkAttacksP1() {
+        long now = System.currentTimeMillis();
+
+        // Remove old presses beyond the calculated attack window
+        while (!pressTimestamps.isEmpty() && now - pressTimestamps.peek() > p1.normalD * p1.comboCounter + 100) {
+            pressTimestamps.poll();
+        }
+
+        // Check if the player has pressed 3 times in the window
+        if (pressTimestamps.size() >= 3) {
+            if (!p1Attcking && !p1InEndLag) { // NEW: Prevent attacking during endlag
+                p1Attcking = true;
+                p1InEndLag = true; // Start endlag timer
+
+                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+                executorService.schedule(() -> {
+                    p1Attcking = false; // Allow attacking again after normal attack duration
+                }, p1.normalD, TimeUnit.MILLISECONDS);
+
+                // NEW: Add **extra** cooldown before allowing attacks again
+                executorService.schedule(() -> {
+                    p1InEndLag = false; // Endlag finished, player can attack again
+                }, p1.normalD + 300, TimeUnit.MILLISECONDS); // Adjust this delay for endlag duration
+
+                executorService.shutdown();
+            }
+        }
+    }
+
+
+    private void checkAttacksP2() {
+        long now = System.currentTimeMillis();
+
+        // Remove old presses beyond 3 seconds
+        while (!pressTimestamps.isEmpty() && now - pressTimestamps.peek() > 3000) {
+            pressTimestamps.poll();
+        }
+
+        // Check if the player has pressed 3 times in the window
+        if (pressTimestamps.size() >= 3) {
+
+        }    }
+
 }
 
 /*3 -- Cancel
