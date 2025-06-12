@@ -10,14 +10,18 @@ public class Luffy extends Character {
     private Animation animation2;
     private Animation animation3;
     private Animation animation4;
+    private Animation temp;
     private Animation animation5;
+    private Animation animation6;
     private int animationNum;
+    private int failCheck;
     public int comboNum;
+    private boolean ult;
     private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0.0, 300, 675, false, false, true, 60,600, 1000, 10);
+        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0.0, 300, 675, false, false, true, 10,600, 1000, 10);
         isAttacking = false;
         comboNum = 3;
         ArrayList<BufferedImage> images = new ArrayList<>();
@@ -57,8 +61,8 @@ public class Luffy extends Character {
         animation3 = new Animation(images3,50, true);
         //jump
         ArrayList<BufferedImage> images4 = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
+        for (int i = 0; i < 8; i++) {
+            String filename = "src\\Luffy\\Walk\\Heavy\\luffyheavy00" + i + ".png";
             try {
                 images4.add(ImageIO.read(new File(filename)));
             }
@@ -67,10 +71,10 @@ public class Luffy extends Character {
             }
         }
         animation4 = new Animation(images4,50, false);
-        //attack
+        temp = animation4;
         ArrayList<BufferedImage> images5 = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            String filename = "src\\Luffy\\Walk\\Heavy\\luffyheavy00" + i + ".png";
+        for (int i = 0; i < 6; i++) {
+            String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
             try {
                 images5.add(ImageIO.read(new File(filename)));
             }
@@ -78,7 +82,19 @@ public class Luffy extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation5 = new Animation(images4,50, false);
+        animation5 = new Animation(images5,100, false);
+        ArrayList<BufferedImage> images6 = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            String filename = "src\\Luffy\\Walk\\Ult\\luffyult00" + i + ".png";
+            try {
+                images6.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation6 = new Animation(images6,100, false);        //attack
+
     }
 
     public Animation getAnimation3() {
@@ -93,7 +109,7 @@ public class Luffy extends Character {
     @Override
     public BufferedImage getPlayerImage() {
         if (isAttacking) {
-            if (!animation4.isRunning()) {
+            if (!animation4.isRunning() && !animation5.isRunning()) {
                 isAttacking = false;
                 animationNum = 2;
             } else {
@@ -116,14 +132,13 @@ public class Luffy extends Character {
 
     @Override
     public Rectangle attack() {
+        animation4=animation5;
         if (!isAttacking) {
             isAttacking = true;
-            animationNum = 4;
-            animation4.reset();
-            animation4.resume();
+            animation5.reset(); //change to 6
+            animation5.resume();
         }
-
-        setAttack(100, height);
+        setAnimationNum(5);
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
@@ -134,17 +149,40 @@ public class Luffy extends Character {
     }
     @Override
     public Rectangle heavyAttack() { //ani 6
+        animation4 = temp;
         setAttack(100, height);
         if (!isAttacking) {
             isAttacking = true;
-            animation5.reset(); //change to 6
-            animation5.resume();
+            animation4.reset(); //change to 6
+            animation4.resume();
         }
         setAnimationNum(4);
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
         return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
+    }
+    public Rectangle special1() { //ani 7
+        ult=true;
+        setAttack(500, 500);
+        animation4=animation6;
+        if (!isAttacking) {
+            isAttacking = true;
+            animation6.reset(); //change to 6
+            animation6.resume();
+        }
+        setAnimationNum(6);
+        if (failCheck==0) {
+            setyCoord((int) (yCoord - 300));
+            failCheck++;
+        }
+        System.out.println("fly");
+        setWidth(500);
+        setHeight(500);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
+        }
+        return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
     }
     /*  public Rectaqngle attack() {
         setAnimation(attackAnimation);
