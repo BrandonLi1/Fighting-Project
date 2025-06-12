@@ -206,7 +206,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             if (p1 instanceof Archer) {
-                Archer archer = (Archer)p1;
+                Archer archer = (Archer) p1;
                 if (archer.attackAnimationEnded()) {
                     int arrowY = (int) (archer.yCoord + archer.height / 2);
                     int arrowX;
@@ -224,14 +224,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.fillRect(327, 74, (int) (480 * ((double) p1.getHealth() / p1.getMaxHealth())), 52);
             g.fillRect(1057 + (int) (480 * (1.0 - (double) p2.getHealth() / p2.getMaxHealth())), 74, (int) (480 * ((double) p2.getHealth() / p2.getMaxHealth())), 52);
             g.setColor(Color.BLUE);
-            g.fillRect(327, 124, (int) (480 * (p1.meter/7)), 26);
-            g.fillRect(1057 + (int) (480 * (1.0 - p2.meter/7)), 126, (int) (480 * (p2.meter/7)), 26);
+            g.fillRect(327, 124, (int) (480 * (p1.meter / 7)), 26);
+            g.fillRect(1057 + (int) (480 * (1.0 - p2.meter / 7)), 126, (int) (480 * (p2.meter / 7)), 26);
             g.setColor(Color.BLACK);
             g.drawImage(healthBar1, 200, 50, null);
             g.drawImage(healthBar2, 1050, 50, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
             if (p2 instanceof Archer) {
-                Archer archer = (Archer)p2;
+                Archer archer = (Archer) p2;
                 if (archer.attackAnimationEnded()) {
                     int arrowY = (int) (archer.yCoord + archer.height / 2);
                     int arrowX;
@@ -257,8 +257,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             g.setFont(new Font("Arial", Font.BOLD, 30));
             g.drawString(String.valueOf(countdown), 904, 100);
-            g.drawRect((int)p1.xCoord, (int) p1.yCoord, p1.width, p1.height);
-            g.drawRect((int)p2.xCoord, (int) p2.yCoord, p2.width, p2.height);
+            g.drawRect((int) p1.xCoord, (int) p1.yCoord, p1.width, p1.height);
+            g.drawRect((int) p2.xCoord, (int) p2.yCoord, p2.width, p2.height);
 
             //p1
 
@@ -306,8 +306,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         if (damageBox.intersects(hitbox) && !p2.blocking) {
                             System.out.println("hit");
                             p2.setHealth(p2.getHealth() - p1.attackDamage);
-                            stunP2(p1.normalD - 50);
-                            p1.addMeter(.2);
+                            stunP2(p1.normalD - 10);
+                            p1.addMeter(10);
                         } else if (damageBox.intersects(hitbox) && p2.blocking) {
                             p2.setHealth(p2.getHealth() - 1);
                             p1.addMeter(.05);
@@ -318,7 +318,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         pressTimestamps.add(now);
 
                         // **Remove old timestamps beyond 3 seconds**
-                        while (!pressTimestamps.isEmpty() && now - pressTimestamps.peek() > p1.normalD * p1.comboCounter + 600) {
+                        while (!pressTimestamps.isEmpty() && now - pressTimestamps.peek() > (long) p1.normalD * p1.comboCounter + 600) {
                             pressTimestamps.poll();
                         }
 
@@ -340,21 +340,25 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         executorService.shutdown();
                     }
                 }
-
-                if (pressedKeys[69]) { //DONT CLICK E
+                if (pressedKeys[69]) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                     if (!p1Attcking) {
                         p1Attcking = true;
-                        Rectangle damageBox = p1.attack();
+                        Rectangle damageBox = p1.heavyAttack();
                         Rectangle hitbox = p2.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
                         if (damageBox.intersects(hitbox)) {
                             System.out.println("hit");
-                            p2.setHealth(p2.getHealth() - p1.attackDamage*3);
+                            p2.setHealth(p2.getHealth() - p1.attackDamage * 3);
                             System.out.println(p2.getHealth());
                             System.out.println(p1.attackDamage);
+                            p2StunTimer = 0;
+                            p2.setStunned(true);
                             p1.addMeter(.5);
+                            if (p1.getClass()==Saber.class) {
+                                ((Saber) p1).energy++;
+                            }
                         }
 
                         executorService.schedule(() -> {
@@ -365,14 +369,24 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     }
                 }
 
-                //Z
-                if (p1.meter>=1&&pressedKeys[90]) { //check for mode(transform) holding
-                    //do spec 1
-                }
                 //X
-                if (p1.meter>=3&&pressedKeys[88]) { //check for mode(transform) holding
-                    //do spec 2
+                if (p1.meter >= 1 && pressedKeys[88]) {
+                    p1Attcking = true;
+                    Rectangle damageBox = p1.special1();
+                    Rectangle hitbox = p2.hitbox();
+                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                    if (damageBox.intersects(hitbox)) {
+                        if (p1.getClass() == Saber.class) {
+                            int x =((Saber) p1).energy + (int)p1.meter;
+                            p1.meter-=(int) p1.meter;
+                            x*=30;
+                            p2.setHealth(p2.getHealth()-x);
+                        }
+                    }
+                    //add executor service for this pls
+                    p1Attcking=false;
                 }
+
             }
             else {
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -388,7 +402,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             if (pressedKeys[69]) {//e
                 p1.//heavy
             }*/
-
 
 
             // W=87; A=65; S=83; D=68
@@ -417,7 +430,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //Right Key
-                if (pressedKeys[80] && !p2.blocking) { // Assuming P2 attacks with 'P' key (key code 80)
+                if (pressedKeys[39] && !p2.blocking) {
+                    p2.moveRight();
+                    p2.faceRight();
+                    p2.setAnimationNum(1);
+                    directionP2 = true;
+                }
+
+                if (pressedKeys[100] && !p2.blocking) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
                     if (!p2Attacking && !p2InEndLag) {
@@ -459,11 +479,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         executorService.schedule(() -> {
                             p2Attacking = false;
                         }, p2.normalD, TimeUnit.MILLISECONDS);
-
                         executorService.shutdown();
                     }
                 }
-
                 if (p1.getHealth()<=0) {
                     p2Win=true;
                     endWindow = true;

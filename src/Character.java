@@ -165,9 +165,6 @@ public class Character implements ActionListener {
         return new Rectangle();
     }
 
-    public Rectangle special2() {
-        return new Rectangle();
-    }
 
     public void block() {
         if (isGrounded && !stunned) {
@@ -249,6 +246,14 @@ public class Character implements ActionListener {
             }
             jumpHeight += 0.2;
         }
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public Rectangle hitbox() {

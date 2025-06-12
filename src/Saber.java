@@ -6,11 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Saber extends Character {
-    Animation animation, animation2, animation3, animation4, animation5, animation6, animation7, animation8, attack1, attack2;
+    Animation animation, animation2, animation3, animation4, animation5, animation6, heavyAttack, attack1, attack2;
     private int basicCount;
+    int energy;
     public int comboNum;
+    private boolean ult;
     public Saber() {
-        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 600, 2000);
+        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 500, 2000);
         isAttacking = false;
 
         comboNum = 5;
@@ -59,6 +61,22 @@ public class Saber extends Character {
         }
         attack1 = new Animation(images,81, false);
         animation4=attack1;
+        images = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            String filename = "src\\Saber\\Attack\\attack" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        try {
+            images.add(ImageIO.read(new File("src\\Saber\\Attack\\attack5.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        heavyAttack = new Animation(images,120, false);
         images=new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             String filename = "src\\Saber\\Attack\\attack2-" + i + ".png";
@@ -81,6 +99,23 @@ public class Saber extends Character {
             }
         }
         animation5 = new Animation(images, 50, true);
+        images = new ArrayList<>();
+        for (int i=1; i<5; i++) {
+            String filename = "src\\Saber\\Special\\spec" + i + ".png";
+            try {
+                images.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        try {
+            images.add(ImageIO.read(new File("src\\Saber\\Special\\spec4.png")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        animation6=new Animation(images, 200, false);
+        animation6.stop();
     }
 
     @Override
@@ -91,9 +126,15 @@ public class Saber extends Character {
     @Override
     public BufferedImage getPlayerImage() {
         if (isAttacking) {
-            if (!animation4.isRunning()) {
+            if (!animation4.isRunning() && !animation6.isRunning()) {
                 isAttacking = false;
+                if (ult==true) {
+                    setyCoord((int) (yCoord + 300));
+                }
+                ult=false;
                 animationNum = 2;
+                setHeight(150);
+                setWidth(150);
             } else {
                 return animation4.getActiveFrame();
             }
@@ -106,14 +147,15 @@ public class Saber extends Character {
             return animation4.getActiveFrame();
         } else if (animationNum==5) {
             return animation5.getActiveFrame();
-        }else {
+        }else if (animationNum==6) {
+            return animation6.getActiveFrame();
+        } else {
             return animation2.getActiveFrame();
         }
     }
     @Override
     public Rectangle attack() {
         setAttack(100, height);
-        basicCount++;
         if (Math.random()<=.5) {
             animation4=attack1;
         } else {
@@ -126,11 +168,6 @@ public class Saber extends Character {
         }
 
         setAnimationNum(4);
-        if (basicCount%basicChain==0) {
-            setNormalD(1000);
-        } else {
-            setNormalD(600);
-        }
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
@@ -139,6 +176,7 @@ public class Saber extends Character {
 
     public Rectangle heavyAttack() { //ani 6
         setAttack(100, height);
+        animation4=heavyAttack;
         if (!isAttacking) {
             isAttacking = true;
             animation4.reset(); //change to 6
@@ -151,13 +189,25 @@ public class Saber extends Character {
         return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
     }
 
-    /*public Rectangle special1() { //ani 7
-
+    public Rectangle special1() { //ani 7
+        ult=true;
+        setAttack(1000, 1000);
+        animation4=animation6;
+        if (!isAttacking) {
+            isAttacking = true;
+            animation6.reset(); //change to 6
+            animation6.resume();
+        }
+        setAnimationNum(6);
+        setyCoord((int) (yCoord-300));
+        setWidth(1000);
+        setHeight(400);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+        }
+        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
     }
 
-    public Rectangle special2() {//ani 8
-
-    }*/
 
     public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);

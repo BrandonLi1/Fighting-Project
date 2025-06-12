@@ -21,7 +21,6 @@ public class Archer extends Character{
     public Archer() {
         super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6, 2, 10);
         isAttacking = false;
-
         comboNum = 9;
         //Archer attack
         for (int i = 11; i < 22; i++) {

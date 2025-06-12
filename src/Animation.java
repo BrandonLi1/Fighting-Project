@@ -23,6 +23,14 @@ public class Animation implements ActionListener {
         return frames.get(currentFrame);
     }
 
+    public int getWidth() {
+        return frames.get(currentFrame).getWidth();
+    }
+
+    public int getHeight() {
+        return frames.get(currentFrame).getHeight();
+    }
+
     public int getCurrentFrame() {
         return currentFrame;
     }
