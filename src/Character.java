@@ -91,6 +91,8 @@ public class Character implements ActionListener {
     public void setyCoord(int yCoord) {
         this.yCoord = yCoord;
     }
+    public void setaWidth(int width){this.width = width;}
+    public void setaLenght(int length){this.height = length;}
 
     public void setBlocking(boolean blocking) {
         this.blocking = blocking;

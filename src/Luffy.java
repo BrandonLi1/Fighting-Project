@@ -22,12 +22,12 @@ public class Luffy extends Character {
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0.0, 300, 675, false, false, true, 10,600, 1000, 10);
+        super("Luffy", 500, 3, 200, 200, 5, 10, 3, 0.0, 300, 675, false, false, true, 10,600, 1000, 10);
         isAttacking = false;
         comboNum = 3;
         ArrayList<BufferedImage> images = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
+        for (int i = 0; i < 8; i++) {
+            String filename = "src\\Luffy\\Walk\\luffyrun00" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -38,7 +38,7 @@ public class Luffy extends Character {
         animation = new Animation(images,50, true);
         //Luffy.Saber.Walk.idle animation
         ArrayList<BufferedImage> images2 = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
             try {
                 images2.add(ImageIO.read(new File(filename)));
@@ -47,7 +47,7 @@ public class Luffy extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation2 = new Animation(images2,50, true);
+        animation2 = new Animation(images2,300, true);
         //luffy Luffy.Saber.Walk.jump animation
         ArrayList<BufferedImage> images3 = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -71,11 +71,11 @@ public class Luffy extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images4,50, false);
+        animation4 = new Animation(images4,75, false);
         temp = animation4;
         ArrayList<BufferedImage> images5 = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
+            String filename = "src\\Luffy\\Walk\\Attack\\luffyattack00" + i + ".png";
             try {
                 images5.add(ImageIO.read(new File(filename)));
             }
@@ -85,7 +85,7 @@ public class Luffy extends Character {
         }
         animation5 = new Animation(images5,100, false);
         ArrayList<BufferedImage> images6 = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 12; i++) {
             String filename = "src\\Luffy\\Walk\\Ult\\luffyult00" + i + ".png";
             try {
                 images6.add(ImageIO.read(new File(filename)));
@@ -162,7 +162,7 @@ public class Luffy extends Character {
     }
     public Rectangle special1() { //ani 7
         ult=true;
-        setAttack(500, 500);
+//        setAttack(500, 500);
         animation4=animation6;
         if (!isAttacking) {
             isAttacking = true;
@@ -175,7 +175,7 @@ public class Luffy extends Character {
             failCheck++;
         }
         System.out.println("fly");
-        setWidth(500);
+        setWidth(1000);
         setHeight(500);
         if (facingRight) {
             return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
