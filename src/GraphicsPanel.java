@@ -306,7 +306,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         if (damageBox.intersects(hitbox) && !p2.blocking) {
                             System.out.println("hit");
                             p2.setHealth(p2.getHealth() - p1.attackDamage);
-                            stunP2(p1.normalD - 10);
+                            stunP2(p1.normalD - 50);
                             p1.addMeter(.2);
                         } else if (damageBox.intersects(hitbox) && p2.blocking) {
                             p2.setHealth(p2.getHealth() - 1);
@@ -371,6 +371,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 //X
                 if (p1.meter >= 3 && pressedKeys[88]) {
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                     p1Attcking = true;
                     Rectangle damageBox = p1.special1();
                     Rectangle hitbox = p2.hitbox();
@@ -383,8 +384,12 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p2.setHealth(p2.getHealth()-x);
                         }
                     }
-                    //add executor service for this pls
-                    p1Attcking=false;
+                    //just change where it says p1.heavyD right below to whatever you its suppsied to be
+                    executorService.schedule(() -> {
+                        p1Attcking = false;
+                    }, p1.heavyD, TimeUnit.MILLISECONDS);
+
+                    executorService.shutdown();
                 }
 
             }
@@ -763,7 +768,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         glorpButton=new JButton();
         glorpButton.setSize(92, 85);
         try {
-            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\luffySelection.jpg"));
+            Image img = ImageIO.read(new File("src\\CharacterSelectionAssets\\GlorpSelection.png"));
             glorpButton.setIcon(new ImageIcon(img));
         } catch (Exception e) {
             System.out.println(e);
