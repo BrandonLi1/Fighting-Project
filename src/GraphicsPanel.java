@@ -37,6 +37,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private Timer roundTimer;
     private Character p1;
     private Character p2;
+    private boolean p1GlorpState = false;
+    private boolean p2GlorpState = false;
     private boolean p1InEndLag = false;
     private boolean p2InEndLag = false;
     private LinkedList<Long> pressTimestamps = new LinkedList<>();
@@ -299,11 +301,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                     if (!p1Attcking && !p1InEndLag) {
                         p1Attcking = true;
-                        Rectangle damageBox = p1.attack();
+                        Rectangle damageBox = null;
+                        try {
+                            damageBox = p1.attack();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         Rectangle hitbox = p2.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
 
-                        if (damageBox.intersects(hitbox) && !p2.blocking) {
+                        if (damageBox.intersects(hitbox) && p2GlorpState) {
+                            p1.setHealth(p1.getHealth() - 120);
+                        } else if (damageBox.intersects(hitbox) && !p2.blocking) {
                             System.out.println("hit");
                             p2.setHealth(p2.getHealth() - p1.attackDamage);
                             stunP2(p1.normalD - 10);
@@ -348,7 +357,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         Rectangle damageBox = p1.heavyAttack();
                         Rectangle hitbox = p2.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                        if (damageBox.intersects(hitbox)) {
+                        if (damageBox.intersects(hitbox) && p1GlorpState) {
+                            p2.setHealth(p2.getHealth() - 120);
+                        } else if (damageBox.intersects(hitbox)) {
                             System.out.println("hit");
                             p2.setHealth(p2.getHealth() - p1.attackDamage * 3);
                             System.out.println(p2.getHealth());
@@ -368,33 +379,46 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                     }
                 }
 
-                //X
-                if (p1.meter >= 3 && pressedKeys[88]) {
-                    int x=0;
-                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-                    p1Attcking = true;
-                    Rectangle damageBox = p1.special1();
-                    Rectangle hitbox = p2.hitbox();
-                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                    if (p1.getClass() == Saber.class) {
-                        x = ((Saber) p1).energy + (int)p1.meter;
-                        p1.meter-=(int) p1.meter;
+                //Xp1.meter >= 3 &&
+                if (pressedKeys[88]) {
+                    if (p1.getClass() == Glorp.class) {
+                        p1GlorpState = true;
+                        p1.setGlorpState(true);
+                        p1.setStunned(true);
+                        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                        executorService.schedule(() -> {
+                            p1GlorpState = false;
+                            p1.setGlorpState(false);
+                            p1.setStunned(false);
+                        }, 1500, TimeUnit.MILLISECONDS);
+                    } else {
+                        int x = 0;
+                        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                        p1Attcking = true;
+                        Rectangle damageBox = p1.special1();
+                        Rectangle hitbox = p2.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                        if (damageBox.intersects(hitbox) && p1GlorpState) {
+                            p2.setHealth(p2.getHealth() - 120);
+                        } else if (p1.getClass() == Saber.class) {
+                            x = ((Saber) p1).energy + (int) p1.meter;
+                            p1.meter -= (int) p1.meter;
+                            System.out.println(x);
+                            x *= 30;
+                        }
                         System.out.println(x);
-                        x*=30;
-                    }
-                    System.out.println(x);
-                    if (damageBox.intersects(hitbox)) {
-                        System.out.println("?dakshgdsbja");
-                        p2.setHealth(p2.getHealth()-x);
-                    }
-                    //just change where it says p1.heavyD right below to whatever you its suppsied to be
-                    executorService.schedule(() -> {
-                        p1Attcking = false;
-                    }, p1.heavyD, TimeUnit.MILLISECONDS);
+                        if (damageBox.intersects(hitbox)) {
+                            System.out.println("?dakshgdsbja");
+                            p2.setHealth(p2.getHealth() - x);
+                        }
+                        //just change where it says p1.heavyD right below to whatever you its suppsied to be
+                        executorService.schedule(() -> {
+                            p1Attcking = false;
+                        }, p1.heavyD, TimeUnit.MILLISECONDS);
 
-                    executorService.shutdown();
+                        executorService.shutdown();
+                    }
                 }
-
             }
             else {
                 ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -450,11 +474,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                     if (!p2Attacking && !p2InEndLag) {
                         p2Attacking = true;
-                        Rectangle damageBox = p2.attack();
+                        Rectangle damageBox = null;
+                        try {
+                            damageBox = p2.attack();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         Rectangle hitbox = p1.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
 
-                        if (damageBox.intersects(hitbox) && !p1.blocking) {
+                        if (damageBox.intersects(hitbox) && p1GlorpState) {
+                            p2.setHealth(p2.getHealth() - 120);
+                        } else if (damageBox.intersects(hitbox) && !p1.blocking) {
                             System.out.println("hit");
                             p1.setHealth(p1.getHealth() - p2.attackDamage);
                             p2.addMeter(.2);
@@ -498,7 +529,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         Rectangle damageBox = p2.heavyAttack();
                         Rectangle hitbox = p1.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                        if (damageBox.intersects(hitbox)) {
+                        if (damageBox.intersects(hitbox) && p1GlorpState) {
+                            p2.setHealth(p2.getHealth() - 120);
+                        } else if (damageBox.intersects(hitbox)) {
                             System.out.println("hit");
                             p1.setHealth(p1.getHealth() - p2.attackDamage * 3);
                             System.out.println(p1.getHealth());
@@ -519,20 +552,34 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 if (p2.meter >= 3 && pressedKeys[98]) {
-                    p2Attacking = true;
-                    Rectangle damageBox = p2.special1();
-                    Rectangle hitbox = p1.hitbox();
-                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                    if (damageBox.intersects(hitbox)) {
-                        if (p1.getClass() == Saber.class) {
-                            int x =((Saber) p2).energy + (int)p2.meter;
-                            p2.meter-=(int) p2.meter;
-                            x*=30;
-                            p1.setHealth(p1.getHealth()-x);
+                    if (p2.getClass() == Glorp.class) {
+                        p2GlorpState = true;
+                        p2.setGlorpState(true);
+                        p2.setStunned(true);
+                        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                        executorService.schedule(() -> {
+                            p2GlorpState = false;
+                            p2.setGlorpState(false);
+                            p2.setStunned(false);
+                        }, 1500, TimeUnit.MILLISECONDS);
+                    } else {
+                        p2Attacking = true;
+                        Rectangle damageBox = p2.special1();
+                        Rectangle hitbox = p1.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                        if (damageBox.intersects(hitbox) && p2GlorpState) {
+                            p1.setHealth(p1.getHealth() - 120);
+                        } else if (damageBox.intersects(hitbox)) {
+                            if (p1.getClass() == Saber.class) {
+                                int x = ((Saber) p2).energy + (int) p2.meter;
+                                p2.meter -= (int) p2.meter;
+                                x *= 30;
+                                p1.setHealth(p1.getHealth() - x);
+                            }
                         }
+                        //add executor service for this pls
+                        p2Attacking = false;
                     }
-                    //add executor service for this pls
-                    p2Attacking=false;
                 }
 
                 if (p1.getHealth()<=0) {
@@ -626,16 +673,16 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         if (source==glorpButton) {
             if (!p1Picked) {
                 try {
-                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
-                    p1Temp="Luffy";
+                    p1CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\GlorpSelectionPlayer.png"));
+                    p1Temp="Glorp";
                     p1NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             } else {
                 try {
-                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\saberSelectionPlayer.jpg"));
-                    p2Temp="Luffy";
+                    p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\GlorpSelectionPlayer.png"));
+                    p2Temp="Glorp";
                     p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -700,6 +747,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (p1Temp.equals("Archer")) {
                     p1 = new Archer();
                 }
+                if (p1Temp.equals("Glorp")) {
+                    p1=new Glorp();
+                }
             } else {
                 p2Picked=true;
                 if (p2Temp.equals("Saber")) {
@@ -710,6 +760,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
                 if (p2Temp.equals("Archer")) {
                     p2 = new Archer();
+                }
+                if (p1Temp.equals("Glorp")) {
+                    p1=new Glorp();
                 }
                 p2.setxCoord(1300);
             }

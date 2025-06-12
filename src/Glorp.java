@@ -19,16 +19,18 @@ public class Glorp extends Character {
     private int animationNum;
     private boolean isAttacking;
     public int comboNum;
+    public boolean isGlorpState = false;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Glorp() {
-        super("Luffy", 500, 3, 150, 150, 10, 10, 3, 0, 300, 675, false, false, true, 10,2, 10);
+        super("Glorp", 500, 3, 150, 150, 6, 10, 3, 0, 300, 675, false, false, true, 10,60, 800);
         isAttacking = false;
         comboNum = 5;
 
+        //walk
         ArrayList<BufferedImage> images = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            String filename = "src\\Luffy\\Walk\\luffy00" + i + ".png";
+        for (int i = 1; i < 7; i++) {
+            String filename = "src\\Glorp\\Walk_00" + i + ".png";
             try {
                 images.add(ImageIO.read(new File(filename)));
             }
@@ -37,10 +39,10 @@ public class Glorp extends Character {
             }
         }
         animation = new Animation(images,50, true);
-        //Luffy.Saber.Walk.idle animation
+        //idle
         ArrayList<BufferedImage> images2 = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            String filename = "src\\Luffy\\Walk\\idle\\luffyidle00" + i + ".png";
+        for (int i = 1; i < 9; i++) {
+            String filename = "src\\Glorp\\idle_00" + i + ".png";
             try {
                 images2.add(ImageIO.read(new File(filename)));
             }
@@ -49,10 +51,10 @@ public class Glorp extends Character {
             }
         }
         animation2 = new Animation(images2,50, true);
-        //luffy Luffy.Saber.Walk.jump animation
+        //attack
         ArrayList<BufferedImage> images3 = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            String filename = "src\\Luffy\\Walk\\jump\\LuffyUp00" + i + ".png";
+        for (int i = 2; i < 7; i++) {
+            String filename = "src\\Glorp\\Jump_00" + i + ".png";
             try {
                 images3.add(ImageIO.read(new File(filename)));
             }
@@ -60,11 +62,11 @@ public class Glorp extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation3 = new Animation(images3,50, true);
+        animation3 = new Animation(images3,120, true);
         //jump
         ArrayList<BufferedImage> images4 = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            String filename = "src\\Luffy\\Walk\\Attack\\luffyAttack00" + i + ".png";
+        for (int i = 6; i >= 1; i--) {
+            String filename = "src\\Glorp\\Attack_00" + i + ".png";
             try {
                 images4.add(ImageIO.read(new File(filename)));
             }
@@ -72,8 +74,12 @@ public class Glorp extends Character {
                 System.out.println(e.getMessage() + filename);
             }
         }
-        animation4 = new Animation(images4,50, false);
-        //attack
+        animation4 = new Animation(images4,44, false);
+    }
+
+    @Override
+    public void setGlorpState(boolean x) {
+        isGlorpState = x;
     }
 
     public Animation getAnimation3() {
@@ -87,10 +93,18 @@ public class Glorp extends Character {
 
     @Override
     public BufferedImage getPlayerImage() {
+        if (isGlorpState) {
+            try {
+            return ImageIO.read(new File("src\\Glorp\\GlorpState.png"));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + "src\\Glorp\\GlorpState.png");
+            }
+        }
         if (isAttacking) {
             if (!animation4.isRunning()) {
-                isAttacking = false;
                 animationNum = 2;
+                isAttacking = false;
             } else {
                 return animation4.getActiveFrame();
             }
@@ -108,7 +122,7 @@ public class Glorp extends Character {
     }
 
     @Override
-    public Rectangle attack() {
+    public Rectangle attack() throws IOException {
         if (!isAttacking) {
             isAttacking = true;
             animationNum = 4;

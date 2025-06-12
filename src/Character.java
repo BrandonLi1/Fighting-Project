@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import javax.swing.*;
 
 
@@ -147,7 +148,7 @@ public class Character implements ActionListener {
         aWidth = width;
     }
 
-    public Rectangle attack() {
+    public Rectangle attack() throws IOException {
         setAnimationNum(4);
         setAttack(100, height);
         animation.resume();
@@ -261,6 +262,10 @@ public class Character implements ActionListener {
             return new Rectangle((int) xCoord, (int) yCoord, width, height);
         }
         return new Rectangle((int) xCoord, (int) yCoord, -width, height);
+    }
+
+    public void setGlorpState(boolean x) {
+        //nothing
     }
 
 
