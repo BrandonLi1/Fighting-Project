@@ -76,7 +76,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         try {
             healthBar1 = ImageIO.read(new File("src\\healthBar\\health bar 1.png"));
             healthBar2 = ImageIO.read(new File("src\\healthBar\\health bar 2.png"));
-            background = ImageIO.read(new File("src/Backgrounds/background2.jpg"));
+            background = ImageIO.read(new File("src/Backgrounds/background3.jpg"));
             startBackground= ImageIO.read(new File("src/StartScreen.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -499,6 +499,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p2.setHealth(p2.getHealth() - 120);
                         } else if (p1.getClass() == Saber.class) {
                             x = ((Saber) p1).energy + (int) p1.meter;
+                            p1.meter -= (int) p1.meter;
+                            System.out.println(x);
+                            x *= 30;
+                        } else if(p1.getClass() == Luffy.class){
+                            x = ((Luffy) p1).energy + (int) p1.meter;
                             p1.meter -= (int) p1.meter;
                             System.out.println(x);
                             x *= 30;

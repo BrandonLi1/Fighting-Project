@@ -17,6 +17,7 @@ public class Luffy extends Character {
     private int failCheck;
     public int comboNum;
     private boolean ult;
+    int energy;
     private boolean isAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
 
@@ -144,9 +145,6 @@ public class Luffy extends Character {
         }
         return new Rectangle((int) (xCoord-width+50), (int) (yCoord), aWidth, aHeight);
     }
-    public Rectangle hitbox() { //change cus character is small
-        return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
-    }
     @Override
     public Rectangle heavyAttack() { //ani 6
         animation4 = temp;
@@ -183,6 +181,9 @@ public class Luffy extends Character {
             return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
         }
         return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
+    }
+    public Rectangle hitbox() { //change cus character is small
+        return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
     }
     /*  public Rectaqngle attack() {
         setAnimation(attackAnimation);
