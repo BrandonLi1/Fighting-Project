@@ -14,14 +14,19 @@ public class Archer extends Character{
     private int animationNum;
     private boolean isAttacking;
     public int comboNum;
+    private boolean isHeavyAttacking;
     ArrayList<BufferedImage> images = new ArrayList<>();
+    public ArrayList<BufferedImage> heavyFrames;
+    public ArcherHeavyEffect pendingHeavyEffect = null;
 
     //https://craftpix.net/freebies/free-underwater-enemies-pixel-art-character-pack/
 
     public Archer() {
-        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0, 300, 675, false, false, true, 6, 2, 10);
+        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0.0, 300, 675, false, false, true, 6, 2, 300, 2);
         isAttacking = false;
         comboNum = 9;
+        isHeavyAttacking = false;
+
         //Archer attack
         for (int i = 11; i < 22; i++) {
             String filename = "src\\Archer\\Attack\\Archer0" + i + ".png";
@@ -80,9 +85,18 @@ public class Archer extends Character{
             }
         }
         hurtAnimation = new Animation(images, 50, false);
+        images = new ArrayList<>();
 
-        //animation.stop();
-        //attackAnimation.stop();
+        //Archer heavy attack
+        heavyFrames = new ArrayList<>();
+        for (int i = 1; i <=3; i++) {
+            String filename = "src\\Archer\\Heavy\\heavy" + i + ".png";
+            try {
+                heavyFrames.add(ImageIO.read(new File(filename)));
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -124,12 +138,7 @@ public class Archer extends Character{
             attackAnimation.reset();
             attackAnimation.resume();
         }
-
-        setAttack(100, height);
-        if (facingRight) {
-            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
-        }
-        return new Rectangle((int) (xCoord), (int) (yCoord), -aWidth, aHeight);
+        return null;
     }
 
     public Rectangle hitbox() {
@@ -138,6 +147,15 @@ public class Archer extends Character{
 
     public boolean attackAnimationEnded() {
         return isAttacking && !attackAnimation.isRunning();
+    }
+
+    public Rectangle heavyAttack() {
+        if (pendingHeavyEffect == null) {
+            double fx = facingRight ? xCoord + width : xCoord - 60;
+            double fy = yCoord;
+            pendingHeavyEffect = new ArcherHeavyEffect(fx, fy, facingRight, heavyFrames);
+        }
+        return null;
     }
 
     public void setIsAttacking(boolean attacking) {

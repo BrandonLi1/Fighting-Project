@@ -10,14 +10,16 @@ public class Arrow extends Character{
     private double arrowSpeed;
     private BufferedImage image;
     private boolean expired;
+    private int owner;
 
-    public Arrow(double x, double y, boolean facingRight) {
-        super("Arrow", 1, 0, 12, 50, 0, 0, 0, 0, (int) x, (int) y, false, false, true, 0, 0, 0);
+    public Arrow(double x, double y, boolean facingRight, int owner) {
+        super("Arrow", 1, 0, 12, 50, 0, 0, 0, 0.0, (int) x, (int) y, false, false, true, 0, 0, 0,3);
         distanceTraveled = 0;
         maxDistance = 350;
         arrowSpeed = 15;
         expired = false;
         this.facingRight = facingRight;
+        this.owner = owner;
 
         try {
             image = ImageIO.read(new File ("src\\Archer\\arrow.png"));
@@ -57,8 +59,16 @@ public class Arrow extends Character{
         return expired;
     }
 
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
     @Override
     public Rectangle hitbox() {
         return new Rectangle((int) xCoord, (int) yCoord, Math.abs(width), height);
+    }
+
+    public int getOwner() {
+        return owner;
     }
 }

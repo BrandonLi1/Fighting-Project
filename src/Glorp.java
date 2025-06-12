@@ -23,7 +23,7 @@ public class Glorp extends Character {
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Glorp() {
-        super("Glorp", 500, 3, 150, 150, 6, 10, 3, 0, 300, 675, false, false, true, 10,60, 800);
+        super("Glorp", 500, 3, 150, 150, 6, 10, 3, 0.0, 300, 675, false, false, true, 10,60, 800, 20);
         isAttacking = false;
         comboNum = 5;
 

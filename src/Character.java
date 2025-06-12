@@ -5,11 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.*;
 
-
-
 public class Character implements ActionListener {
     String name;
-    int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth, normalD, heavyD;
+    int health, basicChain, height, width, speed, comboCounter, currentBasic, maxHealth, normalD, heavyD, heavyDamage;
     double jumpHeight, xCoord, yCoord, meter;
     boolean stunned, IFrames, isGrounded, blocking, facingRight, isAttacking;
     Animation animation;
@@ -25,7 +23,7 @@ public class Character implements ActionListener {
                      int height, int width, int speed, int jumpHeight,
                       int comboCounter, double meter, int xCoord, int yCoord,
                      boolean stunned, boolean IFrames, boolean isGrounded,
-                     int attackDamage, int normalD, int heavyD) {
+                     int attackDamage, int normalD, int heavyD, int heavyDamage) {
 
         timer = new Timer(5,this);
         countdown = 50;
@@ -50,7 +48,7 @@ public class Character implements ActionListener {
         this.attackDamage = attackDamage;
         this.normalD = normalD;
         this.heavyD = heavyD;
-
+        this.heavyDamage = heavyDamage;
     }
 
 

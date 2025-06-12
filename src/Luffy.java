@@ -17,7 +17,7 @@ public class Luffy extends Character {
     ArrayList<BufferedImage> images = new ArrayList<>();
 
     public Luffy() {
-        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0, 300, 675, false, false, true, 60,600, 1000);
+        super("Luffy", 500, 3, 150, 150, 5, 10, 3, 0.0, 300, 675, false, false, true, 60,600, 1000, 10);
         isAttacking = false;
         comboNum = 3;
         ArrayList<BufferedImage> images = new ArrayList<>();

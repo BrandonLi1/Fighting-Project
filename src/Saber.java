@@ -13,7 +13,7 @@ public class Saber extends Character {
     public int comboNum;
     private boolean ult;
     public Saber() {
-        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0, 300, 675, false, false, true, 10, 500, 2000);
+        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0.0, 300, 675, false, false, true, 10, 500, 2000, 10);
         isAttacking = false;
 
         comboNum = 5;
