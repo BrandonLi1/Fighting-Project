@@ -307,7 +307,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             System.out.println("hit");
                             p2.setHealth(p2.getHealth() - p1.attackDamage);
                             stunP2(p1.normalD - 10);
-                            p1.addMeter(10);
+                            p1.addMeter(.2);
                         } else if (damageBox.intersects(hitbox) && p2.blocking) {
                             p2.setHealth(p2.getHealth() - 1);
                             p1.addMeter(.05);
@@ -370,7 +370,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 }
 
                 //X
-                if (p1.meter >= 1 && pressedKeys[88]) {
+                if (p1.meter >= 3 && pressedKeys[88]) {
                     p1Attcking = true;
                     Rectangle damageBox = p1.special1();
                     Rectangle hitbox = p2.hitbox();
@@ -482,6 +482,52 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         executorService.shutdown();
                     }
                 }
+                if (pressedKeys[101]) {
+                    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+                    if (!p2Attacking) {
+                        p2Attacking = true;
+                        Rectangle damageBox = p2.heavyAttack();
+                        Rectangle hitbox = p1.hitbox();
+                        g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                        if (damageBox.intersects(hitbox)) {
+                            System.out.println("hit");
+                            p1.setHealth(p1.getHealth() - p2.attackDamage * 3);
+                            System.out.println(p1.getHealth());
+                            System.out.println(p2.attackDamage);
+                            p1StunTimer=0;
+                            p1.setStunned(true);
+                            p1.addMeter(.5);
+                            if (p1.getClass()==Saber.class) {
+                                ((Saber) p1).energy++;
+                            }
+                        }
+
+                        executorService.schedule(() -> {
+                            p2Attacking = false;
+                        }, p2.heavyD, TimeUnit.MILLISECONDS);
+
+                        executorService.shutdown();
+                    }
+                }
+
+                if (p2.meter >= 3 && pressedKeys[98]) {
+                    p2Attacking = true;
+                    Rectangle damageBox = p2.special1();
+                    Rectangle hitbox = p1.hitbox();
+                    g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                    if (damageBox.intersects(hitbox)) {
+                        if (p1.getClass() == Saber.class) {
+                            int x =((Saber) p2).energy + (int)p2.meter;
+                            p2.meter-=(int) p2.meter;
+                            x*=30;
+                            p1.setHealth(p1.getHealth()-x);
+                        }
+                    }
+                    //add executor service for this pls
+                    p2Attacking=false;
+                }
+
                 if (p1.getHealth()<=0) {
                     p2Win=true;
                     endWindow = true;
