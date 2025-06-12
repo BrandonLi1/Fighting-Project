@@ -32,7 +32,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton playAgain, startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
+    private BufferedImage p1WinText, p2WinText, SaberWin, GlorpWin, ArcherWin, LuffyWin, origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -70,6 +70,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
+
 
         //this.setCursor(); - make a custom cursor(if time)
         try {
@@ -163,34 +164,80 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 g.drawImage(p2CharacterImage, 950, 600, null);
             }
         } else if (endWindow) {
-            /*if (p2Win) {
-                if (p2 instanceof Glorp) {
-                    g.drawImage()
+            try {
+                p1WinText = ImageIO.read((new File("src\\Winanimations\\P1win.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                p2WinText = ImageIO.read((new File("src\\Winanimations\\P2win.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                GlorpWin= ImageIO.read((new File("src\\Winanimations\\GlorpWin.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                SaberWin= ImageIO.read((new File("src\\Winanimations\\SaberWin.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                ArcherWin= ImageIO.read((new File("src\\Winanimations\\ArcherWIn.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                LuffyWin= ImageIO.read((new File("src\\Winanimations\\luffy.gif")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (p2Win) {
+                if (p2.getClass() == Glorp.class) {
+                    g.drawImage(GlorpWin, 0, 0, null);
+                    g.drawImage(p2WinText, 100, 100, null);
                 }
-                else if (p2 instanceof Glorp) {
-                    g.drawImage()
+                else if (p2.getClass() ==  Archer.class) {
+                    g.drawImage(ArcherWin, 0, 0, null);
+                    g.drawImage(p2WinText, 100, 100, null);
+
                 }
-                else if (p2 instanceof Glorp) {
-                    g.drawImage()
+                else if (p2.getClass() ==  Luffy.class) {
+                    g.drawImage(LuffyWin, 0, 0, null);
+                    g.drawImage(p2WinText, 100, 100, null);
+
                 }
-                else if (p2 instanceof Glorp) {
-                    g.drawImage()
+                else if (p2.getClass() == Saber.class) {
+                    g.drawImage(SaberWin, 0, 0, null);
+                    g.drawImage(p2WinText, 100, 100, null);
+
                 }
             }
             else {
-                if (p1 instanceof Glorp) {
-                    g.drawImage()
+                if (p1.getClass() == Glorp.class) {
+                    g.drawImage(GlorpWin, 0, 0, null);
+                    g.drawImage(p1WinText, 100, 100, null);
+
                 }
-                else if (p1 instanceof Glorp) {
-                    g.drawImage()
+                else if (p1.getClass() ==  Archer.class) {
+                    g.drawImage(ArcherWin, 0, 0, null);
+                    g.drawImage(p1WinText, 100, 100, null);
+
                 }
-                else if (p1 instanceof Glorp) {
-                    g.drawImage()
+                else if (p1.getClass() ==  Luffy.class) {
+                    g.drawImage(LuffyWin, 0, 0, null);
+                    g.drawImage(p1WinText, 100, 100, null);
+
                 }
-                else if (p1 instanceof Glorp) {
-                    g.drawImage()
+                else if (p1.getClass() == Saber.class) {
+                    g.drawImage(SaberWin, 0, 0, null);
+                    g.drawImage(p1WinText, 100, 100, null);
+
                 }
-            }*/
+            }
 
             playAgain.setVisible(true);
             playAgain.grabFocus();
