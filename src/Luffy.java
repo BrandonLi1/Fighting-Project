@@ -10,6 +10,7 @@ public class Luffy extends Character {
     private Animation animation2;
     private Animation animation3;
     private Animation animation4;
+    private Animation animation5;
     private int animationNum;
     public int comboNum;
     private boolean isAttacking;
@@ -67,6 +68,17 @@ public class Luffy extends Character {
         }
         animation4 = new Animation(images4,50, false);
         //attack
+        ArrayList<BufferedImage> images5 = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            String filename = "src\\Luffy\\Walk\\Heavy\\luffyheavy00" + i + ".png";
+            try {
+                images5.add(ImageIO.read(new File(filename)));
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage() + filename);
+            }
+        }
+        animation5 = new Animation(images4,50, false);
     }
 
     public Animation getAnimation3() {
@@ -95,7 +107,9 @@ public class Luffy extends Character {
             return animation3.getActiveFrame();
         } else if (animationNum == 4){
             return animation4.getActiveFrame();
-        } else {
+        } else if(animationNum == 5) {
+            return animation5.getActiveFrame();
+        }else{
             return animation2.getActiveFrame();
         }
     }
@@ -109,16 +123,29 @@ public class Luffy extends Character {
             animation4.resume();
         }
 
-        setAttack(280, height);
+        setAttack(100, height);
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord), (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord-width+50), (int) (yCoord), aWidth, aHeight);
     }
     public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
     }
-
+    @Override
+    public Rectangle heavyAttack() { //ani 6
+        setAttack(100, height);
+        if (!isAttacking) {
+            isAttacking = true;
+            animation5.reset(); //change to 6
+            animation5.resume();
+        }
+        setAnimationNum(4);
+        if (facingRight) {
+            return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
+        }
+        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
+    }
     /*  public Rectaqngle attack() {
         setAnimation(attackAnimation);
         setAttack(30, height);
