@@ -23,7 +23,7 @@ public class Archer extends Character{
     //https://craftpix.net/freebies/free-underwater-enemies-pixel-art-character-pack/
 
     public Archer() {
-        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0.0, 300, 675, false, false, true, 6, 2, 300, 2);
+        super("Archer", 350, 1, 130, 150, 4, 8, 1, 0.0, 300, 675, false, false, true, 6, 2, 1500, 2);
         isAttacking = false;
         comboNum = 9;
         isHeavyAttacking = false;
