@@ -150,7 +150,7 @@ public class Luffy extends Character {
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord-width+50), (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord-width+100), (int) (yCoord), aWidth, aHeight);
     }
     @Override
     public Rectangle heavyAttack() { //ani 6
@@ -165,7 +165,7 @@ public class Luffy extends Character {
         if (facingRight) {
             return new Rectangle((int) (xCoord+width), (int) (yCoord), aWidth, aHeight);
         }
-        return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
+        return new Rectangle((int) (xCoord-width + 100), (int) (yCoord), aWidth, aHeight);
     }
     public Rectangle special1() { //ani 7
         if(meter >= 3){

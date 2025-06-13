@@ -45,6 +45,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private boolean p2GlorpState = false;
     private boolean p1InEndLag = false;
     private boolean p2InEndLag = false;
+    private boolean checks = true;
     private LinkedList<Long> pressTimestamps = new LinkedList<>();
     private LinkedList<Long> pressTimestampsP2 = new LinkedList<>();
     private boolean hasPressedThreeTimes = false;
@@ -222,6 +223,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 }
                 else if (p2.getClass() ==  Luffy.class) {
+                    p2.heavyAttack();
                     g.drawImage(LuffyWin, 0, 0, null);
                     g.drawImage(p2WinText, 100, 100, null);
 
@@ -234,6 +236,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             else {
                 if (p1.getClass() == Glorp.class) {
+
                     g.drawImage(GlorpWin, 0, 0, null);
                     g.drawImage(p1WinText, 100, 100, null);
 
@@ -268,6 +271,13 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             if (!roundTimer.isRunning()) {
                 roundTimer.start();
+            }
+            if(checks){
+                p1.heavyAttack();
+                p2.heavyAttack();
+                p1.jump();
+                p2.jump();
+                checks = false;
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
