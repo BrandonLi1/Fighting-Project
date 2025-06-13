@@ -14,7 +14,7 @@ public class Saber extends Character {
     private boolean ult;
 
     public Saber() {
-        super("Saber", 500, 4, 150, 150, 10, 10, 0, 0.0, 300, 675, false, false, true, 10, 500, 1500, 10);
+        super("Saber", 500, 4, 150, 150, 8, 10, 0, 0.0, 300, 675, false, false, true, 10, 500, 1500, 10);
         isAttacking = false;
 
         comboNum = 5;
