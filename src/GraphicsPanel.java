@@ -89,6 +89,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             e.printStackTrace();
         }
 
+
         //this.setCursor(); - make a custom cursor(if time)
         try {
             healthBar1 = ImageIO.read(new File("src\\healthBar\\health bar 1.png"));
@@ -209,7 +210,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 throw new RuntimeException(e);
             }
             try {
-                ArcherWin= ImageIO.read((new File("src\\Winanimations\\ArcherWIn.png")));
+                ArcherWin= ImageIO.read((new File("src\\Winanimations\\ArcherWIn.jpg")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
