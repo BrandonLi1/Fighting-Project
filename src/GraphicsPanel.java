@@ -290,6 +290,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
             if (p1 instanceof Archer) {
                 Archer archer = (Archer) p1;
+                BufferedImage shield = archer.getShieldSprite();
+                if (shield != null) {
+                    Point pos = archer.getShieldPosition();
+                    g.drawImage(shield, pos.x, pos.y, null);
+                }
                 if (archer.attackAnimationEnded()) {
                     int arrowY = (int) (archer.yCoord + archer.height / 2);
                     int arrowX;
@@ -315,6 +320,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
             if (p2 instanceof Archer) {
                 Archer archer = (Archer) p2;
+                BufferedImage shield = archer.getShieldSprite();
+                if (shield != null) {
+                    Point pos = archer.getShieldPosition();
+                    g.drawImage(shield, pos.x, pos.y, null);
+                }
                 if (archer.attackAnimationEnded()) {
                     int arrowY = (int) (archer.yCoord + archer.height / 2);
                     int arrowX;

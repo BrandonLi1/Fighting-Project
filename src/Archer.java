@@ -11,6 +11,7 @@ public class Archer extends Character{
     private Animation deathAnimation;
     private Animation hurtAnimation;
     private Animation idleAnimation;
+    private BufferedImage shieldSprite;
     private int animationNum;
     private boolean isAttacking;
     public int comboNum;
@@ -97,6 +98,13 @@ public class Archer extends Character{
                 System.out.println(e.getMessage());
             }
         }
+
+        //Archer shield
+        try {
+            shieldSprite = ImageIO.read(new File("src\\Archer\\block.png"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
@@ -125,6 +133,27 @@ public class Archer extends Character{
         } else {
             return idleAnimation.getActiveFrame();
         }
+    }
+
+    public BufferedImage getShieldSprite() {
+        if (blocking) {
+            return shieldSprite;
+        }
+        return null;
+    }
+
+    public Point getShieldPosition() {
+        int shieldWidth = shieldSprite != null ? shieldSprite.getWidth() : 0;
+        int offset = 80;
+
+        int shieldX;
+        if (facingRight) {
+            shieldX = (int) xCoord + width - offset;
+        } else {
+            shieldX = (int) xCoord - shieldWidth + offset;
+        }
+        int shieldY = (int) yCoord + height / 4;
+        return new Point(shieldX, shieldY);
     }
 
     public BufferedImage deathAnimation() {
