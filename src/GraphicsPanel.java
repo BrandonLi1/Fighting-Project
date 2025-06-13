@@ -288,6 +288,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(p1.getPlayerImage(), (int) p1.getxCoord(), (int) p1.yCoord, p1.getWidth(), p1.height, null);
+            if (p1 instanceof Archer && ((Archer)p1).isSpecialActive()) {
+                Archer archer = (Archer)p1;
+                long now = System.currentTimeMillis();
+                if (now - archer.lastAuraFrameTime > archer.auraFrameDuration) {
+                    archer.auraFrame = (archer.auraFrame + 1) % archer.auraSprites.length;
+                    archer.lastAuraFrameTime = now;
+                }
+                g.drawImage(
+                        archer.auraSprites[archer.auraFrame],
+                        (int)archer.xCoord, (int)archer.yCoord, archer.width, archer.height, null
+                );
+            }
             if (p1 instanceof Archer) {
                 Archer archer = (Archer) p1;
                 BufferedImage shield = archer.getShieldSprite();
@@ -318,6 +330,18 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             g.drawImage(healthBar1, 200, 50, null);
             g.drawImage(healthBar2, 1050, 50, null);
             g.drawImage(p2.getPlayerImage(), (int) p2.getxCoord(), (int) p2.yCoord, p2.getWidth(), p2.height, null);
+            if (p2 instanceof Archer && ((Archer)p2).isSpecialActive()) {
+                Archer archer = (Archer)p2;
+                long now = System.currentTimeMillis();
+                if (now - archer.lastAuraFrameTime > archer.auraFrameDuration) {
+                    archer.auraFrame = (archer.auraFrame + 1) % archer.auraSprites.length;
+                    archer.lastAuraFrameTime = now;
+                }
+                g.drawImage(
+                        archer.auraSprites[archer.auraFrame],
+                        (int)archer.xCoord, (int)archer.yCoord, archer.width, archer.height, null
+                );
+            }
             if (p2 instanceof Archer) {
                 Archer archer = (Archer) p2;
                 BufferedImage shield = archer.getShieldSprite();
@@ -567,6 +591,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                                 System.out.println(x);
                                 x *= 30;
                             }
+                        } else if (p1.getClass() == Archer.class) {
+                            ((Archer) p1).activateSpecial();
                         }
                         System.out.println(x);
                         //just change where it says p1.heavyD right below to whatever you its suppsied to be
@@ -783,6 +809,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                                 System.out.println(x);
                                 x *= 30;
                             }
+                        } else if (p2.getClass() == Archer.class) {
+                            ((Archer) p2).activateSpecial();
                         }
                         System.out.println(x);
                         //just change where it says p1.heavyD right below to whatever you its suppsied to be
@@ -1013,6 +1041,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
             p1=null;
             p2=null;
             endWindow = false;
+        }
+        repaint();
+
+        if (p1 instanceof Archer) {
+            ((Archer) p1).updateSpecialState();
+        }
+        if (p2 instanceof Archer) {
+            ((Archer) p2).updateSpecialState();
         }
         repaint();
     }

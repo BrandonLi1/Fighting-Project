@@ -20,6 +20,16 @@ public class Archer extends Character{
     public ArrayList<BufferedImage> heavyFrames;
     public ArcherHeavyEffect pendingHeavyEffect = null;
 
+    //for special move
+    private boolean specialActive = false;
+    private long specialEndTime = 0;
+    BufferedImage[] auraSprites = new BufferedImage[4];
+    int auraFrame = 0;
+    long lastAuraFrameTime = 0;
+    int auraFrameDuration = 100;
+    private double originalMoveSpeed;
+    private double originalJumpPower;
+
     //https://craftpix.net/freebies/free-underwater-enemies-pixel-art-character-pack/
 
     public Archer() {
@@ -102,6 +112,15 @@ public class Archer extends Character{
         //Archer shield
         try {
             shieldSprite = ImageIO.read(new File("src\\Archer\\block.png"));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        //Archer Special Move Aura
+        try {
+            for (int i = 1; i <= 4; i++) {
+                auraSprites[i - 1] = ImageIO.read(new File("src\\Archer\\SpecialAura\\aura" + i + ".png"));
+            }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -189,5 +208,33 @@ public class Archer extends Character{
 
     public void setIsAttacking(boolean attacking) {
         isAttacking = attacking;
+    }
+
+    public void activateSpecial() {
+        if (meter >= 4 && !specialActive) {
+            specialActive = true;
+            specialEndTime = System.currentTimeMillis() + 12000;
+            meter = 0;
+
+            originalMoveSpeed = this.speed;
+            originalJumpPower = this.jumpHeight;
+            this.speed = (int) Math.round(this.speed * 1.75);
+            this.jumpHeight *= 1.75;
+
+            auraFrame = 0;
+            lastAuraFrameTime = System.currentTimeMillis();
+        }
+    }
+
+    public void updateSpecialState() {
+        if (specialActive && System.currentTimeMillis() > specialEndTime) {
+            specialActive = false;
+            this.speed = (int) Math.round(originalMoveSpeed);
+            this.jumpHeight = originalJumpPower;
+        }
+    }
+
+    public boolean isSpecialActive() {
+        return specialActive;
     }
 }
