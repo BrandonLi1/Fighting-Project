@@ -22,6 +22,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
+
 
 
 //https://craftpix.net/freebies/free-animated-explosion-sprite-pack/
@@ -70,7 +74,19 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         p2Controls=new JTextArea();
         p1Controls.setEditable(false);
         p2Controls.setEditable(false);
+        try {
+            File audioFile = new File("src\\Music\\MHA.wav"); // update path if needed
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
 
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+
+            // Wait until the clip finishes playing
+            Thread.sleep(1);
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //this.setCursor(); - make a custom cursor(if time)
         try {
