@@ -914,7 +914,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 try {
                     p2CharacterImage = ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerImage\\GlorpSelectionPlayer.png"));
                     p2Temp="Glorp";
-                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\saberName.jpg"));
+                    p2NameImage=ImageIO.read(new File("src\\CharacterSelectionAssets\\PlayerText\\GlorpName.png"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
