@@ -503,7 +503,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             System.out.println(x);
                             x *= 30;
                         } else if(p1.getClass() == Luffy.class){
-                            x = ((Luffy) p1).energy + (int) p1.meter;
+                            //x = ((Luffy) p1).energy + (int) p1.meter;
+                            x = 5;
                             p1.meter -= (int) p1.meter;
                             System.out.println(x);
                             x *= 30;
@@ -527,6 +528,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 executorService.schedule(() -> {
                     p1Attcking = false;
                 }, 2000, TimeUnit.MILLISECONDS);
+
             }
 
 
@@ -686,18 +688,36 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         }, 1500, TimeUnit.MILLISECONDS);
                     } else {
                         p2Attacking = true;
+                        int x = 0;
+                        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                         Rectangle damageBox = p2.special1();
                         Rectangle hitbox = p1.hitbox();
                         g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
                         if (damageBox.intersects(hitbox) && p2GlorpState) {
                             p1.setHealth(p1.getHealth() - 120);
                         } else if (damageBox.intersects(hitbox)) {
-                            if (p1.getClass() == Saber.class) {
-                                int x = ((Saber) p2).energy + (int)p2.meter;
+                            if (p2.getClass() == Saber.class) {
+                                x = ((Saber) p2).energy + (int)p2.meter;
                                 p2.meter -= (int) p2.meter;
                                 x *= 30;
                                 p1.setHealth(p1.getHealth() - x);
+                            } else if(p2.getClass() == Luffy.class){
+                                //x = ((Luffy) p1).energy + (int) p1.meter;
+                                x = 5;
+                                p2.meter -= (int) p2.meter;
+                                System.out.println(x);
+                                x *= 30;
                             }
+                            if (damageBox.intersects(hitbox)) {
+                                System.out.println("?dakshgdsbja");
+                                p1.setHealth(p1.getHealth() - x);
+                            }
+                            //just change where it says p1.heavyD right below to whatever you its suppsied to be
+                            executorService.schedule(() -> {
+                                p2Attacking = false;
+                            }, p2.heavyD, TimeUnit.MILLISECONDS);
+
+                            executorService.shutdown();
                         }
                         //add executor service for this pls
                         p2Attacking = false;

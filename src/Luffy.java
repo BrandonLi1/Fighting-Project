@@ -112,6 +112,13 @@ public class Luffy extends Character {
         if (isAttacking) {
             if (!animation4.isRunning() && !animation5.isRunning()) {
                 isAttacking = false;
+                if(ult == true){
+                    setyCoord((int) (yCoord + 300));
+                    failCheck = 0;
+                }
+                ult = false;
+                setHeight(200);
+                setWidth(200);
                 animationNum = 2;
             } else {
                 return animation4.getActiveFrame();
@@ -161,26 +168,29 @@ public class Luffy extends Character {
         return new Rectangle((int) (xCoord)-aWidth, (int) (yCoord), aWidth, aHeight);
     }
     public Rectangle special1() { //ani 7
-        ult=true;
+        if(meter >= 3){
+            ult=true;
 //        setAttack(500, 500);
-        animation4=animation6;
-        if (!isAttacking) {
-            isAttacking = true;
-            animation6.reset(); //change to 6
-            animation6.resume();
-        }
-        setAnimationNum(6);
-        if (failCheck==0) {
-            setyCoord((int) (yCoord - 300));
-            failCheck++;
-        }
-        System.out.println("fly");
-        setWidth(1000);
-        setHeight(500);
-        if (facingRight) {
+            animation4=animation6;
+            if (!isAttacking && meter >= 3) {
+                isAttacking = true;
+                animation6.reset(); //change to 6
+                animation6.resume();
+            }
+            setAnimationNum(6);
+            if (failCheck==0) {
+                setyCoord((int) (yCoord - 300));
+                failCheck++;
+            }
+            System.out.println("fly");
+            setWidth(1000);
+            setHeight(500);
+            if (facingRight) {
+                return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
+            }
             return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
         }
-        return new Rectangle((int) (xCoord), (int) (yCoord), width, height);
+        return(new Rectangle(0,0,0,0));
     }
     public Rectangle hitbox() { //change cus character is small
         return new Rectangle((int) xCoord+85, (int) yCoord, 50, height);
