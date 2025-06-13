@@ -48,10 +48,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private LinkedList<Long> pressTimestamps = new LinkedList<>();
     private LinkedList<Long> pressTimestampsP2 = new LinkedList<>();
     private boolean hasPressedThreeTimes = false;
-    int countdown, p1StunTimer, p2StunTimer;
+    int countdown, counter, x;
     String p1Temp;
     String p2Temp;
-    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false, endWindow = false, directionP1 = true, directionP2 = false, p1Win, p2Win;
+    boolean startWindow, keybindsWindow, selectionScreen=false, p1Picked=false, p2Picked=false, endWindow = false, directionP1 = true, directionP2 = false, p1Win, p2Win, p1JustUlted, p2JustUlted;
     boolean[] pressedKeys = new boolean[128];
     //false is left, true is right -what is this bruh
     private boolean p1Attcking = false;
@@ -453,7 +453,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 if (pressedKeys[69]) {
                     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                    if (!p1Attcking) {
+                    if (!p1Attcking && !p1JustUlted) {
                         p1Attcking = true;
                         if (p1 instanceof Archer) {
                             Archer archer = (Archer) p1;
@@ -494,6 +494,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                 //Xp1.meter >= 3 &&
                 if (pressedKeys[88]) {
+                    int y=0;
                     if (p1.getClass() == Glorp.class) {
                         p1GlorpState = true;
                         p1.setGlorpState(true);
@@ -505,7 +506,6 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p1.setStunned(false);
                         }, 1500, TimeUnit.MILLISECONDS);
                     } else {
-                        int x = 0;
                         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                         p1Attcking = true;
                         Rectangle damageBox = p1.special1();
@@ -514,29 +514,36 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                         if (damageBox.intersects(hitbox) && p1GlorpState) {
                             p2.setHealth(p2.getHealth() - 120);
                         } else if (p1.getClass() == Saber.class) {
-                            x = ((Saber) p1).energy + (int) p1.meter;
-                            p1.meter -= (int) p1.meter;
-                            System.out.println(x);
-                            x *= 30;
+                            y=800;
+                            if (p1.meter>=3) {
+                                x = ((Saber) p1).energy + (int) p1.meter;
+                                p1.meter -= (int) p1.meter;
+
+                                System.out.println(x);
+                                x *= 30;
+                            }
                         } else if(p1.getClass() == Luffy.class){
-                            //x = ((Luffy) p1).energy + (int) p1.meter;
-                            x = 5;
-                            p1.meter -= (int) p1.meter;
-                            System.out.println(x);
-                            x *= 30;
+                            y=600;
+                            if (p1.meter>=3) {
+                                x = 5;
+                                p1.meter -= (int) p1.meter;
+                                System.out.println(x);
+                                x *= 30;
+                            }
                         }
                         System.out.println(x);
-                        if (damageBox.intersects(hitbox)) {
-                            System.out.println("?dakshgdsbja");
-                            p2.setHealth(p2.getHealth() - x);
-                        }
                         //just change where it says p1.heavyD right below to whatever you its suppsied to be
                         executorService.schedule(() -> {
+                            if (damageBox.intersects(hitbox)) {
+                                System.out.println("?dakshgdsbja");
+                                p2.setHealth(p2.getHealth() - x);
+                            }
                             p1Attcking = false;
-                        }, p1.heavyD, TimeUnit.MILLISECONDS);
+                        }, y, TimeUnit.MILLISECONDS);
 
                         executorService.shutdown();
                     }
+                    p1JustUlted=true;
                 }
             }
             else {
@@ -675,8 +682,8 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                                 System.out.println(p2.attackDamage);
                                 stunP1(500);
                                 p2.addMeter(.5);
-                                if (p1.getClass()==Saber.class) {
-                                    ((Saber) p1).energy++;
+                                if (p2.getClass()==Saber.class) {
+                                    ((Saber) p2).energy++;
                                 }
                             }
                         }
@@ -773,7 +780,14 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
 
         if (source==roundTimer) {
+            if (p1JustUlted || p2JustUlted) {
+                counter++;
+            }
             countdown--;
+            if (counter%3==0) {
+                p1JustUlted = false;
+                p2JustUlted = false;
+            }
             if (countdown<=0) {
                 if (p1.health > p2.health) {
                     endWindow = true;
@@ -935,6 +949,10 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
         }
         if (source == playAgain) {
             selectionScreen = true;
+            p1Picked=false;
+            p2Picked=false;
+            p1=null;
+            p2=null;
             endWindow = false;
         }
         repaint();
