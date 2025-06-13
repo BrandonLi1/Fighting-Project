@@ -36,7 +36,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton playAgain, startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage p1WinText, p2WinText, SaberWin, GlorpWin, ArcherWin, LuffyWin, origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
+    private BufferedImage p1WinText, p2WinText, SaberWin, GlorpWin, ArcherWin, LuffyWin, origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage,title;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -102,7 +102,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
         backButton.setVisible(false);
         playAgain.setVisible(false);
-        startButton.setSize(300, 300);
+        startButton.setSize(500, 500);
         add(startButton);
         add(keybindsButton);
         add(backButton);
@@ -130,15 +130,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 throw new RuntimeException(e);
             }
             g.drawImage(origin, 0, 0, null);
+            try {
+                title = ImageIO.read((new File("src\\Winanimations\\title.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            g.drawImage(title,450,300,null);
 
             startButton.setBackground(Color.BLACK);
             startButton.setForeground(Color.WHITE);
             keybindsButton.setBackground(Color.BLACK);
             keybindsButton.setForeground(Color.WHITE);
-            startButton.setLocation(870, 275);
-            startButton.setSize(90, 60);
-            keybindsButton.setLocation(680, 640);
-            keybindsButton.setSize(95, 50);
+            startButton.setLocation(870, 575);
+            startButton.setSize(100, 60);
+            keybindsButton.setLocation(870, 640);
+            keybindsButton.setSize(100, 50);
             startButton.setVisible(true);
             keybindsButton.setVisible(true);
         } else if (keybindsWindow) {
@@ -208,7 +214,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 throw new RuntimeException(e);
             }
             try {
-                LuffyWin= ImageIO.read((new File("src\\Winanimations\\luffy.gif")));
+                LuffyWin= ImageIO.read((new File("src\\Winanimations\\luffy.png")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -465,40 +471,49 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                     if (!p1Attcking && !p1JustUlted) {
                         p1Attcking = true;
-                        if (p1 instanceof Archer) {
-                            Archer archer = (Archer) p1;
-                            p1.heavyAttack();
-                            if (archer.pendingHeavyEffect != null) {
-                                archer.pendingHeavyEffect.owner = 1;
-                                heavyEffects.add(archer.pendingHeavyEffect);
-                                archer.pendingHeavyEffect = null;
-                            }
-                        } else {
-                            Rectangle damageBox = p1.heavyAttack();
-                            Rectangle hitbox = p2.hitbox();
-                            g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
-                            if (damageBox.intersects(hitbox) && p1GlorpState) {
-                                p2.setHealth(p2.getHealth() - 120);
-                            } else if (damageBox.intersects(hitbox)) {
-                                System.out.println("hit");
-                                p2.setHealth(p2.getHealth() - p1.attackDamage * 3);
-                                System.out.println(p2.getHealth());
-                                System.out.println(p1.attackDamage);
-                                stunP2(500);
-                                p1.addMeter(.5);
-                                if (p1.getClass()==Saber.class) {
-                                    ((Saber) p1).energy++;
+                        if (p1.getClass() == Glorp.class) {
+                            p1.isAttacking = true;
+                        }
+                            if (p1 instanceof Archer) {
+                                Archer archer = (Archer) p1;
+                                p1.heavyAttack();
+                                if (archer.pendingHeavyEffect != null) {
+                                    archer.pendingHeavyEffect.owner = 1;
+                                    heavyEffects.add(archer.pendingHeavyEffect);
+                                    archer.pendingHeavyEffect = null;
+                                }
+                            } else {
+                                Rectangle damageBox = p1.heavyAttack();
+                                Rectangle hitbox = p2.hitbox();
+                                g.drawRect(damageBox.x, damageBox.y, damageBox.width, damageBox.height);
+                                if (damageBox.intersects(hitbox) && p1GlorpState) {
+                                    p2.setHealth(p2.getHealth() - 120);
+                                } else if (damageBox.intersects(hitbox)) {
+                                    System.out.println("hit");
+                                    p2.setHealth(p2.getHealth() - p1.attackDamage * 3);
+                                    System.out.println(p2.getHealth());
+                                    System.out.println(p1.attackDamage);
+                                    if (p1 instanceof Glorp) {
+                                        stunP2(1000);
+                                    } else {
+                                        stunP2(500);
+                                    }
+                                    p1.addMeter(.5);
+                                    if (p1.getClass() == Saber.class) {
+                                        ((Saber) p1).energy++;
+                                    }
                                 }
                             }
-                        }
 
 
+                            executorService.schedule(() -> {
+                                p1Attcking = false;
+                                if (p1.getClass() == Glorp.class) {
+                                    p1.isAttacking = false;
+                                }
+                            }, p1.heavyD, TimeUnit.MILLISECONDS);
 
-                        executorService.schedule(() -> {
-                            p1Attcking = false;
-                        }, p1.heavyD, TimeUnit.MILLISECONDS);
-
-                        executorService.shutdown();
+                            executorService.shutdown();
                     }
                 }
 
@@ -515,6 +530,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p1.setGlorpState(false);
                             p1.setStunned(false);
                         }, 1500, TimeUnit.MILLISECONDS);
+                        p1.meter -= (int) p1.meter;
                     } else {
                         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                         p1Attcking = true;
@@ -671,6 +687,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                     if (!p2Attacking) {
                         p2Attacking = true;
+                        if (p2.getClass() == Glorp.class) {
+                            p2.isAttacking = true;
+                        }
                         if (p2 instanceof Archer) {
                             Archer archer = (Archer) p2;
                             p2.heavyAttack();
@@ -690,7 +709,11 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                                 p1.setHealth(p1.getHealth() - p2.attackDamage * 3);
                                 System.out.println(p1.getHealth());
                                 System.out.println(p2.attackDamage);
-                                stunP1(500);
+                                if (p2 instanceof Glorp) {
+                                    stunP1(1000);
+                                } else {
+                                    stunP1(500);
+                                }
                                 p2.addMeter(.5);
                                 if (p2.getClass()==Saber.class) {
                                     ((Saber) p2).energy++;
@@ -702,6 +725,9 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
                         executorService.schedule(() -> {
                             p2Attacking = false;
+                            if (p2.getClass() == Glorp.class) {
+                                p2.isAttacking = false;
+                            }
                         }, p2.heavyD, TimeUnit.MILLISECONDS);
 
                         executorService.shutdown();
@@ -720,6 +746,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                             p2.setGlorpState(false);
                             p2.setStunned(false);
                         }, 1500, TimeUnit.MILLISECONDS);
+                        p2.meter -= (int) p2.meter;
                     } else {
                         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
                         p1Attcking = true;
