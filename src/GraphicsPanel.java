@@ -36,7 +36,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
     private JButton playAgain, startButton, keybindsButton, backButton, saberButton, luffyButton, archerButton, glorpButton, confirmButton;
     private JTextArea p1Controls;
     private JTextArea p2Controls;
-    private BufferedImage p1WinText, p2WinText, SaberWin, GlorpWin, ArcherWin, LuffyWin, origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage;
+    private BufferedImage p1WinText, p2WinText, SaberWin, GlorpWin, ArcherWin, LuffyWin, origin, background, selectionBackground, startBackground, p1CharacterImage, p2CharacterImage, healthBar1,healthBar2, p1NameImage, p2NameImage,Hitimage,title;
     private Timer timer;
     private Timer roundTimer;
     private Character p1;
@@ -102,7 +102,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
 
         backButton.setVisible(false);
         playAgain.setVisible(false);
-        startButton.setSize(300, 300);
+        startButton.setSize(500, 500);
         add(startButton);
         add(keybindsButton);
         add(backButton);
@@ -130,15 +130,21 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 throw new RuntimeException(e);
             }
             g.drawImage(origin, 0, 0, null);
+            try {
+                title = ImageIO.read((new File("src\\Winanimations\\title.png")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            g.drawImage(title,450,300,null);
 
             startButton.setBackground(Color.BLACK);
             startButton.setForeground(Color.WHITE);
             keybindsButton.setBackground(Color.BLACK);
             keybindsButton.setForeground(Color.WHITE);
-            startButton.setLocation(870, 275);
-            startButton.setSize(90, 60);
-            keybindsButton.setLocation(680, 640);
-            keybindsButton.setSize(95, 50);
+            startButton.setLocation(870, 575);
+            startButton.setSize(100, 60);
+            keybindsButton.setLocation(870, 640);
+            keybindsButton.setSize(100, 50);
             startButton.setVisible(true);
             keybindsButton.setVisible(true);
         } else if (keybindsWindow) {
@@ -208,7 +214,7 @@ public class GraphicsPanel extends JPanel implements ActionListener, KeyListener
                 throw new RuntimeException(e);
             }
             try {
-                LuffyWin= ImageIO.read((new File("src\\Winanimations\\luffy.gif")));
+                LuffyWin= ImageIO.read((new File("src\\Winanimations\\luffy.png")));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
